@@ -60,6 +60,7 @@ const (
 	PermViewAlerts     Permission = "view:alerts"
 )
 
+// RolePermissions maps roles to permissions.
 var RolePermissions = map[Role][]Permission{
 	RoleAdmin: {
 		PermViewDashboard, PermManagePolicies, PermManageCerts,
