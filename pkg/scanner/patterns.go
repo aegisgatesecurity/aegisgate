@@ -270,5 +270,5 @@ func DefaultPatterns() []*Pattern {
 
 // ShouldBlock returns true if the severity level should trigger a block
 func ShouldBlock(severity Severity) bool {
-	return severity >= Critical
+	return severity >= High
 }

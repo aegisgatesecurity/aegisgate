@@ -11,6 +11,14 @@ import (
 	"time"
 )
 
+// contextKey is a type for context values
+type contextKey string
+
+const (
+	apiVersionKey  contextKey = "api_version"
+	versionInfoKey contextKey = "version_info"
+)
+
 // Version represents an API version
 type Version struct {
 	Major      int
