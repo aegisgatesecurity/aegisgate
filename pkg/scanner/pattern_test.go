@@ -178,7 +178,7 @@ func TestPattern_JWTToken(t *testing.T) {
 		find    bool
 	}{
 		{"Valid JWT", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c", true},
-		{"JWT in JSON", "{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"}", true},
+		{"JWT in JSON", `{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIn0.dozjgNryP4J3jVmNHl0w5N_XgL0n3I9PlFUP0THsR8U"}`, true},
 		{"Invalid JWT", "not.a.jwt", false},
 		{"Random", "some random content", false},
 	}
@@ -265,7 +265,7 @@ func TestPattern_EmailAddress(t *testing.T) {
 		{"Standard email", "user@example.com", true},
 		{"Email with subdomain", "user@mail.example.com", true},
 		{"Email with plus", "user+tag@example.com", true},
-		{"Email in JSON", "{"email": "test@aegisgatesecurity.io"}", true},
+		{"Email in JSON", `{"email": "test@aegisgatesecurity.io"}`, true},
 		{"Invalid email", "notanemail", false},
 	}
 
@@ -591,17 +591,17 @@ func TestJSONPayloadScanning(t *testing.T) {
 	}{
 		{
 			name:    "Sensitive JSON",
-			content: "{"username": "john", "password": "secret123", "api_key": "AKIAIOSFODNN7EXAMPLE"}",
+			content: `{"username": "john", "password": "secret123", "api_key": "AKIAIOSFODNN7EXAMPLE"}`,
 			find:    true,
 		},
 		{
 			name:    "Clean JSON",
-			content: "{"username": "john", "action": "login", "userId": 12345}",
+			content: `{"username": "john", "action": "login", "userId": 12345}`,
 			find:    false,
 		},
 		{
 			name:    "Nested JSON with sensitive",
-			content: "{"user": {"email": "john@example.com", "ssn": "123-45-6789"}}",
+			content: `{"user": {"email": "john@example.com", "ssn": "123-45-6789"}}`,
 			find:    true,
 		},
 	}
