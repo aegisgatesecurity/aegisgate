@@ -6,7 +6,6 @@
 package scanner_test
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/aegisgatesecurity/aegisgate/pkg/scanner"
