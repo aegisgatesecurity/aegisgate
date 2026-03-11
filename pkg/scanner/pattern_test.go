@@ -484,7 +484,7 @@ func TestCleanContent(t *testing.T) {
 	cfg := testConfig()
 	sc := scanner.New(cfg)
 
-	content := "This is normal text with no sensitive data. Just some JSON: {"action": "login", "userId": 12345}."
+	content := "This is normal text with no sensitive data. Just some JSON: {action: login, userId: 12345}."
 	findings := sc.Scan(content)
 
 	for _, f := range findings {
