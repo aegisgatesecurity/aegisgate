@@ -2,19 +2,13 @@
 
 <div align="center">
 
-# 🔐 AegisGate
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8.svg)](https://golang.org/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://docker.com/)
 
-### Enterprise AI API Security Platform
+**Enterprise-grade security platform for AI API gateways**
 
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/Go-1.21%2B-brightgreen)](https://golang.org)
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/aegisgatesecurity/aegisgate/actions)
-[![Docker](https://img.shields.io/badge/Docker-ready-brightblue)](https://hub.docker.com/r/aegisgate/aegisgate)
-[![Enterprise](https://img.shields.io/badge/Edition-Open%20Core-orange)](https://aegisgatesecurity.io/pricing)
-
-*A comprehensive security platform for protecting AI API infrastructure*
-
-[Features](#features) • [Architecture](#architecture) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Enterprise](#enterprise) • [License](#license)
+[AegisGate](#features) - [Quick Start](#quick-start) - [Tiers and Pricing](#tiers--pricing) - [Contributing](#contributing)
 
 </div>
 
@@ -22,62 +16,43 @@
 
 ## What is AegisGate?
 
-**AegisGate** is an enterprise-grade, open-core AI API security platform designed to protect your AI infrastructure from emerging threats. It serves as a reverse proxy that sits between your applications and AI providers (OpenAI, Anthropic, Azure OpenAI, AWS Bedrock, Google Vertex, and more), providing:
+AegisGate is an enterprise-grade AI API security platform that provides comprehensive protection for organizations deploying AI services at scale. Acting as a secure proxy gateway, AegisGate monitors, filters, and secures all traffic between your applications and AI providers like OpenAI, Anthropic, Azure OpenAI, AWS Bedrock, and Cohere.
 
-- 🔒 **Threat Detection** - Real-time detection of prompt injections, jailbreaks, and malicious payloads
-- 📊 **Compliance** - Built-in frameworks for SOC 2, HIPAA, PCI-DSS, GDPR, NIST, and more
-- 🛡️ **Defense in Depth** - Multiple layers of security including mTLS, device attestation, and behavioral analysis
-- 📈 **Observability** - Comprehensive metrics, logging, and SIEM integrations
-- ⚡ **Performance** - HTTP/2 and HTTP/3 support with intelligent request optimization
+### Key Capabilities
 
-### Open Core Model
-
-AegisGate follows an **Open Core** business model:
-- **Community Edition** - Free, open-source version with core security features
-- **Paid Tiers** - Professional and Enterprise tiers with advanced capabilities
+- **AI API Proxy** - Transparent proxy with full request/response inspection
+- **Security Scanning** - Prompt injection, PII detection, malicious payload blocking
+- **Observability** - Prometheus metrics, structured logging, dashboard
+- **Compliance** - SOC2, GDPR, HIPAA, PCI-DSS, OWASP, NIST, ISO 27001 ready
+- **ML Anomaly Detection** - Traffic pattern analysis, cost anomaly detection
+- **Authentication** - JWT validation, API key management, RBAC
 
 ---
 
 ## Features
 
-### Core Security Features
+### Core Security
 
-| Feature | Community | Professional | Enterprise |
-|---------|:---------:|:------------:|:----------:|
-| **TLS Termination** | ✅ | ✅ | ✅ |
-| **Rate Limiting** | 200/min | 5,000/min | Unlimited |
-| **Request Logging** | ✅ | ✅ | ✅ |
-| **Error Tracking** | ✅ | ✅ | ✅ |
-| **Metrics (Prometheus)** | ✅ | ✅ | ✅ |
-| **mTLS Authentication** | - | ✅ | ✅ |
-| **Device Attestation** | - | ✅ | ✅ |
-| **OAuth/SSO** | - | ✅ | ✅ |
-| **SAML/OIDC** | - | ✅ | ✅ |
-| **Hardware Token (HSM)** | - | - | ✅ |
+| Feature | Description |
+|---------|-------------|
+| AI Provider Proxy | Unified proxy for OpenAI, Anthropic, Azure, Bedrock, Cohere |
+| Prompt Injection Detection | Block malicious prompt injection attacks |
+| PII Redaction | Automatic detection and redaction of sensitive data |
+| Content Filtering | Scan requests/responses for policy violations |
+| Rate Limiting | Token bucket algorithm with tier-based limits |
 
-### AI Security Features
+### Enterprise Features
 
-| Feature | Community | Professional | Enterprise |
-|---------|:---------:|:------------:|:----------:|
-| **ML Anomaly Detection** | Basic | Advanced | Advanced |
-| **Prompt Injection Detection** | - | ✅ | ✅ |
-| **Content Analysis** | - | ✅ | ✅ |
-| **Behavioral Analysis** | - | - | ✅ |
-| **Custom ML Models** | - | - | ✅ |
-| **Real-time Threat Response** | - | - | ✅ |
-| **Zero-Day Protection** | - | - | ✅ |
-
-### Compliance Frameworks
-
-| Framework | Community | Professional | Enterprise |
-|-----------|:---------:|:------------:|:----------:|
-| **OWASP** | View | Full | Full |
-| **SOC 2** | View | Full | Full |
-| **GDPR** | View | Full | Full |
-| **NIST** | - | Full | Full |
-| **HIPAA** | - | Full | Full |
-| **PCI-DSS** | - | Full | Full |
-| **ISO 27001** | - | Full | Full |
+| Feature | Community | Developer | Professional | Enterprise |
+|---------|:---------:|:---------:|:------------:|:----------:|
+| AI Providers | 3 | 5 | Unlimited | Unlimited |
+| Rate Limit (req/min) | 100 | 1000 | 10000 | Unlimited |
+| Max Users | 5 | 50 | 500 | Unlimited |
+| ML Detection | No | Yes | Yes | Yes |
+| Compliance Reports | No | No | Yes | Yes |
+| SSO/SAML | No | Yes | Yes | Yes |
+| Multi-Tenancy | No | No | Yes | Yes |
+| Behavioral Analysis | No | No | No | Yes |
 
 ---
 
@@ -85,165 +60,122 @@ AegisGate follows an **Open Core** business model:
 
 ### Prerequisites
 
-| Requirement | Minimum | Recommended |
-|-------------|---------|-------------|
-| **Go** | 1.21+ | 1.23+ |
-| **Docker** | 20.10+ | Latest |
-| **Kubernetes** | 1.24+ | 1.28+ |
-| **Memory** | 512 MB | 2 GB |
-| **CPU** | 1 core | 2+ cores |
+| Requirement | Minimum Version |
+|-------------|-----------------|
+| Go | 1.21+ |
+| Docker | Latest |
 
-### Option 1: Docker (Recommended)
+### Docker
 
 ```bash
-# Pull the official image
-docker pull aegisgate/aegisgate:latest
-
-# Run with basic configuration
-docker run -d \
-  --name aegisgate \
-  -p 8080:8080 \
-  -e TARGET_URL=https://api.openai.com \
-  -e TIER=community \
-  aegisgate/aegisgate:latest
-
-# Test the proxy
-curl http://localhost:8080/health
-```
-
-### Option 2: Docker Compose
-
-```bash
-# Clone the repository
-git clone https://github.com/aegisgatesecurity/aegisgate.git
-cd aegisgate
-
-# Start with Docker Compose
 docker-compose up -d
 ```
 
-### Option 3: From Source
+Access the dashboard at: http://localhost:8080
+
+### From Source
 
 ```bash
-# Clone the repository
 git clone https://github.com/aegisgatesecurity/aegisgate.git
 cd aegisgate
-
-# Build the binary
 make build
+./bin/aegisgate -tier community
+```
 
-# Run the proxy
-./bin/aegisgate --target https://api.openai.com --tier community
+### Configuration
+
+```bash
+export AEGISGATE_BIND=0.0.0.0:8080
+export AEGISGATE_TARGET=https://api.openai.com
+export AEGISGATE_TIER=community
 ```
 
 ---
 
-## Configuration
+## Architecture
 
-### Environment Variables
+AegisGate acts as a secure proxy between your applications and AI providers:
 
-| Variable | Description | Default | Required |
-|----------|-------------|---------|----------|
-| `TARGET_URL` | AI provider URL | - | Yes |
-| `TIER` | License tier | `community` | No |
-| `PORT` | HTTP listen port | `8080` | No |
-
-### Configuration File
-
-Create a `config.yaml`:
-
-```yaml
-server:
-  host: 0.0.0.0
-  port: 8080
-
-upstream:
-  url: https://api.openai.com
-  timeout: 30s
-
-security:
-  tier: professional
-  rate_limit: 5000
-  ml_detection: true
-```
+- **Proxy Layer** - HTTP/HTTPS proxy with request/response inspection
+- **Security Scanner** - Multi-layer threat detection (prompt injection, PII, malware)
+- **ML Engine** - Anomaly detection and behavioral analysis
+- **Compliance Engine** - Policy enforcement for SOC2, GDPR, HIPAA, etc.
+- **Metrics** - Prometheus-compatible metrics export
+- **Dashboard** - Web-based administration interface
 
 ---
 
-## Enterprise
+## Tiers and Pricing
 
-### Contact Sales
+| Tier | Price | Best For |
+|------|-------|----------|
+| Community | Free | Individuals, learning |
+| Developer | $29/mo | Startups |
+| Professional | $99/mo | Teams, businesses |
+| Enterprise | Custom | Large organizations |
 
-For enterprise licensing and custom deployments:
-
-- **Email**: sales@aegisgatesecurity.io
-- **Web**: https://aegisgatesecurity.io/contact
-
-### Enterprise Features
-
-| Feature | Description |
-|---------|-------------|
-| **Custom SLAs** | 99.99% uptime guarantees |
-| **Dedicated Infrastructure** | Isolated clusters |
-| **Custom Compliance** | Industry-specific frameworks |
-| **24/7 Support** | Dedicated support team |
-| **Migration Assistance** | Zero-downtime transitions |
+See https://aegisgatesecurity.io/pricing for complete feature comparison.
 
 ---
 
 ## Security
 
-### Vulnerability Reporting
+Report vulnerabilities to security@aegisgatesecurity.io
 
-If you discover a security vulnerability, please report it responsibly:
+See SECURITY.md for full disclosure guidelines.
 
-**DO NOT** create a public GitHub issue for security vulnerabilities.
+---
 
-- **Email**: security@aegisgatesecurity.io
-- **PGP**: https://aegisgatesecurity.io/security/pgp-key
+## Documentation
 
-See [SECURITY.md](SECURITY.md) for full security documentation.
+| Document | Description |
+|----------|-------------|
+| CHANGELOG.md | Release history and changes |
+| CONTRIBUTING.md | Contribution guidelines |
+| CODE_OF_CONDUCT.md | Community code of conduct |
+| SECURITY.md | Security policy and supported versions |
+| TODO.md | Future roadmap and feature planning |
+
+### API Reference
+
+```bash
+# Health check
+curl http://localhost:8080/health
+
+# Metrics
+curl http://localhost:9090/metrics
+
+# Version info
+curl http://localhost:8080/version
+```
+
+---
+
+## Contributing
+
+We welcome contributions! Please read CONTRIBUTING.md before submitting PRs.
+
+```bash
+git clone https://github.com/aegisgatesecurity/aegisgate.git
+cd aegisgate
+git checkout -b feature/your-feature
+make test
+git commit -m "Add your feature"
+git push origin feature/your-feature
+```
+
+---
+
+## Support
+
+| Resource | Link |
+|----------|------|
+| Documentation | https://docs.aegisgatesecurity.io |
+| GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
+| Website | https://aegisgatesecurity.io |
 
 ---
 
 ## License
 
-AegisGate is licensed under the **Apache License 2.0**.
-
-### Community Edition
-
-The Community Edition is open source and free to use under the Apache 2.0 license. See [LICENSE](LICENSE) for details.
-
-### Commercial Tiers
-
-Commercial use of Professional and Enterprise tiers requires a license agreement. Contact sales@aegisgatesecurity.io for details.
-
----
-
-## Quick Reference
-
-```bash
-# Docker Quick Start
-docker run -d -p 8080:8080 -e TARGET_URL=https://api.openai.com aegisgate/aegisgate:latest
-
-# Build from Source
-git clone https://github.com/aegisgatesecurity/aegisgate.git
-cd aegisgate
-make build
-./bin/aegisgate --target https://api.openai.com
-```
-
----
-
-<div align="center">
-
-### ⭐ Star us on GitHub!
-
-If AegisGate helps you secure your AI infrastructure, please star us!
-
-[![GitHub stars](https://img.shields.io/github/stars/aegisgatesecurity/aegisgate?style=social)](https://github.com/aegisgatesecurity/aegisgate)
-
----
-
-*© 2024-2026 AegisGate Security, Inc. All rights reserved.*
-
-</div>
+MIT License - Copyright 2024-2026 AegisGate Security. All rights reserved.
