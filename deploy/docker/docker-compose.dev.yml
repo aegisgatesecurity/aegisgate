@@ -1,0 +1,28 @@
+# Development override for ML testing
+# Usage: docker-compose -f docker-compose.ml.yml -f docker-compose.dev.yml up
+
+services:
+  aegisgate:
+    image: aegisgate/aegisgate:dev
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    environment:
+      - AEGISGATE_LOG_LEVEL=debug
+      - AEGISGATE_ML_ENABLED=true
+      - AEGISGATE_ML_SENSITIVITY=paranoid
+      - AEGISGATE_SIEM_ENABLED=false
+    volumes:
+      - ../../:/app
+      - ../../config:/config
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+      - "9090:9090"
+    command: ["--config", "/config/aegisgate.ml.yml"]
+
+  prometheus:
+    profiles: []  # Always include in dev
+
+  grafana:
+    profiles: []  # Always include in dev

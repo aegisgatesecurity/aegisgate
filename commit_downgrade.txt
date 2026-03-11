@@ -1,0 +1,1 @@
+Fix: Downgrade golang.org/x/net to v0.49.0 for Go 1.24 compatibility

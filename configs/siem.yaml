@@ -1,0 +1,333 @@
+# SIEM Integration Configuration for AegisGate AI Security Gateway
+# This file configures connections to external SIEM platforms for security event forwarding.
+
+# Global Settings
+global:
+  app_name: "aegisgate"
+  environment: "production"
+  default_severity: "info"
+  include_raw: true
+  add_hostname: true
+  # Optional: Override detected hostname
+  # hostname: "security-gateway-01"
+
+# Event Filtering
+filter:
+  # Minimum severity to forward (critical, high, medium, low, info)
+  min_severity: "info"
+  
+  # Include only these categories (empty = all)
+  include_categories: []
+  
+  # Exclude these categories
+  exclude_categories: []
+  
+  # Include only these event types (empty = all)
+  include_types: []
+  
+  # Exclude these event types
+  exclude_types:
+    - "health_check"
+    - "heartbeat"
+    - "metrics_poll"
+
+# Buffering Settings
+buffer:
+  enabled: true
+  max_size: 10000
+  flush_interval: 5s
+  # Persist buffer to disk for crash recovery
+  persist: false
+  persist_dir: "/var/lib/aegisgate/siem-buffer"
+
+# Platform Configurations
+# Enable and configure the SIEM platforms you want to use
+
+platforms:
+  # ===========================================================================
+  # Splunk Integration
+  # ===========================================================================
+  - platform: splunk
+    enabled: false
+    format: json
+    endpoint: "https://splunk.example.com:8088"
+    auth:
+      type: "api_key"
+      api_key: "YOUR_HEC_TOKEN"
+      api_key_header: "Authorization"
+    settings:
+      index: "security"
+      source_type: "aegisgate:security"
+      source: "aegisgate"
+      use_batch_api: true
+    tls:
+      enabled: true
+      insecure_skip_verify: false
+      # ca_file: "/etc/aegisgate/certs/ca.crt"
+    retry:
+      enabled: true
+      max_attempts: 3
+      initial_backoff: 1s
+      max_backoff: 30s
+      backoff_multiplier: 2.0
+      retry_on_status_codes:
+        - 429
+        - 500
+        - 502
+        - 503
+        - 504
+    batch:
+      enabled: true
+      max_size: 100
+      max_wait: 5s
+      max_bytes: 1048576
+
+  # ===========================================================================
+  # Elasticsearch Integration
+  # ===========================================================================
+  - platform: elasticsearch
+    enabled: false
+    format: json
+    endpoint: "https://elasticsearch.example.com:9200"
+    auth:
+      type: "basic"
+      username: "aegisgate"
+      password: "YOUR_PASSWORD"
+      # Or use API key:
+      # type: "api_key"
+      # api_key: "YOUR_API_KEY"
+    settings:
+      index: "aegisgate-security-{yyyy.MM.dd}"
+      data_stream: false
+      data_stream_type: "logs"
+      # pipeline: "aegisgate-pipeline"
+    tls:
+      enabled: true
+      insecure_skip_verify: false
+
+  # ===========================================================================
+  # IBM QRadar Integration
+  # ===========================================================================
+  - platform: qradar
+    enabled: false
+    format: leef  # Options: json, leef
+    endpoint: "https://qradar.example.com"
+    auth:
+      type: "api_key"
+      api_key: "YOUR_QRADAR_AUTH_TOKEN"
+    settings:
+      log_source_id: "LOG_SOURCE_ID"
+      log_source_name: "AegisGate Security Gateway"
+      use_leef: true
+      leef_version: "2.0"
+      event_collector_port: 514
+    tls:
+      enabled: true
+
+  # ===========================================================================
+  # Microsoft Sentinel Integration
+  # ===========================================================================
+  - platform: sentinel
+    enabled: false
+    format: json
+    endpoint: ""  # Derived from workspace_id if not set
+    auth:
+      type: "api_key"
+    settings:
+      workspace_id: "YOUR_WORKSPACE_ID"
+      shared_key: "YOUR_SHARED_KEY"
+      log_type: "AegisGateSecurity"
+      arm_endpoint: "https://management.azure.com"
+    tls:
+      enabled: true
+
+  # ===========================================================================
+  # Sumo Logic Integration
+  # ===========================================================================
+  - platform: sumologic
+    enabled: false
+    format: json
+    endpoint: "https://endpoint.sumologic.com/receiver/v1/http/YOUR_ENDPOINT"
+    settings:
+      source_category: "aegisgate/security"
+      source_name: "aegisgate"
+      source_host: ""  # Auto-detected if empty
+      use_gzip: false
+
+  # ===========================================================================
+  # LogRhythm Integration
+  # ===========================================================================
+  - platform: logrhythm
+    enabled: false
+    format: syslog
+    endpoint: ""  # Optional API endpoint
+    settings:
+      syslog_host: "logrhythm.example.com"
+      syslog_port: 514
+      protocol: "tls"  # Options: tcp, udp, tls
+      use_tls: true
+      log_source_identifier: "aegisgate"
+    tls:
+      enabled: true
+      insecure_skip_verify: false
+
+  # ===========================================================================
+  # ArcSight Integration
+  # ===========================================================================
+  - platform: arcsight
+    enabled: false
+    format: cef
+    endpoint: "https://arcsight.example.com:8443"
+    auth:
+      type: "basic"
+      username: "aegisgate"
+      password: "YOUR_PASSWORD"
+    settings:
+      cef_destination: "ESM"
+      device_vendor: "Block"
+      device_product: "AegisGate"
+      device_version: "1.0"
+      smart_connector_host: ""
+      smart_connector_port: 514
+    tls:
+      enabled: true
+
+  # ===========================================================================
+  # AWS CloudWatch Integration
+  # ===========================================================================
+  - platform: cloudwatch
+    enabled: false
+    format: json
+    endpoint: ""  # Uses AWS SDK default endpoint
+    auth:
+      type: "api_key"
+    settings:
+      region: "us-east-1"
+      log_group_name: "/aegisgate/security"
+      log_stream_name: ""  # Auto-generated if empty
+    # AWS credentials configured via:
+    # - AWS_ACCESS_KEY_ID / AWS_SECRET_ACCESS_KEY env vars
+    # - AWS credentials file (~/.aws/credentials)
+    # - IAM role (if running on EC2/ECS)
+
+  # ===========================================================================
+  # AWS Security Hub Integration
+  # ===========================================================================
+  - platform: securityhub
+    enabled: false
+    format: json
+    endpoint: ""
+    auth:
+      type: "api_key"
+    settings:
+      region: "us-east-1"
+      product_arn: ""  # Optional: Custom product ARN
+      # AWS credentials same as CloudWatch
+
+  # ===========================================================================
+  # Generic Syslog Integration
+  # ===========================================================================
+  - platform: syslog
+    enabled: false
+    format: syslog
+    endpoint: "syslog.example.com:514"
+    settings:
+      host: "syslog.example.com"
+      port: 514
+      protocol: "tcp"  # Options: tcp, udp, tls
+      rfc_5424: true
+      facility: 1  # User facility
+      app_name: "aegisgate"
+      message_id_prefix: "AEGISGATE"
+    tls:
+      enabled: false
+      insecure_skip_verify: false
+
+# ===========================================================================
+# Format-Specific Settings
+# ===========================================================================
+# These settings apply when using specific output formats
+
+# CEF (Common Event Format) - for ArcSight
+cef:
+  vendor: "Block"
+  product: "AegisGate AI Security Gateway"
+  version: "1.0"
+
+# LEEF (Log Event Extended Format) - for QRadar
+leef:
+  vendor: "Block"
+  product: "AegisGate"
+  version: "1.0"
+
+# Syslog (RFC 5424)
+syslog:
+  facility: 1  # User facility
+  app_name: "aegisgate"
+  hostname: ""  # Auto-detected if empty
+
+# ===========================================================================
+# Compliance Mappings
+# ===========================================================================
+# Automatically add compliance framework mappings to events
+
+compliance:
+  enabled: true
+  frameworks:
+    - name: "SOC2"
+      enabled: true
+      # Map event types to SOC2 controls
+      mappings:
+        blocked_request: "CC6.1,CC6.6"
+        auth_failure: "CC6.1,CC6.7"
+        config_change: "CC8.1"
+    - name: "PCI-DSS"
+      enabled: true
+      mappings:
+        blocked_request: "10.2.1,10.2.2"
+        auth_failure: "10.2.4,10.2.5"
+        data_access: "10.2.7"
+    - name: "HIPAA"
+      enabled: false
+    - name: "NIST-800-53"
+      enabled: false
+
+# ===========================================================================
+# MITRE ATT&CK Mapping
+# ===========================================================================
+# Automatically map security events to MITRE ATT&CK framework
+
+mitre:
+  enabled: true
+  # Map event types to techniques
+  mappings:
+    sql_injection:
+      tactic: "Initial Access"
+      technique: "T1190"
+    xss:
+      tactic: "Initial Access"
+      technique: "T1189"
+    command_injection:
+      tactic: "Execution"
+      technique: "T1059"
+    path_traversal:
+      tactic: "Initial Access"
+      technique: "T1083"
+    auth_brute_force:
+      tactic: "Credential Access"
+      technique: "T1110"
+    data_exfiltration:
+      tactic: "Exfiltration"
+      technique: "T1567"
+
+# ===========================================================================
+# Health Check Settings
+# ===========================================================================
+health_check:
+  enabled: true
+  interval: 30s
+  timeout: 10s
+  # Fail after this many consecutive failures
+  failure_threshold: 3
+  # Recovery after this many consecutive successes
+  recovery_threshold: 2

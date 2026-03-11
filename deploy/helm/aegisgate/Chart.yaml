@@ -1,0 +1,23 @@
+apiVersion: v2
+name: aegisgate
+description: Zero-Trust WebSocket Gateway
+icon: https://raw.githubusercontent.com/block/aegisgate/main/docs/logo.png
+type: application
+version: 0.2.0
+appVersion: "0.2.0"
+keywords:
+  - websocket
+  - gateway
+  - zero-trust
+  - security
+  - real-time
+home: https://github.com/block/aegisgate
+sources:
+  - https://github.com/block/aegisgate
+maintainers:
+  - name: Block Security Team
+    email: security@aegisgatesecurity.ioblock.xyz
+annotations:
+  category: Security
+  licenses: Apache-2.0
+dependencies: []

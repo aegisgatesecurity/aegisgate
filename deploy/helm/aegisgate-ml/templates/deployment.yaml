@@ -1,0 +1,165 @@
+{{- /*
+AegisGate ML-enabled Deployment Template
+*/ -}}
+{{- $fullName := include "aegisgate.fullname" . -}}
+{{- $svcPort := .Values.service.ports.https -}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $fullName }}
+  labels:
+    {{- include "aegisgate.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gateway
+spec:
+  replicas: {{ .Values.replicas | default 2 }}
+  selector:
+    matchLabels:
+      {{- include "aegisgate.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
+        {{- if .Values.podAnnotations }}
+        {{- toYaml .Values.podAnnotations | nindent 8 }}
+        {{- end }}
+      labels:
+        {{- include "aegisgate.selectorLabels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "aegisgate.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+        {{- if .Values.initContainers }}
+        {{- toYaml .Values.initContainers | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.global.imageRegistry }}/{{ .Values.global.imageRepository }}:{{ .Values.global.tag }}"
+          imagePullPolicy: {{ .Values.global.imagePullPolicy | default "IfNotPresent" }}
+          ports:
+            - name: https
+              containerPort: 8443
+              protocol: TCP
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: metrics
+              containerPort: 9090
+              protocol: TCP
+            - name: admin
+              containerPort: 8444
+              protocol: TCP
+          env:
+            # Server
+            - name: AEGISGATE_BIND_ADDRESS
+              value: {{ .Values.server.bindAddress | quote }}
+            - name: AEGISGATE_UPSTREAM
+              value: {{ .Values.server.upstream | quote }}
+            - name: AEGISGATE_TIMEOUT
+              value: {{ .Values.server.timeout | quote }}
+            
+            # ML Configuration
+            - name: AEGISGATE_ML_ENABLED
+              value: {{ .Values.ml.enabled | quote }}
+            - name: AEGISGATE_ML_SENSITIVITY
+              value: {{ .Values.ml.sensitivity | quote }}
+            - name: AEGISGATE_ML_SAMPLE_RATE
+              value: {{ .Values.ml.sampleRate | quote }}
+            - name: AEGISGATE_ML_BLOCK_CRITICAL
+              value: {{ .Values.ml.blockOnCritical | quote }}
+            - name: AEGISGATE_ML_BLOCK_HIGH
+              value: {{ .Values.ml.blockOnHigh | quote }}
+            
+            # ML Advanced
+            - name: AEGISGATE_ML_PROMPT_INJECTION
+              value: {{ .Values.mlAdvanced.promptInjection.enabled | quote }}
+            - name: AEGISGATE_ML_CONTENT_ANALYSIS
+              value: {{ .Values.mlAdvanced.contentAnalysis.enabled | quote }}
+            - name: AEGISGATE_ML_BEHAVIORAL_ANALYSIS
+              value: {{ .Values.mlAdvanced.behavioralAnalysis.enabled | quote }}
+            
+            # Compliance
+            - name: AEGISGATE_ATLAS_ENABLED
+              value: {{ .Values.compliance.atlas.enabled | quote }}
+            
+            # Logging
+            - name: AEGISGATE_LOG_LEVEL
+              value: {{ .Values.logging.level | quote }}
+            
+            # SIEM
+            {{- if .Values.siem.enabled }}
+            - name: AEGISGATE_SIEM_ENABLED
+              value: "true"
+            - name: SPLUNK_ENDPOINT
+              value: {{ .Values.siem.endpoint | quote }}
+            - name: SPLUNK_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ $fullName }}-secrets
+                  key: splunk-key
+            {{- end }}
+            
+            # Custom env vars
+            {{- range .Values.env }}
+            - name: {{ .name }}
+              value: {{ .value | quote }}
+            {{- end }}
+          
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          
+          livenessProbe:
+            {{- toYaml .Values.livenessProbe | nindent 12 }}
+          
+          readinessProbe:
+            {{- toYaml .Values.readinessProbe | nindent 12 }}
+          
+          securityContext:
+            {{- toYaml .Values.containerSecurityContext | nindent 12 }}
+          
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
+            - name: certs
+              mountPath: /certs
+              readOnly: true
+            - name: logs
+              mountPath: /var/log/aegisgate
+            {{- if .Values.extraVolumeMounts }}
+            {{- toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
+      
+      {{- if .Values.sidecars }}
+      {{- toYaml .Values.sidecars | nindent 6 }}
+      {{- end }}
+      
+      volumes:
+        - name: config
+          configMap:
+            name: {{ $fullName }}-config
+        - name: certs
+          secret:
+            secretName: {{ $fullName }}-certs
+            optional: true
+        - name: logs
+          emptyDir: {}
+        {{- if .Values.extraVolumes }}
+        {{- toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
+      
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

@@ -1,0 +1,14 @@
+# Padlock Production Docker Image
+FROM gcr.io/distroless/base-debian12
+
+WORKDIR /app
+
+COPY --from=builder /app/padlock /app/padlock
+COPY --from=builder /app/config /app/config
+
+EXPOSE 8080 8443
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/app/padlock"]
+CMD ["--config=/app/config/config.yaml"]

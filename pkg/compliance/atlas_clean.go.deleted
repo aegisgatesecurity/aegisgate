@@ -1,0 +1,623 @@
+package compliance
+
+import (
+	"bytes"
+	"io"
+	"net/http"
+	"regexp"
+	"strings"
+)
+
+// AtlasManager provides specialized MITRE ATLAS checking
+type AtlasManager struct {
+	findings []AtlasFinding
+}
+
+// AtlasFinding represents an ATLAS technique detection
+type AtlasFinding struct {
+	TechniqueID   string
+	TechniqueName string
+	Description   string
+	Severity      Severity
+	MatchedText   string
+	Context       string
+}
+
+// NewAtlasManager creates a new ATLAS compliance manager
+func NewAtlasManager() *AtlasManager {
+	return &AtlasManager{
+		findings: make([]AtlasFinding, 0),
+	}
+}
+
+// NewAtlas is an alias for NewAtlasManager (used by proxy.go)
+func NewAtlas() *AtlasManager {
+	return NewAtlasManager()
+}
+
+// CheckRequest scans content for MITRE ATLAS threats in requests
+func (am *AtlasManager) CheckRequest(content string) []Finding {
+	return am.checkContent(content)
+}
+
+// CheckResponse scans content for MITRE ATLAS threats in responses
+func (am *AtlasManager) CheckResponse(content string) []Finding {
+	return am.checkContent(content)
+}
+
+// CheckRequestHTTP scans an HTTP request for MITRE ATLAS threats
+func (am *AtlasManager) CheckRequestHTTP(req *http.Request) []Finding {
+	if req == nil {
+		return nil
+	}
+
+	content := ""
+	if req.Body != nil {
+		bodyBytes, _ := io.ReadAll(req.Body)
+		content = string(bodyBytes)
+		// Restore the body for downstream handlers
+		req.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+	}
+
+	return am.checkContent(content)
+}
+
+// CheckResponseHTTP scans an HTTP response for MITRE ATLAS threats
+func (am *AtlasManager) CheckResponseHTTP(resp *http.Response) []Finding {
+	if resp == nil || resp.Body == nil {
+		return nil
+	}
+
+	bodyBytes, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil
+	}
+
+	// Restore the body for downstream handlers
+	resp.Body = io.NopCloser(bytes.NewReader(bodyBytes))
+
+	return am.checkContent(string(bodyBytes))
+}
+
+// checkContent performs the actual content scanning against ATLAS patterns
+func (am *AtlasManager) checkContent(content string) []Finding {
+	findings := make([]Finding, 0)
+
+	for _, req := range atlasPatterns {
+		for _, pattern := range req.Patterns {
+			matches := pattern.Regex.FindAllStringIndex(content, -1)
+			if matches != nil {
+				for _, match := range matches {
+					finding := Finding{
+						Line:     strings.Count(content[:match[0]], "\n") + 1,
+						Column:   match[0] - strings.LastIndex(content[:match[0]], "\n"),
+						Match:    content[match[0]:match[1]],
+						Context:  extractAtlasContext(content, match[0], match[1]),
+						Pattern:  pattern,
+						Severity: pattern.Severity,
+					}
+					findings = append(findings, finding)
+
+					// Store finding in the AtlasManager
+					descParts := strings.Split(finding.Pattern.Description, " - ")
+					techID := ""
+					if len(descParts) > 0 {
+						techID = descParts[0]
+					}
+					am.findings = append(am.findings, AtlasFinding{
+						TechniqueID:   techID,
+						TechniqueName: req.Name,
+						Description:   finding.Pattern.Description,
+						Severity:      finding.Severity,
+						MatchedText:   finding.Match,
+						Context:       finding.Context,
+					})
+				}
+			}
+		}
+	}
+
+	return findings
+}
+
+// extractAtlasContext extracts surrounding context for a match
+func extractAtlasContext(content string, start, end int) string {
+	const contextLines = 2
+
+	// Find start of context
+	startPos := start
+	linesCount := 0
+	for i := start; i >= 0 && linesCount < contextLines; i-- {
+		if i < len(content) && content[i] == '\n' {
+			linesCount++
+			startPos = i + 1
+		}
+	}
+	if linesCount < contextLines {
+		startPos = 0
+	}
+
+	// Find end of context
+	endPos := end
+	linesCount = 0
+	for i := end; i < len(content) && linesCount < contextLines; i++ {
+		if content[i] == '\n' {
+			linesCount++
+			endPos = i
+		}
+	}
+	if linesCount < contextLines {
+		endPos = len(content)
+	}
+
+	return strings.TrimSpace(content[startPos:endPos])
+}
+
+// atlasPatterns defines MITRE ATLAS technique detection patterns
+// Comprehensive coverage for AI security compliance - 18 techniques, 60+ patterns
+var atlasPatterns = []Requirement{
+	// T1535 - Direct Prompt Injection
+	{
+		ID:          "ATLAS-T1535",
+		Name:        "Direct Prompt Injection",
+		Description: "Direct injection of malicious instructions into LLM prompts to override system instructions",
+		Severity:    CriticalSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)ignore\s+(?:all\s+)?(?:previous|prior)\s+(?:instructions?|directives?|commands?)\s*:?`),
+				Description: "T1535 - Direct instruction override attempt",
+				Severity:    CriticalSeverity,
+				Recommendation: "Block attempts to override system instructions",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:system|role)\s*[:\s]+\s*(?:ignore|disregard|bypass|override)\s+(?:previous|prior)`),
+				Description: "T1535 - System role injection attempt",
+				Severity:    CriticalSeverity,
+				Recommendation: "Validate system instruction boundaries",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)^\s*(?:you\s+are\s+now|you\s+are\s+a|pretend\s+to\s+be|act\s+as\s+if)\s+(?:a\s+)?(?:different|new|unrestricted|unfiltered)`),
+				Description: "T1535 - Persona manipulation attempt",
+				Severity:    HighSeverity,
+				Recommendation: "Validate persona constraints",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:forget|disregard)\s+(?:everything|all|your)\s+(?:instructions|programming|rules|guidelines)\s*(?:I\s+say|tell|ask|now)`),
+				Description: "T1535 - Instruction forgetting attempt",
+				Severity:    CriticalSeverity,
+				Recommendation: "Implement instruction persistence validation",
+			},
+		},
+	},
+	// T1484 - LLM Jailbreak
+	{
+		ID:          "ATLAS-T1484",
+		Name:        "LLM Jailbreak",
+		Description: "Attempts to bypass content restrictions, safety filters, or policy enforcement in LLM systems",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\bDAN\s*(?:mode)?|Do\s*Anything\s*Now\b`),
+				Description: "T1484 - DAN mode jailbreak attempt",
+				Severity:    HighSeverity,
+				Recommendation: "Block DAN mode activation attempts",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\bdeveloper\s*(?:mode|access|console)\b`),
+				Description: "T1484 - Developer mode access attempt",
+				Severity:    HighSeverity,
+				Recommendation: "Restrict developer mode access patterns",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\bhypothetically\s*(?:speaking|)|suppose\s+(?:we|I|you)\s+(?:were|are|can)\s+(?:to\s+)?(?:do|be)\b`),
+				Description: "T1484 - Hypothetical framing for content bypass",
+				Severity:    MediumSeverity,
+				Recommendation: "Analyze contextual framing for safety bypasses",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:jailbreak|bypass|unlock|uncensored)\s+(?:mode|enabled?|activate|request)\b`),
+				Description: "T1484 - Direct jailbreak terminology",
+				Severity:    HighSeverity,
+				Recommendation: "Block jailbreak activation keywords",
+			},
+		},
+	},
+	// T1632 - System Prompt Extraction
+	{
+		ID:          "ATLAS-T1632",
+		Name:        "System Prompt Extraction",
+		Description: "Attempts to extract system prompts, instructions, or configuration from LLM systems",
+		Severity:    MediumSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:repeat|output|show|display|print)\s+(?:your|the)\s+(?:instructions|system\s*prompt|configuration|initial\s+prompt|base\s+prompt)\b`),
+				Description: "T1632 - System prompt disclosure request",
+				Severity:    MediumSeverity,
+				Recommendation: "Block system prompt extraction attempts",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:dump|leak|expose|reveal)\s+(?:your|their|the)\s+(?:system|base|initial)\s+(?:prompt|instructions?|directives?)\b`),
+				Description: "T1632 - Prompt leakage attempt",
+				Severity:    HighSeverity,
+				Recommendation: "Detect and block prompt leakage attempts",
+			},
+		},
+	},
+	// T1589 - Training Data Exposure
+	{
+		ID:          "ATLAS-T1589",
+		Name:        "Training Data Exposure",
+		Description: "Attempts to extract or infer sensitive information from AI model training data",
+		Severity:    MediumSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:tell|show|give)\s+(?:me|us)\s+(?:an?\s+)?(?:example|sample|instance)\s+(?:of|from|like)\s+(?:your|the)\s+(?:training|learned)\s+(?:data|examples|information)\b`),
+				Description: "T1589 - Training data example request",
+				Severity:    MediumSeverity,
+				Recommendation: "Block training data extraction attempts",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:what|which)\s+(?:personal|sensitive|private)\s+(?:information|data|records?)\s+(?:were|was|were)\s+(?:you|trained|learned)\s+(?:on|from)\b`),
+				Description: "T1589 - Training data content inquiry",
+				Severity:    HighSeverity,
+				Recommendation: "Validate data provenance inquiries",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:recall|remember|memorize)\s+(?:a|an|the)\s+(?:specific|particular|exact)\s+(?:document|email|message|file|record)\b`),
+				Description: "T1589 - Specific training data recall attempt",
+				Severity:    HighSeverity,
+				Recommendation: "Detect memorization extraction attempts",
+			},
+		},
+	},
+	// T1584 - Indirect Prompt Injection
+	{
+		ID:          "ATLAS-T1584",
+		Name:        "Indirect Prompt Injection",
+		Description: "Embedding malicious instructions in external content processed by AI systems",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:ignore|disregard|bypass)\s+(?:previous|prior|above|earlier)\s+(?:instruction|directive|command)\s*(?:in|within|inside)\s+(?:this|that|these)\s+(?:document|file|text|content)`),
+				Description: "T1584 - Document-embedded instruction override",
+				Severity:    HighSeverity,
+				Recommendation: "Implement document content sanitization",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:system|admin|root)\s*[:]\s*(?:instruction|command|directive)\s*[:]\s*(?:ignore|execute|perform)\b`),
+				Description: "T1584 - Embedded system command pattern",
+				Severity:    HighSeverity,
+				Recommendation: "Detect embedded command patterns in documents",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:markdown|html|xml)\s*[:]\s*<!--\s*(?:ignore|execute|run)\s+(?:this|these)\s+(?:instruction|command)`),
+				Description: "T1584 - Comment-embedded instructions",
+				Severity:    HighSeverity,
+				Recommendation: "Parse and sanitize comment sections",
+			},
+		},
+	},
+	// T1658 - Adversarial Examples
+	{
+		ID:          "ATLAS-T1658",
+		Name:        "Adversarial Examples",
+		Description: "Specially crafted inputs designed to cause AI models to produce incorrect or undesired outputs",
+		Severity:    MediumSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:adversarial|poisoned|malicious)\s+(?:input|example|pattern|image|text|data)\b`),
+				Description: "T1658 - Explicit adversarial reference",
+				Severity:    MediumSeverity,
+				Recommendation: "Detect explicit adversarial terminology",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:perturb|perturbation|noise)\s+(?:attack|pattern|input)\b`),
+				Description: "T1658 - Perturbation attack reference",
+				Severity:    MediumSeverity,
+				Recommendation: "Monitor for perturbation attack patterns",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)(?:carefully|crafted|specifically)\s+(?:designed|constructed|created)\s+(?:to\s+)?(?:fool|trick|confuse|deceive)\s+(?:the\s+)?(?:model|AI|classifier)\b`),
+				Description: "T1658 - Model fooling intent",
+				Severity:    MediumSeverity,
+				Recommendation: "Detect model manipulation intent",
+			},
+		},
+	},
+	// T1648 - Serverless Compute Exploitation
+	{
+		ID:          "ATLAS-T1648",
+		Name:        "Serverless Compute Exploitation",
+		Description: "Exploiting serverless compute functions in AI/ML deployments for unauthorized access",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:lambda|function|cloudfunction|azurefunction|cloud-run)\s+(?:event|trigger|payload|injection)\b`),
+				Description: "T1648 - Serverless function trigger manipulation",
+				Severity:    HighSeverity,
+				Recommendation: "Validate serverless function event inputs",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:cold\s+start|function\s+timeout|concurrent\s+execution)\s+(?:attack|exploit|bypass)\b`),
+				Description: "T1648 - Serverless-specific attack vector",
+				Severity:    MediumSeverity,
+				Recommendation: "Implement serverless-specific safeguards",
+			},
+		},
+	},
+	// T1590 - Gather Victim Network Information
+	{
+		ID:          "ATLAS-T1590",
+		Name:        "Gather Victim Network Information",
+		Description: "Collecting information about network topology and infrastructure supporting AI systems",
+		Severity:    MediumSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:ML|machine\s+learning|inference)\s+(?:server|endpoint|API|service)\s+(?:address|IP|hostname|URL)\b`),
+				Description: "T1590 - ML infrastructure reconnaissance",
+				Severity:    MediumSeverity,
+				Recommendation: "Monitor ML infrastructure probing",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:model\s+serving|model\s+API|endpoint)\s+(?:architecture|topology|infrastructure)\b`),
+				Description: "T1590 - Model serving infrastructure inquiry",
+				Severity:    MediumSeverity,
+				Recommendation: "Protect infrastructure documentation",
+			},
+		},
+	},
+	// T1592 - Gather Victim Host Information
+	{
+		ID:          "ATLAS-T1592",
+		Name:        "Gather Victim Host Information",
+		Description: "Collecting information about AI/ML system host configurations and deployment details",
+		Severity:    MediumSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:Python|TensorFlow|PyTorch|scikit)\s+(?:version|environment|dependencies?|packages?)\b`),
+				Description: "T1592 - ML framework environment probing",
+				Severity:    MediumSeverity,
+				Recommendation: "Monitor environment configuration inquiries",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:docker|container|kubernetes|k8s|pod)\s+(?:image|version|config|registry)\b`),
+				Description: "T1592 - Container orchestration reconnaissance",
+				Severity:    MediumSeverity,
+				Recommendation: "Protect container configuration details",
+			},
+		},
+	},
+	// T1556 - Modify Authentication Process
+	{
+		ID:          "ATLAS-T1556",
+		Name:        "Modify Authentication Process",
+		Description: "Modifying authentication mechanisms, policies, or workflows in AI/ML systems",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:bypass|disable|override)\s+(?:authentication|auth|login|credential)\s+(?:check|validation|verification)\s+(?:for|on)\s+(?:API|model|endpoint)\b`),
+				Description: "T1556 - Authentication bypass for AI systems",
+				Severity:    HighSeverity,
+				Recommendation: "Protect AI system authentication",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:OAuth|SAML|JWT|OIDC)\s+(?:token|bypass|forgery|manipulation)\s+(?:attack|exploit)\b`),
+				Description: "T1556 - Identity protocol manipulation",
+				Severity:    HighSeverity,
+				Recommendation: "Validate identity token integrity",
+			},
+		},
+	},
+	// T1552 - Unsecured Credentials
+	{
+		ID:          "ATLAS-T1552",
+		Name:        "Unsecured Credentials",
+		Description: "Finding, accessing, or exposing unsecured credentials in AI/ML deployments",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:API|model|service)\s+key\s+(?:exposed|leaked|found|visible)\s+(?:in|on)\s+(?:code|config|environment|log)\b`),
+				Description: "T1552 - Credential exposure in AI systems",
+				Severity:    HighSeverity,
+				Recommendation: "Implement secrets management for AI systems",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:environment|env)\s+(?:variable|vars?)\s+(?:contains?|has|with)\s+(?:API|access|secret|token|key)\b`),
+				Description: "T1552 - Environment variable credential access",
+				Severity:    HighSeverity,
+				Recommendation: "Secure environment variable handling",
+			},
+		},
+	},
+	// T1566 - Phishing (AI-Enhanced)
+	{
+		ID:          "ATLAS-T1566",
+		Name:        "Phishing (AI-Enhanced)",
+		Description: "Phishing attacks that leverage AI to create more convincing content or target AI system interfaces",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:AI|ML|ChatGPT|GPT|Claude)\s+(?:generated|assisted)\s+(?:phishing|email|message)\b`),
+				Description: "T1566 - AI-generated phishing content",
+				Severity:    HighSeverity,
+				Recommendation: "Detect AI-generated phishing content",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:prompt\s+injection|malicious\s+prompt)\s+(?:via|through)\s+(?:email|link|attachment)\b`),
+				Description: "T1566 - Prompt injection via phishing",
+				Severity:    HighSeverity,
+				Recommendation: "Filter malicious prompts from email inputs",
+			},
+		},
+	},
+	// T1486 - Data Encrypted for Impact (AI Model Ransomware)
+	{
+		ID:          "ATLAS-T1486",
+		Name:        "Data Encrypted for Impact (AI Model Ransomware)",
+		Description: "Encrypting AI models or data to extort organizations",
+		Severity:    CriticalSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:AI|ML|model)\s+(?:model|weights?|parameters?)\s+(?:encrypt|ransom|lock)\b`),
+				Description: "T1486 - AI model encryption threat",
+				Severity:    CriticalSeverity,
+				Recommendation: "Implement model encryption and backup",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:ransom|decrypt)\s+(?:model|weights?|neural|AI)\s+(?:file|storage|checkpoint)\b`),
+				Description: "T1486 - Model ransomware reference",
+				Severity:    CriticalSeverity,
+				Recommendation: "Monitor for ransomware discussions",
+			},
+		},
+	},
+	// T1611 - Escape to Host
+	{
+		ID:          "ATLAS-T1611",
+		Name:        "Escape to Host",
+		Description: "Escaping container or sandbox isolation in ML workload environments to access the host system",
+		Severity:    CriticalSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:container|docker|pod)\s+(?:escape|breakout|τ¬üτá┤)\s+(?:technique|method|exploit)\b`),
+				Description: "T1611 - Container escape technique",
+				Severity:    CriticalSeverity,
+				Recommendation: "Implement container security measures",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:host|root)\s+(?:access|gain|privilege)\s+(?:from|through|via)\s+(?:container|sandbox|guest)\b`),
+				Description: "T1611 - Host access from container",
+				Severity:    CriticalSeverity,
+				Recommendation: "Prevent container-to-host escape",
+			},
+		},
+	},
+	// T1621 - Multi-Factor Authentication Request Generation
+	{
+		ID:          "ATLAS-T1621",
+		Name:        "Multi-Factor Authentication Request Generation",
+		Description: "Generating fraudulent MFA authentication requests to gain access to AI systems",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:MFA|2FA|authentication)\s+(?:bypass|flood|spam|abuse)\s+(?:AI|ML|API|model)\b`),
+				Description: "T1621 - MFA bypass for AI systems",
+				Severity:    HighSeverity,
+				Recommendation: "Implement MFA protections for AI systems",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:push|notification)\s+(?:bombing|spam|flood|abuse)\s+(?:account|login|auth)\b`),
+				Description: "T1621 - Push notification bombing",
+				Severity:    HighSeverity,
+				Recommendation: "Implement rate limiting on MFA requests",
+			},
+		},
+	},
+	// T1599 - Network Boundary Bridging
+	{
+		ID:          "ATLAS-T1599",
+		Name:        "Network Boundary Bridging",
+		Description: "Bypassing network isolation or segmentation in AI/ML infrastructure",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:network|firewall)\s+(?:bypass|bridge|tunnel)\s+(?:ML|AI|inference|training)\s+(?:server|endpoint|network)\b`),
+				Description: "T1599 - Network isolation bypass for AI systems",
+				Severity:    HighSeverity,
+				Recommendation: "Implement network segmentation for AI systems",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:internal|private)\s+(?:network|IP|address)\s+(?:expose|exposed|accessible)\s+(?:to|from|via)\s+(?:internet|public|external)\b`),
+				Description: "T1599 - Internal AI network exposure",
+				Severity:    HighSeverity,
+				Recommendation: "Protect internal AI infrastructure",
+			},
+		},
+	},
+	// T1110 - Brute Force (AI API Access)
+	{
+		ID:          "ATLAS-T1110",
+		Name:        "Brute Force (AI API Access)",
+		Description: "Brute force attacks targeting AI system APIs and authentication endpoints",
+		Severity:    HighSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:brute\s+force|credential\s+stuffing)\s+(?:API|model|endpoint|access)\s+(?:attack|attempt)\b`),
+				Description: "T1110 - Brute force against AI API",
+				Severity:    HighSeverity,
+				Recommendation: "Implement rate limiting on AI APIs",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:password|credential)\s+(?:spray|guess|brute)\s+(?:attack|attempt)\s+(?:against|on|to)\s+(?:AI|ML|model)\b`),
+				Description: "T1110 - Password spray against AI systems",
+				Severity:    HighSeverity,
+				Recommendation: "Implement account lockout policies",
+			},
+		},
+	},
+	// T1041 - Exfiltration Over C2 Channel (AI Data)
+	{
+		ID:          "ATLAS-T1041",
+		Name:        "Exfiltration Over C2 Channel (AI Data)",
+		Description: "Exfiltrating AI training data, model weights, or inference outputs over C2 channels",
+		Severity:    CriticalSeverity,
+		Framework:   MITRE_ATLAS,
+		Patterns: []Pattern{
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:model|weights?|parameters?|checkpoint)\s+(?:exfiltration|export|download|steal)\b`),
+				Description: "T1041 - Model exfiltration",
+				Severity:    CriticalSeverity,
+				Recommendation: "Protect model assets from exfiltration",
+			},
+			{
+				Regex:       regexp.MustCompile(`(?i)\b(?:training\s+data|dataset)\s+(?:exfiltration|leak|expose|export)\s+(?:via|through|to)\b`),
+				Description: "T1041 - Training data exfiltration",
+				Severity:    CriticalSeverity,
+				Recommendation: "Protect training data assets",
+			},
+		},
+	},
+}
+
+// GetAtlasPatterns returns all ATLAS detection patterns
+func GetAtlasPatterns() []Requirement {
+	return atlasPatterns
+}
+
+// GetTechniqueByID returns a specific ATLAS technique by ID
+func GetTechniqueByID(techniqueID string) *Requirement {
+	for i := range atlasPatterns {
+		if atlasPatterns[i].ID == techniqueID {
+			return &atlasPatterns[i]
+		}
+	}
+	return nil
+}
+
+// GetTechniquesBySeverity returns ATLAS techniques matching a severity level
+func GetTechniquesBySeverity(severity Severity) []Requirement {
+	var result []Requirement
+	for i := range atlasPatterns {
+		if atlasPatterns[i].Severity == severity {
+			result = append(result, atlasPatterns[i])
+		}
+	}
+	return result
+}

@@ -1,0 +1,68 @@
+?   	github.com/aegisgatesecurity/aegisgate/cmd/debug	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/cmd/gencerts	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/cmd/aegisgate	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/examples	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/adapters	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/api	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/auth	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/certificate	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/compliance	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/common	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/community/atlas	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/community/gdpr	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/community/owasp	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/enterprise/iso42001	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/enterprise/nist	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/hipaa	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/pci	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/premium/hipaa	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/premium/pci	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/compliance/premium/soc2	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/config	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/core	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/core/license	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/crypto/enhanced	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/crypto/fips	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/dashboard	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/graphql	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/pkg/grpc	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/hash_chain	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/i18n	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/filesystem	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/integrity	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/logging	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/readonly	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/rollback	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/snapshot	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/wal	0.823s
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/immutable-config/watcher	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/metrics	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/middleware	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/ml	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/opsec	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/pkiattest	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/plugin	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/plugin/examples	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/proxy	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/pkg/reporting	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/sandbox	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/scanner	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/secrets	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/security	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/siem	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/signature_verification	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/sso	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/tenant	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/threatintel	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/tls	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/trustdomain	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/webhook	(cached)
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/websocket	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/sdk/go	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/tests/integration	(cached)
+?   	github.com/aegisgatesecurity/aegisgate/tests/integration/aiapifixtures	[no test files]
+ok  	github.com/aegisgatesecurity/aegisgate/tests/load	(cached) [no tests to run]
+?   	github.com/aegisgatesecurity/aegisgate/tests/security/compliance	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/tests/security/fuzzing	[no test files]
+?   	github.com/aegisgatesecurity/aegisgate/tests/security/penetration	[no test files]

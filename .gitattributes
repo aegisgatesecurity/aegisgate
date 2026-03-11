@@ -1,0 +1,26 @@
+# Linguist configuration for Padlock
+# Mark documentation and vendored files
+
+# Documentation - exclude from language stats
+*.md linguist-documentation
+*.mdx linguist-documentation
+docs/** linguist-documentation
+
+# Vendor directories - exclude from language stats
+vendor/** linguist-vendored
+ui/frontend/node_modules/** linguist-vendored
+
+# Frontend files (included but secondary)
+*.js linguist-language=JavaScript
+*.html linguist-language=HTML
+*.css linguist-language=CSS
+
+# Configuration files
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+
+# Mark Go as primary language for statistics
+*.go linguist-language=Go
+
+# Ensure Go is detected as primary
+*.go linguist-detectable=true

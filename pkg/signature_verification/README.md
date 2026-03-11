@@ -1,0 +1,1 @@
+Signature Verification Package - Provides comprehensive digital signature verification for threat intel packages. Supports RSA, ECDSA, and Ed25519 algorithms. Features include key management, signature verification, audit logging, and strict mode. API includes SignatureValidationService and KeyManagementService.

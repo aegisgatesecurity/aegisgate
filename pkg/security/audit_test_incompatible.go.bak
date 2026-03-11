@@ -1,0 +1,389 @@
+package security
+
+import (
+	"bytes"
+	"context"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+	"time"
+)
+
+func TestAuditLogger_Log(t *testing.T) {
+	logger := NewAuditLogger()
+
+	entry := AuditEntry{
+		Timestamp:   time.Now(),
+		Action:      "LOGIN",
+		UserID:      "user123",
+		IP:          "192.168.1.1",
+		Resource:    "/api/login",
+		Status:      "SUCCESS",
+		Details:     "User logged in successfully",
+	}
+
+	err := logger.Log(entry)
+	if err != nil {
+		t.Errorf("AuditLogger.Log() error = %v", err)
+	}
+}
+
+func TestAuditLogger_Log_EmptyEntry(t *testing.T) {
+	logger := NewAuditLogger()
+
+	entry := AuditEntry{
+		Timestamp: time.Now(),
+		Action:    "TEST",
+		Status:    "SUCCESS",
+	}
+
+	// Empty entries should still be logged without error
+	err := logger.Log(entry)
+	if err != nil {
+		t.Errorf("AuditLogger.Log() should not error on empty entry: %v", err)
+	}
+}
+
+func TestAuditLogger_Log_MultipleEntries(t *testing.T) {
+	logger := NewAuditLogger()
+
+	entries := []AuditEntry{
+		{Timestamp: time.Now(), Action: "CREATE", UserID: "user1", Status: "SUCCESS"},
+		{Timestamp: time.Now(), Action: "READ", UserID: "user2", Status: "SUCCESS"},
+		{Timestamp: time.Now(), Action: "UPDATE", UserID: "user1", Status: "SUCCESS"},
+		{Timestamp: time.Now(), Action: "DELETE", UserID: "user3", Status: "DENIED"},
+	}
+
+	for _, entry := range entries {
+		err := logger.Log(entry)
+		if err != nil {
+			t.Errorf("AuditLogger.Log() error for action %s: %v", entry.Action, err)
+		}
+	}
+}
+
+func TestAuditMiddleware(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Hello"))
+	}))
+
+	req := httptest.NewRequest("GET", "/api/test", nil)
+	req.Header.Set("X-Forwarded-For", "10.0.0.1")
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+
+	if capturedEntry.Action != "GET /api/test" {
+		t.Errorf("Action = %s, want GET /api/test", capturedEntry.Action)
+	}
+
+	if capturedEntry.IP != "10.0.0.1" {
+		t.Errorf("IP = %s, want 10.0.0.1", capturedEntry.IP)
+	}
+
+	if capturedEntry.Status != "SUCCESS" {
+		t.Errorf("Status = %s, want SUCCESS", capturedEntry.Status)
+	}
+}
+
+func TestAuditMiddleware_FailedRequest(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Forbidden"))
+	}))
+
+	req := httptest.NewRequest("POST", "/api/admin", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+
+	if capturedEntry.Action != "POST /api/admin" {
+		t.Errorf("Action = %s, want POST /api/admin", capturedEntry.Action)
+	}
+
+	if capturedEntry.Status != "DENIED" {
+		t.Errorf("Status = %s, want DENIED for failed request", capturedEntry.Status)
+	}
+}
+
+func TestAuditMiddleware_WithUserID(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Simulate setting user ID in context
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/api/user", nil)
+	// Add user context
+	ctx := context.WithValue(req.Context(), "user_id", "testuser123")
+	req = req.WithContext(ctx)
+
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+
+	if capturedEntry.UserID != "testuser123" {
+		t.Errorf("UserID = %s, want testuser123", capturedEntry.UserID)
+	}
+}
+
+func TestAuditMiddleware_LargeResponse(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Write large response
+		for i := 0; i < 1000; i++ {
+			w.Write([]byte("data"))
+		}
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/api/large", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+
+	if capturedEntry.Action != "GET /api/large" {
+		t.Errorf("Action = %s, want GET /api/large", capturedEntry.Action)
+	}
+}
+
+func TestAuditEntry_Validation(t *testing.T) {
+	tests := []struct {
+		name    string
+		entry   AuditEntry
+		wantErr bool
+	}{
+		{
+			name: "valid entry",
+			entry: AuditEntry{
+				Timestamp: time.Now(),
+				Action:    "LOGIN",
+				Status:    "SUCCESS",
+			},
+			wantErr: false,
+		},
+		{
+			name: "empty action",
+			entry: AuditEntry{
+				Timestamp: time.Now(),
+				Action:    "",
+				Status:    "SUCCESS",
+			},
+			wantErr: false, // Should still be loggable
+		},
+		{
+			name: "zero timestamp",
+			entry: AuditEntry{
+				Timestamp: time.Time{},
+				Action:    "TEST",
+				Status:    "SUCCESS",
+			},
+			wantErr: false, // Should still be loggable
+		},
+	}
+
+	logger := NewAuditLogger()
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			err := logger.Log(tt.entry)
+			if (err != nil) != tt.wantErr {
+				t.Errorf("AuditLogger.Log() error = %v, wantErr %v", err, tt.wantErr)
+			}
+		})
+	}
+}
+
+func TestAuditLogger_ConcurrentLogging(t *testing.T) {
+	logger := NewAuditLogger()
+
+	done := make(chan bool, 50)
+
+	for i := 0; i < 50; i++ {
+		go func(id int) {
+			entry := AuditEntry{
+				Timestamp: time.Now(),
+				Action:    "CONCURRENT",
+				UserID:    string(rune('A' + id%26)),
+				Status:    "SUCCESS",
+			}
+			err := logger.Log(entry)
+			done <- boolErr(err == nil)
+		}(i)
+	}
+
+	successCount := 0
+	for i := 0; i < 50; i++ {
+		if receive(done) {
+			successCount++
+		}
+	}
+
+	if successCount != 50 {
+		t.Errorf("Concurrent logging: %d/50 succeeded", successCount)
+	}
+}
+
+func TestAuditMiddleware_Methods(t *testing.T) {
+	var lastEntry AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			lastEntry = entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	methods := []string{"GET", "POST", "PUT", "DELETE", "PATCH", "HEAD", "OPTIONS"}
+
+	for _, method := range methods {
+		t.Run(method, func(t *testing.T) {
+			var body *bytes.Buffer
+			if method == "POST" || method == "PUT" || method == "PATCH" {
+				body = bytes.NewBufferString("test data")
+			} else {
+				body = bytes.NewBuffer(nil)
+			}
+
+			req := httptest.NewRequest(method, "/api/resource", body)
+			rr := httptest.NewRecorder()
+
+			handler.ServeHTTP(rr, req)
+
+			expectedAction := method + " /api/resource"
+			if lastEntry.Action != expectedAction {
+				t.Errorf("Action = %s, want %s", lastEntry.Action, expectedAction)
+			}
+		})
+	}
+}
+
+func TestAuditMiddleware_QueryParams(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/api/search?q=test&limit=10", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+
+	// Action should include the full path with query string
+	if !strings.Contains(capturedEntry.Action, "/api/search") {
+		t.Errorf("Action should contain full path, got: %s", capturedEntry.Action)
+	}
+}
+
+func TestAuditMiddleware_UserAgent(t *testing.T) {
+	var capturedEntry *AuditEntry
+
+	logger := &mockAuditLogger{
+		logFunc: func(entry AuditEntry) error {
+			capturedEntry = &entry
+			return nil
+		},
+	}
+
+	handler := AuditMiddleware(logger, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/api/test", nil)
+	req.Header.Set("User-Agent", "TestAgent/1.0")
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if capturedEntry == nil {
+		t.Fatal("Audit entry was not captured")
+	}
+}
+
+// Mock audit logger for testing
+type mockAuditLogger struct {
+	logFunc func(entry AuditEntry) error
+}
+
+func (m *mockAuditLogger) Log(entry AuditEntry) error {
+	if m.logFunc != nil {
+		return m.logFunc(entry)
+	}
+	return nil
+}
+
+func boolErr(b bool) bool {
+	return b
+}
+
+func receive(done chan bool) bool {
+	return done
+}
+

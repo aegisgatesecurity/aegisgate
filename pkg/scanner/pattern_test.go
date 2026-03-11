@@ -1,0 +1,1 @@
+Get-Content -Path 'C:\Users\Administrator\Desktop\Testing\AegisGate\pkg\scanner\pattern_test.go'

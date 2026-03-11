@@ -1,0 +1,310 @@
+# Default values for AegisGate ML-enabled deployment
+# This file supports the full ML anomaly detection feature set
+
+## Global settings
+global:
+  imagePullSecrets: []
+  imageRegistry: ghcr.io
+  imageRepository: aegisgatesecurity/aegisgate
+  tag: "latest"
+  serviceAccount:
+    create: true
+    name: ""
+
+## Server Configuration
+server:
+  bindAddress: ":8443"
+  upstream: "http://llm-backend:8080"
+  timeout: 30s
+  shutdownTimeout: 60s
+  maxBodySize: 10485760  # 10MB
+  maxConns: 1000
+
+## Rate Limiting
+rateLimit:
+  enabled: true
+  requestsPerMinute: 1000
+  burst: 100
+
+## TLS Configuration
+tls:
+  enabled: true
+  mode: "self-signed"  # Options: self-signed, letsencrypt, external
+  certDir: "/certs"
+  # For Let's Encrypt
+  letsencrypt:
+    email: ""
+    domains: []
+    directoryUrl: "https://acme-v02.api.letsencrypt.org/directory"
+
+## ML Anomaly Detection (Core Feature)
+ml:
+  enabled: true
+  # Sensitivity: low, medium, high, paranoid
+  sensitivity: "medium"
+  # Blocking configuration
+  blockOnCritical: true
+  blockOnHigh: false
+  minScoreToBlock: 3.0
+  # Sampling (use lower values for high-throughput)
+  sampleRate: 100
+  # Exclusions
+  excludedPaths:
+    - /health
+    - /ready
+    - /metrics
+    - /status
+  excludedMethods:
+    - OPTIONS
+    - HEAD
+  # Logging
+  logAllAnomalies: true
+
+## Advanced ML Features
+mlAdvanced:
+  # Prompt Injection Detection
+  promptInjection:
+    enabled: true
+    sensitivity: 75  # 0-100
+  # Content Analysis (LLM Response Inspection)
+  contentAnalysis:
+    enabled: true
+  # Behavioral Analysis
+  behavioralAnalysis:
+    enabled: true
+  # Model Parameters
+  windowSize: 1000
+  zThreshold: 3.0
+  minSamples: 10
+  entropyThreshold: 4.5
+
+## Compliance Frameworks
+compliance:
+  # MITRE ATLAS (AI/ML Threat Framework)
+  atlas:
+    enabled: true
+    blockCritical: true
+  # HIPAA (Healthcare)
+  hipaa:
+    enabled: false
+    module: "premium"
+  # PCI-DSS (Payment Cards)
+  pci:
+    enabled: false
+    module: "premium"
+  # SOC 2
+  soc2:
+    enabled: false
+  # NIST AI RMF
+  nist:
+    enabled: false
+
+## SIEM Integration
+siem:
+  enabled: false
+  format: "splunk"  # splunk, elastic, qradar, chronicle, syslog
+  endpoint: ""
+  apiKey: ""
+  rfc5424:
+    enabled: true
+
+## Security Settings
+security:
+  fips:
+    enabled: false
+  auditLogging:
+    enabled: true
+    path: "/var/log/aegisgate/audit.log"
+  opsec:
+    enabled: true
+  immutableConfig:
+    enabled: true
+  wal:
+    enabled: true
+  snapshot:
+    enabled: true
+  maxMemoryMb: 512
+  securityHeaders:
+    enabled: true
+  allowedMethods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+    - HEAD
+
+## Logging
+logging:
+  level: "info"  # debug, info, warn, error
+  json: true
+  outputs:
+    - type: stdout
+    - type: file
+      path: "/var/log/aegisgate/aegisgate.log"
+      maxSizeMb: 100
+      maxBackups: 10
+
+## Observability
+observability:
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+  health:
+    enabled: true
+    port: 8080
+    path: "/health"
+    readyPath: "/ready"
+  tracing:
+    enabled: false
+
+## Admin UI
+admin:
+  ui:
+    enabled: true
+    tlsEnabled: true
+  api:
+    enabled: true
+    port: 8444
+
+## Service Configuration
+service:
+  type: ClusterIP
+  ports:
+    http: 80
+    https: 443
+    health: 8080
+    metrics: 9090
+    admin: 8444
+  # Load balancer annotations
+  annotations: {}
+
+## Ingress Configuration
+ingress:
+  enabled: true
+  className: "nginx"
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/proxy-body-size: "50m"
+  hosts:
+    - host: aegisgate.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: aegisgate-tls
+      hosts:
+        - aegisgate.example.com
+
+## Resources
+resources:
+  limits:
+    cpu: "2"
+    memory: 2Gi
+  requests:
+    cpu: "500m"
+    memory: 512Mi
+
+## Autoscaling
+autoscaling:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+## Pod annotations
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "9090"
+  prometheus.io/path: "/metrics"
+
+## Pod security context
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+## Container security context
+containerSecurityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+## Liveness and readiness probes
+livenessProbe:
+  httpGet:
+    path: /health
+    port: 8080
+  initialDelaySeconds: 10
+  periodSeconds: 30
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+readinessProbe:
+  httpGet:
+    path: /ready
+    port: 8080
+  initialDelaySeconds: 5
+  periodSeconds: 10
+  timeoutSeconds: 3
+  failureThreshold: 3
+
+## Node selection
+nodeSelector: {}
+
+## Tolerations
+tolerations: []
+
+## Affinity
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchLabels:
+              app: aegisgate
+          topologyKey: kubernetes.io/hostname
+
+## Persistence
+persistence:
+  enabled: true
+  storageClass: "standard"
+  accessMode: ReadWriteOnce
+  size: 10Gi
+  annotations: {}
+
+## Volume mounts
+extraVolumeMounts: []
+
+## Environment variables (secret values)
+env: []
+
+## Init containers
+initContainers: []
+
+## Sidecar containers
+sidecars: []
+
+## Network policies
+networkPolicy:
+  enabled: true
+  egress:
+    - to:
+        - namespaceSelector: {}
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 443
+
+## Pod disruption budget
+podDisruptionBudget:
+  enabled: true
+  minAvailable: 1
