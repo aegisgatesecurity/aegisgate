@@ -34,7 +34,7 @@ WORKDIR /app
 
 # Copy binary from builder
 COPY --from=builder /build/padlock /app/padlock
-COPY config/padlock.yml.example /app/padlock.yml
+COPY config/aegisgate.yml.example /app/padlock.yml
 
 # Use non-root user
 USER padlock
