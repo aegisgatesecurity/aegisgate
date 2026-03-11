@@ -1,0 +1,23 @@
+module github.com/jcolvin1056/padlock
+
+go 1.23
+
+replace (
+	github.com/jcolvin1056/padlock/pkg/alerting => ./pkg/alerting
+	github.com/jcolvin1056/padlock/pkg/api => ./pkg/api
+	github.com/jcolvin1056/padlock/pkg/certificate => ./pkg/certificate
+	github.com/jcolvin1056/padlock/pkg/certmanager => ./pkg/certmanager
+	github.com/jcolvin1056/padlock/pkg/cli => ./pkg/cli
+	github.com/jcolvin1056/padlock/pkg/compliance => ./pkg/compliance
+	github.com/jcolvin1056/padlock/pkg/config => ./pkg/config
+	github.com/jcolvin1056/padlock/pkg/inspector => ./pkg/inspector
+	github.com/jcolvin1056/padlock/pkg/logging => ./pkg/logging
+	github.com/jcolvin1056/padlock/pkg/metrics => ./pkg/metrics
+	github.com/jcolvin1056/padlock/pkg/opsec => ./pkg/opsec
+	github.com/jcolvin1056/padlock/pkg/proxy => ./pkg/proxy
+	github.com/jcolvin1056/padlock/pkg/scanner => ./pkg/scanner
+	github.com/jcolvin1056/padlock/pkg/scanner/llm => ./pkg/scanner/llm
+	github.com/jcolvin1056/padlock/pkg/scanner/matcher => ./pkg/scanner/matcher
+	github.com/jcolvin1056/padlock/pkg/scanner/regex => ./pkg/scanner/regex
+	github.com/jcolvin1056/padlock/pkg/tls => ./pkg/tls
+)

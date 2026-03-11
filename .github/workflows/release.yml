@@ -1,0 +1,313 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Version to release (e.g., v0.21.2)'
+        required: true
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+  GO_VERSION: '1.24'
+
+jobs:
+  # ============================================
+  # Phase 0: Version Consistency Check
+  # ============================================
+  version-check:
+    name: Verify Version Consistency
+    runs-on: self-hosted
+    outputs:
+      version: ${{ steps.extract.outputs.version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Extract version from tag
+        id: extract
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ github.event.inputs.version }}"
+          } else {
+            $version = "${{ github.ref_name }}"
+          }
+          # Remove 'v' prefix for comparison
+          $versionNum = $version.TrimStart('v')
+          Write-Output "version=$version" >> $env:GITHUB_OUTPUT
+          Write-Output "version_num=$versionNum" >> $env:GITHUB_OUTPUT
+          Write-Host "Release version: $version"
+
+      - name: Verify VERSION file matches
+        shell: pwsh
+        run: |
+          $expectedVersion = (Get-Content VERSION -Raw).Trim()
+          $tagVersion = "${{ steps.extract.outputs.version_num }}"
+          Write-Host "VERSION file: $expectedVersion"
+          Write-Host "Tag version: $tagVersion"
+          if ($expectedVersion -ne $tagVersion) {
+            Write-Host "::warning::VERSION file ($expectedVersion) does not match tag version ($tagVersion)"
+          }
+
+      - name: Verify CHANGELOG has entry
+        shell: pwsh
+        run: |
+          $version = "${{ steps.extract.outputs.version_num }}"
+          $escapedVersion = [regex]::Escape($version)
+          $pattern = "\[$escapedVersion\]|## $escapedVersion"
+          if (Select-String -Path CHANGELOG.md -Pattern $pattern -Quiet) {
+            Write-Host "CHANGELOG.md has entry for $version"
+          } else {
+            Write-Host "::warning::CHANGELOG.md may be missing entry for $version"
+          }
+
+  # ============================================
+  # Phase 1: Run Tests
+  # ============================================
+  test:
+    name: Run Tests
+    needs: version-check
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Download dependencies
+        run: go mod download
+
+      - name: Run tests
+        # Note: -race flag removed because self-hosted Windows runner lacks GCC
+        # Race detection requires CGO which requires a C compiler
+        shell: pwsh
+        run: |
+          # Clean up any leftover artifacts from previous runs
+          Get-ChildItem -Recurse -Force -Directory -Filter ".out" -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse
+          if (Test-Path "coverage.out") { Remove-Item "coverage.out" -Force }
+          go test -v "-coverprofile=coverage.out" ./...
+
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage.out
+
+  # ============================================
+  # Phase 2: Build Cross-Platform Binaries
+  # ============================================
+  build-binaries:
+    name: Build Binaries
+    needs: test
+    runs-on: self-hosted
+    strategy:
+      matrix:
+        include:
+          # Linux
+          - goos: linux
+            goarch: amd64
+            suffix: -linux-amd64
+          - goos: linux
+            goarch: arm64
+            suffix: -linux-arm64
+          - goos: linux
+            goarch: "386"
+            suffix: -linux-386
+          # Windows
+          - goos: windows
+            goarch: amd64
+            suffix: -windows-amd64.exe
+          - goos: windows
+            goarch: arm64
+            suffix: -windows-arm64.exe
+          # macOS
+          - goos: darwin
+            goarch: amd64
+            suffix: -darwin-amd64
+          - goos: darwin
+            goarch: arm64
+            suffix: -darwin-arm64
+          # FreeBSD
+          - goos: freebsd
+            goarch: amd64
+            suffix: -freebsd-amd64
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Build binary
+        shell: pwsh
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          $OUTPUT_NAME = "padlock${{ matrix.suffix }}"
+          Write-Host "Building for ${{ matrix.goos }}/${{ matrix.goarch }} -> $OUTPUT_NAME"
+          $env:CGO_ENABLED = "0"
+          go build -ldflags "-s -w -X main.Version=${{ needs.version-check.outputs.version }}" -trimpath -o "$OUTPUT_NAME" ./cmd/padlock
+          Get-Item "$OUTPUT_NAME"
+
+      - name: Calculate checksum
+        shell: pwsh
+        run: |
+          $OUTPUT_NAME = "padlock${{ matrix.suffix }}"
+          $hash = Get-FileHash "$OUTPUT_NAME" -Algorithm SHA256
+          "$($hash.Hash)  $OUTPUT_NAME" | Out-File -FilePath "$($OUTPUT_NAME).sha256" -Encoding ascii
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: |
+            padlock-*
+            *.sha256
+
+  # ============================================
+  # Phase 3: Generate SBOM
+  # ============================================
+  generate-sbom:
+    name: Generate SBOM
+    needs: build-binaries
+    runs-on: self-hosted
+    permissions:
+      contents: read
+      packages: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Syft
+        shell: pwsh
+        run: |
+          $latest = (Invoke-RestMethod "https://api.github.com/repos/anchore/syft/releases/latest").tag_name
+          $versionNum = $latest.TrimStart('v'); $url = "https://github.com/anchore/syft/releases/download/$latest/syft_$versionNum" + "_windows_amd64.zip"
+          Write-Host "Downloading Syft from $url"
+          Invoke-WebRequest -Uri $url -OutFile "syft.zip"
+          Expand-Archive -Path "syft.zip" -DestinationPath "C:\syft" -Force
+          echo "C:\syft" >> $env:GITHUB_PATH
+
+      - name: Generate SBOM
+        run: |
+          C:\syft\syft.exe dir:./ -o cyclonedx-json > sbom.cyclonedx.json
+          C:\syft\syft.exe dir:./ -o spdx-json > sbom.spdx.json
+          C:\syft\syft.exe dir:./ -o table > sbom.txt
+
+      - name: Upload SBOM
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: |
+            sbom.cyclonedx.json
+            sbom.spdx.json
+            sbom.txt
+          retention-days: 30
+
+  # ============================================
+  # Phase 4: Create GitHub Release
+  # ============================================
+  create-release:
+    name: Create GitHub Release
+    needs: [version-check, build-binaries, generate-sbom]
+    runs-on: self-hosted
+    permissions:
+      contents: write
+      packages: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download release artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: binaries-*
+          path: artifacts
+          merge-multiple: true
+
+      - name: Download SBOM artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: sbom
+          path: artifacts/sbom
+
+      - name: Prepare release assets
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path release
+          
+          # Copy all binaries
+          Get-ChildItem -Path artifacts -Filter "padlock-*" -Recurse | Copy-Item -Destination release
+          
+          # Copy SBOM
+          if (Test-Path "artifacts/sbom") {
+            New-Item -ItemType Directory -Force -Path release/sbom
+            Copy-Item -Path artifacts/sbom/* -Destination release/sbom
+          }
+          
+          # Generate checksums file
+          Set-Location release
+          $binaries = Get-ChildItem -Filter "padlock-*"
+          if ($binaries) {
+            $checksums = @()
+            foreach ($file in $binaries) {
+              $hash = Get-FileHash $file -Algorithm SHA256
+              $checksums += "$($hash.Hash)  $($file.Name)"
+            }
+            $checksums | Out-File -FilePath checksums.txt -Encoding ascii
+          }
+          
+          Get-ChildItem
+
+      - name: Extract changelog for this version
+        id: changelog
+        shell: pwsh
+        run: |
+          $version = "${{ needs.version-check.outputs.version_num }}"
+          Write-Host "Extracting changelog for version: $version"
+          
+          # Extract changelog section for this version
+          $content = Get-Content CHANGELOG.md -Raw
+          $versionEscaped = [regex]::Escape($version)
+          $pattern = "(?s)## \[?$versionEscaped\]?[-\s\[].*?(?=## \[|## \[Unreleased\]|$)"
+          if ($content -match $pattern) {
+            $notes = $Matches[0]
+            # Write to file for release notes
+            $notes | Out-File -FilePath release_notes.md -Encoding utf8
+            Write-Host "Changelog extracted successfully"
+          } else {
+            Write-Host "No changelog entry found for $version"
+            "Release notes not available." | Out-File -FilePath release_notes.md -Encoding utf8
+          }
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          name: Padlock ${{ needs.version-check.outputs.version }}
+          body_path: release_notes.md
+          files: |
+            release/padlock-*
+            release/checksums.txt
+            release/sbom/*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

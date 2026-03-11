@@ -1,0 +1,82 @@
+# AegisGate Configuration File
+# Version: 0.40.3
+
+# Server Configuration
+bind_address: ":8443"
+cert_dir: "./certs"
+upstream: "https://api.openai.com"
+
+# Connection Settings
+max_body_size: 10485760  # 10MB in bytes
+max_conns: 1000
+timeout: 30s
+shutdown_timeout: 60s
+rate_limit: 1000  # requests per minute
+
+# Logging
+log_level: "info"  # debug, info, warn, error
+
+# TLS Configuration (optional)
+tls:
+  enabled: false
+  cert_file: "/path/to/server.crt"
+  key_file: "/path/to/server.key"
+  ca_file: "/path/to/ca.crt"
+  skip_verify: false
+
+# ML Anomaly Detection
+ml:
+  enabled: true
+  sensitivity: "medium"  # low, medium, high, paranoid
+  block_on_critical: true
+  block_on_high: false
+  min_score_to_block: 3.0
+  sample_rate: 100  # 0-100, percentage of requests to analyze
+  excluded_paths:
+    - "/health"
+    - "/ready"
+    - "/metrics"
+  excluded_methods:
+    - "OPTIONS"
+    - "HEAD"
+  log_all_anomalies: true
+  enable_prompt_injection: true
+  prompt_injection_sensitivity: 75
+  enable_content_analysis: true
+  enable_behavioral_analysis: true
+  window_size: 1000
+  z_threshold: 3.0
+  min_samples: 10
+  entropy_threshold: 4.5
+
+# Plugin Configuration
+plugins:
+  enabled: false
+  directories:
+    - "./plugins"
+  timeout: 30s
+  enable_periodic: false
+  plugin_settings: {}
+
+# Security Configuration
+security:
+  enable_fips: false
+  enable_audit_logging: true
+  audit_log_path: "/var/log/aegisgate/audit.log"
+  enable_opsec: true
+  enable_immutable_config: true
+  enable_readonly_fs: false
+  enable_wal: true
+  enable_snapshot: true
+  enable_rollback: true
+  max_memory_mb: 512
+  enable_security_headers: true
+  allowed_methods:
+    - "GET"
+    - "POST"
+    - "PUT"
+    - "DELETE"
+    - "PATCH"
+    - "HEAD"
+  blocked_ips: []
+  allowed_hosts: []

@@ -1,0 +1,1 @@
+ok  	github.com/aegisgatesecurity/aegisgate/pkg/security	0.708s

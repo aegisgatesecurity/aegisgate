@@ -1,0 +1,12 @@
+{
+    "exclude": [
+        "G104", // Errors unhandled - common in Go for methods that intentionally ignore errors (e.g., Write calls in HTTP responses)
+        "G706"  // Log injection - false positive for structured logging with controlled field names
+    ],
+    "include": [],
+    "rules": [],
+    "asc": false,
+    "nosec": true,
+    "confidence": "HIGH",
+    "severity": "LOW"
+}

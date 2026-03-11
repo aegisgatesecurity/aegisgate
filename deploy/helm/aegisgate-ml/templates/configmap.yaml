@@ -1,0 +1,67 @@
+{{- /*
+Generate config.yaml from values
+*/ -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aegisgate.fullname" . }}-config
+  labels:
+    {{- include "aegisgate.labels" . | nindent 4 }}
+data:
+  aegisgate.yaml: |
+    server:
+      bind_address: {{ .Values.server.bindAddress | quote }}
+      upstream: {{ .Values.server.upstream | quote }}
+      timeout: {{ .Values.server.timeout | quote }}
+      max_body_size: {{ .Values.server.maxBodySize }}
+    
+    ml:
+      enabled: {{ .Values.ml.enabled }}
+      sensitivity: {{ .Values.ml.sensitivity | quote }}
+      block_on_critical: {{ .Values.ml.blockOnCritical }}
+      block_on_high: {{ .Values.ml.blockOnHigh }}
+      min_score_to_block: {{ .Values.ml.minScoreToBlock }}
+      sample_rate: {{ .Values.ml.sampleRate }}
+      excluded_paths:
+        {{- range .Values.ml.excludedPaths }}
+        - {{ . | quote }}
+        {{- end }}
+      excluded_methods:
+        {{- range .Values.ml.excludedMethods }}
+        - {{ . | quote }}
+        {{- end }}
+      log_all_anomalies: {{ .Values.ml.logAllAnomalies }}
+    
+    ml_advanced:
+      enable_prompt_injection: {{ .Values.mlAdvanced.promptInjection.enabled }}
+      prompt_injection_sensitivity: {{ .Values.mlAdvanced.promptInjection.sensitivity }}
+      enable_content_analysis: {{ .Values.mlAdvanced.contentAnalysis.enabled }}
+      enable_behavioral_analysis: {{ .Values.mlAdvanced.behavioralAnalysis.enabled }}
+      window_size: {{ .Values.mlAdvanced.windowSize }}
+      z_threshold: {{ .Values.mlAdvanced.zThreshold }}
+      min_samples: {{ .Values.mlAdvanced.minSamples }}
+      entropy_threshold: {{ .Values.mlAdvanced.entropyThreshold }}
+    
+    compliance:
+      atlas:
+        enabled: {{ .Values.compliance.atlas.enabled }}
+      hipaa:
+        enabled: {{ .Values.compliance.hipaa.enabled }}
+      pci:
+        enabled: {{ .Values.compliance.pci.enabled }}
+      soc2:
+        enabled: {{ .Values.compliance.soc2.enabled }}
+      nist:
+        enabled: {{ .Values.compliance.nist.enabled }}
+    
+    logging:
+      level: {{ .Values.logging.level | quote }}
+      json: {{ .Values.logging.json }}
+    
+    observability:
+      metrics:
+        enabled: {{ .Values.observability.metrics.enabled }}
+        port: {{ .Values.observability.metrics.port }}
+      health:
+        enabled: {{ .Values.observability.health.enabled }}
+        port: {{ .Values.observability.health.port }}

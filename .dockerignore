@@ -1,0 +1,54 @@
+# Build artifacts
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+padlock-linux
+
+# Test artifacts
+*.test
+
+# Go workspace file
+go.work
+
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+docs/
+LICENSE
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Build files
+_archive/
+build/
+deploy/
+k8s/
+scripts/
+tests/
+ui/
+analysis/
+
+# Config files (not needed in Docker build)
+*.yml
+!config/*.yml
+Makefile
+
+# Temporary files
+*.log
+*.tmp
+temp_*

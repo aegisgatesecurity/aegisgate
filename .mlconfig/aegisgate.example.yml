@@ -1,0 +1,314 @@
+# Padlock Configuration - ML-Enabled Production Deployment
+# =====================================================
+#
+# This is a comprehensive configuration file for a production-ready
+# Padlock deployment with ML anomaly detection enabled.
+#
+# For more information, see: docs/CONFIGURATION.md
+
+# =============================================================================
+# SERVER CONFIGURATION
+# =============================================================================
+server:
+  # Network binding
+  bind_address: ":8443"
+  
+  # Upstream AI/LLM service
+  upstream: "https://your-llm-backend.example.com"
+  
+  # Timeouts
+  timeout: 30s
+  shutdown_timeout: 60s
+  
+  # Connection limits
+  max_conns: 1000
+  max_body_size: 10485760  # 10MB
+
+# =============================================================================
+# RATE LIMITING
+# =============================================================================
+rate_limit:
+  requests_per_minute: 1000
+  burst: 100
+
+# =============================================================================
+# TLS CONFIGURATION
+# =============================================================================
+tls:
+  # Use "letsencrypt", "internal", or "external"
+  provider: "letsencrypt"
+  
+  # For internal/self-signed
+  cert_dir: "./certs"
+  
+  # ACME settings (for Let's Encrypt)
+  acme:
+    email: "admin@example.com"
+    domains:
+      - "padlock.example.com"
+    directory_url: "https://acme-v02.api.letsencrypt.org/directory"
+
+# =============================================================================
+# ML ANOMALY DETECTION CONFIGURATION
+# =============================================================================
+ml:
+  # Enable ML-based anomaly detection
+  enabled: true
+  
+  # Sensitivity levels: low, medium, high, paranoid
+  # - low:    Minimal detection, lowest false positives
+  # - medium: Balanced detection (recommended)
+  # - high:   Aggressive detection
+  # - paranoid: Maximum detection, may have more false positives
+  sensitivity: "medium"
+  
+  # Blocking configuration
+  block_on_critical: true   # Block critical severity anomalies
+  block_on_high: false      # Don't block high severity by default
+  
+  # Minimum z-score to trigger blocking (2.0-5.0 recommended)
+  min_score_to_block: 3.0
+  
+  # Sample rate: percentage of requests to analyze (0-100)
+  # Use lower values for high-throughput environments
+  sample_rate: 100
+  
+  # Paths excluded from ML analysis
+  excluded_paths:
+    - /health
+    - /ready
+    - /metrics
+    - /status
+    
+  # HTTP methods excluded from ML analysis
+  excluded_methods:
+    - OPTIONS
+    - HEAD
+  
+  # Log all anomalies (not just blocked ones)
+  log_all_anomalies: true
+
+# =============================================================================
+# ADVANCED ML FEATURES
+# =============================================================================
+ml_advanced:
+  # Prompt Injection Detection
+  # Detects attempts to manipulate LLM behavior
+  enable_prompt_injection: true
+  prompt_injection_sensitivity: 75  # 0-100
+  
+  # Content Analysis (LLM Response Inspection)
+  # Scans LLM responses for PII, secrets, and policy violations
+  enable_content_analysis: true
+  
+  # Behavioral Analysis
+  # Tracks client behavior patterns for anomaly detection
+  enable_behavioral_analysis: true
+  
+  # ML Model Parameters
+  window_size: 1000        # Number of requests for baseline
+  z_threshold: 3.0          # Standard deviations for anomaly
+  min_samples: 10          # Samples before detection starts
+  entropy_threshold: 4.5   # Shannon entropy threshold
+
+# =============================================================================
+# PROMPT INJECTION DETECTION PATTERNS
+# =============================================================================
+prompt_injection:
+  # Custom patterns (regex) - add your own
+  custom_patterns:
+    - name: "confidential_keyword"
+      pattern: "(?i)(confidential|secret|classified|internal_only)"
+      severity: 3
+    - name: "override_attempt"
+      pattern: "(?i)(you_are_now|you_must_now|from_now_on)"
+      severity: 4
+
+# =============================================================================
+# COMPLIANCE FRAMEWORKS
+# =============================================================================
+compliance:
+  # MITRE ATLAS (AI/ML Threat Framework)
+  atlas:
+    enabled: true
+    # Block techniques: LLM01, LLM02, LLM03, etc.
+    block_critical: true
+    
+  # HIPAA (Healthcare)
+  hipaa:
+    enabled: false
+    module: "premium"  # premium requires license
+    block_phi_leaks: true
+    
+  # PCI-DSS (Payment Cards)
+  pci:
+    enabled: false
+    module: "premium"
+    block_card_data: true
+    
+  # SOC 2
+  soc2:
+    enabled: false
+    
+  # NIST AI RMF
+  nist:
+    enabled: false
+
+# =============================================================================
+# SIEM INTEGRATION
+# =============================================================================
+siem:
+  enabled: true
+  
+  # Output format: splunk, elastic, qradar, chronicle, syslog
+  format: "splunk"
+  
+  # Destination
+  endpoint: "https://splunk.example.com:8088"
+  api_key: "${SPLUNK_API_KEY}"
+  
+  # RFC 5424 compliance
+  rfc5424:
+    enabled: true
+    hostname: "padlock-gateway"
+    app_name: "padlock"
+    proc_id: "main"
+    
+  # What to send
+  send:
+    anomalies: true
+    blocks: true
+    metrics: true
+    audit: true
+
+# =============================================================================
+# SECURITY SETTINGS
+# =============================================================================
+security:
+  # FIPS 140-2 mode
+  enable_fips: false
+  
+  # Audit logging
+  enable_audit_logging: true
+  audit_log_path: "/var/log/padlock/audit.log"
+  
+  # OPSEC features
+  enable_opsec: true
+  enable_immutable_config: true
+  enable_readonly_fs: false
+  
+  # WAL and Snapshots (for config management)
+  enable_wal: true
+  enable_snapshot: true
+  enable_rollback: true
+  
+  # Memory limits
+  max_memory_mb: 512
+  
+  # Security headers
+  enable_security_headers: true
+  
+  # Allowed HTTP methods
+  allowed_methods:
+    - GET
+    - POST
+    - PUT
+    - DELETE
+    - PATCH
+    - HEAD
+    
+  # Blocked IP addresses
+  blocked_ips: []
+  
+  # Allowed hosts (empty = all)
+  allowed_hosts: []
+
+# =============================================================================
+# PLUGIN SYSTEM
+# =============================================================================
+plugins:
+  enabled: false
+  directories:
+    - "./plugins"
+  timeout: 30s
+  enable_periodic: false
+
+# =============================================================================
+# LOGGING
+# =============================================================================
+logging:
+  level: "info"  # debug, info, warn, error
+  
+  # Structured JSON logging
+  json: true
+  
+  # Output
+  outputs:
+    - type: "stdout"
+    - type: "file"
+      path: "/var/log/padlock/padlock.log"
+      max_size_mb: 100
+      max_backups: 10
+    - type: "file"
+      path: "/var/log/padlock/audit.log"
+      max_size_mb: 100
+      max_backups: 30
+
+# =============================================================================
+# OBSERVABILITY
+# =============================================================================
+observability:
+  # Metrics
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+    
+  # Health checks
+  health:
+    enabled: true
+    port: 8080
+    path: "/health"
+    ready_path: "/ready"
+    
+  # Tracing
+  tracing:
+    enabled: false
+    endpoint: "http://jaeger:14268/api/traces"
+    sample_rate: 0.1
+
+# =============================================================================
+# ADMINISTRATION
+# =============================================================================
+admin:
+  # Web UI
+  ui:
+    enabled: true
+    port: 8443
+    # TLS for admin UI (recommended)
+    tls_enabled: true
+    
+  # API
+  api:
+    enabled: true
+    port: 8444
+    # API key authentication
+    api_keys:
+      - "${ADMIN_API_KEY}"
+      
+  # Session settings
+  session:
+    timeout: 24h
+    max_concurrent: 5
+
+# =============================================================================
+# ENVIRONMENT VARIABLES
+# =============================================================================
+# The following environment variables can be used:
+# - PADLOCK_BIND_ADDRESS
+# - PADLOCK_UPSTREAM
+# - PADLOCK_LOG_LEVEL
+# - PADLOCK_ML_ENABLED
+# - PADLOCK_ML_SENSITIVITY
+# - SPLUNK_API_KEY
+# - ADMIN_API_KEY

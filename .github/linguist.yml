@@ -1,0 +1,92 @@
+# GitHub Linguist Configuration for Padlock
+# This file configures how GitHub detects and displays repository languages
+
+# Primary Implementation Language
+documentation: |
+  Padlock is implemented primarily in Go (version 1.23+) using only 
+  the Go standard library - zero external dependencies.
+  
+  The language breakdown is:
+  - Go: ~59% (38+ files) - Core WAF implementation
+  - JavaScript: ~19% (12 files) - Dashboard UI
+  - HTML: ~8% (5 files) - UI templates
+  - CSS: ~5% (3 files) - Styling
+  - YAML: ~6% (15+ files) - Config/K8s/CI-CD
+  - Shell: ~2% (8 files) - Build scripts
+  
+  Total Lines of Code: ~16,144
+
+# Language detection overrides
+# Mark documentation files
+documentation:
+  - docs/*.md
+  - *.md
+  - RELEASE_NOTES*.md
+  - SECURITY.md
+
+# Exclude generated/test files from language stats
+linguist-generated:
+  - "*_test.go"
+  - "vendor/*"
+  - "*.min.js"
+  - "*.min.css"
+
+# Mark vendored files
+linguist-vendored:
+  - "vendor/*"
+
+# Detectable languages (keep Go as primary)
+# This ensures Go is prominently featured on the repository landing page
+languages:
+  Go:
+    primary: true
+    pattern: 
+      - "**/*.go"
+    exclude:
+      - "**/*_test.go"
+    documentation: "Go 1.23+ (Standard Library Only)"
+  
+  JavaScript:
+    pattern:
+      - "ui/**/*.js"
+      - "ui/frontend/**/*.js"
+    documentation: "Frontend (Dashboard UI)"
+  
+  HTML:
+    pattern:
+      - "ui/**/*.html"
+    documentation: "UI Templates"
+  
+  CSS:
+    pattern:
+      - "ui/**/*.css"
+    documentation: "Styling"
+  
+  YAML:
+    pattern:
+      - ".github/**/*.yml"
+      - "deploy/**/*.yaml"
+      - "deploy/**/*.yml"
+      - "*.yml"
+    documentation: "Configuration & K8s"
+  
+  Shell:
+    pattern:
+      - "scripts/*.sh"
+      - "scripts/*.bat"
+    documentation: "Build Scripts"
+
+# Repository metadata
+repository:
+  primary_language: Go
+  language_version: "1.23+"
+  description: "AI Chatbot Security Gateway - Zero dependencies, production-ready WAF"
+  topics:
+    - waf
+    - security
+    - ai
+    - golang
+    - proxy
+    - machine-learning
+    - compliance
+    - zero-dependencies

@@ -1,0 +1,65 @@
+# Multi-platform Docker build for Padlock
+# Supports: linux/amd64, linux/arm64, linux/arm/v7
+
+# Stage 1: Build
+FROM --platform=$BUILDPLATFORM golang:1.24-alpine AS builder
+
+# Install cross-platform build tools
+RUN apk add --no-cache git musl-dev gcc
+
+# Set ARGs for cross-platform builds
+ARG TARGETOS
+ARG TARGETARCH
+
+# Set Go environment
+ENV CGO_ENABLED=1 \
+    GOOS=${TARGETOS} \
+    GOARCH=${TARGETARCH}
+
+WORKDIR /build
+
+# Copy and download dependencies
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source
+COPY cmd/ ./cmd/
+COPY pkg/ ./pkg/
+COPY config/ ./config/
+
+# Build for target platform
+RUN go build -o padlock ./cmd/padlock
+
+# Stage 2: Production
+FROM alpine:3.19
+
+RUN apk --no-cache add ca-certificates tzdata
+
+# Create non-root user
+RUN addgroup -g 1001 padlock && \
+    adduser -u 1001 -G padlock -s /bin/false -D padlock
+
+WORKDIR /app
+
+# Copy binary
+COPY --from=builder /build/padlock .
+COPY --from=builder /build/config/ ./config/
+
+# Set permissions
+RUN mkdir -p /app/certs /app/logs && \
+    chown -R padlock:padlock /app
+
+USER padlock
+
+EXPOSE 8443
+
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD wget --no-verbose --tries=1 --spider http://localhost:8443/health || exit 1
+
+ENTRYPOINT ["/app/padlock"]
+CMD ["--config", "/app/config/padlock.yml"]
+
+# Labels
+LABEL org.opencontainers.image.title="Padlock Chatbot Security Gateway" \
+      org.opencontainers.image.description="Real-time AI chatbot security gateway" \
+      org.opencontainers.image.version="v0.39.0"

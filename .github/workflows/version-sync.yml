@@ -1,0 +1,59 @@
+# Version Sync Workflow
+# Automatically ensures VERSION and cmd/padlock/main.go are aligned
+
+name: Version Sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - VERSION
+      - cmd/padlock/main.go
+  pull_request:
+    branches: [main]
+    paths:
+      - VERSION
+      - cmd/padlock/main.go
+
+jobs:
+  version-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read VERSION file
+        id: version
+        run: |
+          VERSION=$(cat VERSION | tr -d '[:space:]')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION file: $VERSION"
+
+      - name: Read main.go version
+        id: main_version
+        run: |
+          MAIN_VERSION=$(grep -o 'const version = "[^"]*"' cmd/padlock/main.go | grep -o '[0-9.]*')
+          echo "main_version=$MAIN_VERSION" >> $GITHUB_OUTPUT
+          echo "main.go version: $MAIN_VERSION"
+
+      - name: Sync VERSION to main.go (if VERSION changed)
+        if: steps.version.outputs.version != steps.main_version.outputs.main_version
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          sed -i "s/const version = \"[0-9.]*\"/const version = \"$VERSION\"/" cmd/padlock/main.go
+          echo "Updated main.go to version $VERSION"
+
+      - name: Commit and push if changed
+        if: steps.version.outputs.version != steps.main_version.outputs.main_version
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add cmd/padlock/main.go
+          git commit -m "chore: Sync version to ${{ steps.version.outputs.version }}"
+          git push

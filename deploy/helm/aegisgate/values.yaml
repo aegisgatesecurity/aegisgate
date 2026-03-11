@@ -1,0 +1,129 @@
+# Default values for AegisGate
+# This is a YAML-formatted file.
+
+replicaCount: 3
+
+image:
+  repository: block/aegisgate
+  pullPolicy: IfNotPresent
+  tag: "0.2.0"
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  annotations: {}
+  name: ""
+
+podAnnotations:
+  prometheus.io/scrape: "true"
+  prometheus.io/port: "8080"
+  prometheus.io/path: "/metrics"
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  fsGroup: 1000
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  wssPort: 8443
+  metricsPort: 8080
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: aegisgate.local
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: aegisgate-tls
+      hosts:
+        - aegisgate.local
+
+resources:
+  requests:
+    memory: "256Mi"
+    cpu: "250m"
+  limits:
+    memory: "512Mi"
+    cpu: "1000m"
+
+autoscaling:
+  enabled: true
+  minReplicas: 3
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity:
+  podAntiAffinity:
+    preferredDuringSchedulingIgnoredDuringExecution:
+      - weight: 100
+        podAffinityTerm:
+          labelSelector:
+            matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                  - aegisgate
+          topologyKey: kubernetes.io/hostname
+
+config:
+  server:
+    host: 0.0.0.0
+    port: 8443
+    max_connections: 10000
+    read_timeout: 30s
+    write_timeout: 30s
+  
+  websocket:
+    ping_interval: 30s
+    pong_timeout: 60s
+    max_message_size: 65536
+    compression: true
+  
+  security:
+    rate_limit: 100
+    burst_limit: 1000
+    tls_version: "1.3"
+    hsts_enabled: true
+  
+  logging:
+    level: info
+    format: json
+  
+  metrics:
+    enabled: true
+    port: 8080
+    path: /metrics
+
+secrets:
+  tls:
+    enabled: true
+    existingSecret: "aegisgate-tls"
+    certData: ""
+    keyData: ""
+
+networkPolicy:
+  enabled: true

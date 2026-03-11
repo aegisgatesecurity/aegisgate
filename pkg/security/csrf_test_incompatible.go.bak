@@ -1,0 +1,358 @@
+package security
+
+import (
+	"bytes"
+	"context"
+	"net/http"
+	"net/http/httptest"
+	"strings"
+	"testing"
+	"time"
+)
+
+func TestGenerateCSRFToken(t *testing.T) {
+	tests := []struct {
+		name    string
+		wantLen int
+	}{
+		{
+			name:    "generates valid token",
+			wantLen: 32,
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			token, err := generateCSRFToken()
+			if err != nil {
+				t.Fatalf("generateCSRFToken() error = %v", err)
+			}
+			if len(token) != tt.wantLen {
+				t.Errorf("generateCSRFToken() length = %d, want %d", len(token), tt.wantLen)
+			}
+			// Verify token contains only valid characters
+			validChars := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+			for _, ch := range token {
+				if !strings.ContainsRune(validChars, ch) {
+					t.Errorf("generateCSRFToken() contains invalid character: %c", ch)
+				}
+			}
+		})
+	}
+}
+
+func TestCSRFTokenUniqueness(t *testing.T) {
+	// Generate multiple tokens and ensure they're all unique
+	tokens := make(map[string]bool)
+	for i := 0; i < 100; i++ {
+		token, err := generateCSRFToken()
+		if err != nil {
+			t.Fatalf("generateCSRFToken() error = %v", err)
+		}
+		if tokens[token] {
+			t.Errorf("generateCSRFToken() generated duplicate token: %s", token)
+		}
+		tokens[token] = true
+	}
+}
+
+func TestCSRFMiddleware_GET(t *testing.T) {
+	// GET requests should be exempt from CSRF checks
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	}))
+
+	req := httptest.NewRequest("GET", "/test", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("GET request failed: got %d, want %d", rr.Code, http.StatusOK)
+	}
+
+	// Should set CSRF cookie
+	cookies := rr.Result().Cookies()
+	var csrfCookie *http.Cookie
+	for _, c := range cookies {
+		if c.Name == "csrf_token" {
+			csrfCookie = c
+			break
+		}
+	}
+	if csrfCookie == nil {
+		t.Error("CSRF cookie not set for GET request")
+	}
+}
+
+func TestCSRFMiddleware_POST_MissingToken(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("Handler should not be called without CSRF token")
+	}))
+
+	req := httptest.NewRequest("POST", "/test", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("POST without CSRF token: got %d, want %d", rr.Code, http.StatusForbidden)
+	}
+
+	body := strings.TrimSpace(rr.Body.String())
+	if !strings.Contains(body, "CSRF token required") {
+		t.Errorf("Expected error message about CSRF token, got: %s", body)
+	}
+}
+
+func TestCSRFMiddleware_POST_InvalidToken(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		t.Error("Handler should not be called with invalid CSRF token")
+	}))
+
+	req := httptest.NewRequest("POST", "/test", nil)
+	req.Header.Set("X-CSRF-Token", "invalid_token")
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusForbidden {
+		t.Errorf("POST with invalid CSRF token: got %d, want %d", rr.Code, http.StatusForbidden)
+	}
+}
+
+func TestCSRFMiddleware_POST_ValidToken(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Success"))
+	}))
+
+	// First, make a GET request to get a valid CSRF token
+	getReq := httptest.NewRequest("GET", "/test", nil)
+	getRr := httptest.NewRecorder()
+	handler.ServeHTTP(getRr, getReq)
+
+	// Extract the CSRF token from cookies
+	var csrfToken string
+	for _, c := range getRr.Result().Cookies() {
+		if c.Name == "csrf_token" {
+			csrfToken = c.Value
+			break
+		}
+	}
+
+	if csrfToken == "" {
+		t.Fatal("Failed to get CSRF token from GET request")
+	}
+
+	// Now make a POST request with the token
+	postReq := httptest.NewRequest("POST", "/test", nil)
+	postReq.Header.Set("X-CSRF-Token", csrfToken)
+	// Include the cookie
+	for _, c := range getRr.Result().Cookies() {
+		postReq.AddCookie(c)
+	}
+
+	postRr := httptest.NewRecorder()
+	handler.ServeHTTP(postRr, postReq)
+
+	if postRr.Code != http.StatusOK {
+		t.Errorf("POST with valid CSRF token: got %d, want %d", postRr.Code, http.StatusOK)
+	}
+}
+
+func TestCSRFMiddleware_ExemptPath(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("OK"))
+	}))
+
+	// /api/ paths should be exempt
+	req := httptest.NewRequest("POST", "/api/webhook", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("POST to exempt path should succeed: got %d, want %d", rr.Code, http.StatusOK)
+	}
+}
+
+func TestCSRFMiddleware_ExemptPath_Prefix(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	var exemptPaths = []string{
+		"/api/v1/webhook",
+		"/api/internal/status",
+		"/api/graphql",
+	}
+
+	for _, path := range exemptPaths {
+		t.Run("exempt_"+strings.ReplaceAll(path, "/", "_"), func(t *testing.T) {
+			req := httptest.NewRequest("POST", path, nil)
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, req)
+
+			if rr.Code != http.StatusOK {
+				t.Errorf("POST to %s: got %d, want %d", path, rr.Code, http.StatusOK)
+			}
+		})
+	}
+}
+
+func TestCSRFMiddleware_OtherMethods(t *testing.T) {
+	methods := []string{"PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"}
+
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	for _, method := range methods {
+		t.Run(method, func(t *testing.T) {
+			req := httptest.NewRequest(method, "/test", nil)
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, req)
+
+			// Non-GET requests should be blocked without token
+			if method != "HEAD" && method != "OPTIONS" {
+				// Actually, our middleware blocks all non-GET requests without token
+				// except exempt paths
+				if rr.Code != http.StatusForbidden && rr.Code != http.StatusOK {
+					t.Errorf("%s without token: got %d", method, rr.Code)
+				}
+			}
+		})
+	}
+}
+
+func TestCSRFMiddleware_Cookies(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/test", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	cookies := rr.Result().Cookies()
+	found := false
+	for _, c := range cookies {
+		if c.Name == "csrf_token" {
+			found = true
+			if !c.HttpOnly {
+				t.Error("CSRF cookie should be HttpOnly")
+			}
+			if c.SameSite != http.SameSiteStrictMode {
+				t.Errorf("CSRF cookie SameSite = %v, want Strict", c.SameSite)
+			}
+			if c.Secure {
+				t.Error("CSRF cookie Secure flag should be false for non-HTTPS (test environment)")
+			}
+			if c.Path != "/" {
+				t.Errorf("CSRF cookie Path = %s, want /", c.Path)
+			}
+		}
+	}
+
+	if !found {
+		t.Error("CSRF cookie not found")
+	}
+}
+
+func TestCSRFTokenInContext(t *testing.T) {
+	var tokenFromContext string
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		tokenFromContext = GetCSRFToken(r.Context())
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	req := httptest.NewRequest("GET", "/test", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if tokenFromContext == "" {
+		t.Error("CSRF token not found in context")
+	}
+
+	// Verify it matches the cookie
+	for _, c := range rr.Result().Cookies() {
+		if c.Name == "csrf_token" {
+			if c.Value != tokenFromContext {
+				t.Error("Context token does not match cookie token")
+			}
+		}
+	}
+}
+
+func TestCSRFMiddleware_RaceCondition(t *testing.T) {
+	// Concurrent requests should not cause races
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+	}))
+
+	done := make(chan bool, 10)
+	for i := 0; i < 10; i++ {
+		go func() {
+			req := httptest.NewRequest("GET", "/test", nil)
+			rr := httptest.NewRecorder()
+			handler.ServeHTTP(rr, req)
+			if rr.Code == http.StatusOK {
+				done <- true
+			} else {
+				done <- false
+			}
+		}()
+	}
+
+	success := 0
+	for i := 0; i < 10; i++ {
+		if <-done {
+			success++
+		}
+	}
+
+	if success != 10 {
+		t.Errorf("Concurrent requests: %d/10 succeeded", success)
+	}
+}
+
+func TestCSRFMiddleware_FormPost(t *testing.T) {
+	handler := CSRFMiddleware(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		w.Write([]byte("Success"))
+	}))
+
+	// Get a token first
+	getReq := httptest.NewRequest("GET", "/test", nil)
+	getRr := httptest.NewRecorder()
+	handler.ServeHTTP(getRr, getReq)
+
+	var csrfToken string
+	for _, c := range getRr.Result().Cookies() {
+		if c.Name == "csrf_token" {
+			csrfToken = c.Value
+			break
+		}
+	}
+
+	// Make form post with X-CSRF-Token header
+	formData := bytes.NewBufferString("field=value")
+	req := httptest.NewRequest("POST", "/test", formData)
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	req.Header.Set("X-CSRF-Token", csrfToken)
+	for _, c := range getRr.Result().Cookies() {
+		req.AddCookie(c)
+	}
+
+	rr := httptest.NewRecorder()
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Errorf("Form POST with CSRF token: got %d, want %d", rr.Code, http.StatusOK)
+	}
+}

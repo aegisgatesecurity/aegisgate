@@ -1,0 +1,59 @@
+# Multi-stage build for minimal Alpine-based image
+# Stage 1: Build
+FROM golang:1.21-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates tzdata
+
+# Set working directory
+WORKDIR /build
+
+# Copy go mod files
+COPY go.mod go.sum ./
+RUN go mod download
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o padlock ./cmd/padlock
+
+# Stage 2: Runtime
+FROM alpine:3.18
+
+# Security: Create non-root user
+RUN addgroup -g 1000 -S padlock && \
+    adduser -u 1000 -S padlock -G padlock
+
+# Install runtime dependencies
+RUN apk add --no-cache ca-certificates tzdata
+
+# Copy binary from builder
+COPY --from=builder /build/padlock /usr/local/bin/padlock
+
+# Copy TLS certificates if they exist
+COPY --from=builder /build/certs /etc/padlock/certs 2>/dev/null || true
+
+# Set ownership
+RUN chown -R padlock:padlock /etc/padlock
+
+# Switch to non-root user
+USER padlock
+
+# Expose ports
+EXPOSE 8443/tcp
+EXPOSE 8080/tcp
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
+
+# Set entrypoint
+ENTRYPOINT ["/usr/local/bin/padlock"]
+CMD ["--config", "/etc/padlock/config.yaml"]
+
+# Labels
+LABEL org.opencontainers.image.title="Padlock"
+LABEL org.opencontainers.image.description="Zero-Trust WebSocket Gateway"
+LABEL org.opencontainers.image.version="0.2.0"
+LABEL org.opencontainers.image.source="https://github.com/block/padlock"

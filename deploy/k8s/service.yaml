@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: aegisgate
+  namespace: aegisgate
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: gateway
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/port: "8080"
+spec:
+  type: ClusterIP
+  ports:
+    - name: wss
+      port: 8443
+      targetPort: 8443
+      protocol: TCP
+    - name: metrics
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: aegisgate
+  sessionAffinity: None
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: aegisgate-metrics
+  namespace: aegisgate
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: metrics
+spec:
+  type: ClusterIP
+  ports:
+    - name: metrics
+      port: 8080
+      targetPort: 8080
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: aegisgate

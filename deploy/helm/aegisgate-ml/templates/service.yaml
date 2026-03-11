@@ -1,0 +1,38 @@
+{{- /*
+AegisGate Service Template
+*/ -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "aegisgate.fullname" . }}
+  labels:
+    {{- include "aegisgate.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.ports.https }}
+      targetPort: https
+      protocol: TCP
+      name: https
+    - port: {{ .Values.service.ports.http }}
+      targetPort: http
+      protocol: TCP
+      name: http
+    - port: {{ .Values.service.ports.health }}
+      targetPort: http
+      protocol: TCP
+      name: health
+    - port: {{ .Values.service.ports.metrics }}
+      targetPort: metrics
+      protocol: TCP
+      name: metrics
+    - port: {{ .Values.service.ports.admin }}
+      targetPort: admin
+      protocol: TCP
+      name: admin
+  selector:
+    {{- include "aegisgate.selectorLabels" . | nindent 4 }}
