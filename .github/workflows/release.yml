@@ -22,7 +22,7 @@ jobs:
   # ============================================
   version-check:
     name: Verify Version Consistency
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.extract.outputs.version }}
     steps:
@@ -73,7 +73,7 @@ jobs:
   test:
     name: Run Tests
     needs: version-check
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -108,7 +108,7 @@ jobs:
   build-binaries:
     name: Build Binaries
     needs: test
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
@@ -183,7 +183,7 @@ jobs:
   generate-sbom:
     name: Generate SBOM
     needs: build-binaries
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: read
@@ -224,7 +224,7 @@ jobs:
   create-release:
     name: Create GitHub Release
     needs: [version-check, build-binaries, generate-sbom]
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     permissions:
       contents: write
       packages: write
