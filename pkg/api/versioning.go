@@ -238,6 +238,8 @@ func (m *VersionManager) sortVersions() {
 // VersionList is a list of version strings
 type VersionList []string
 
+// Sort returns the sorted list of version strings.
+// Sort returns the sorted list of version strings.
 func (v VersionList) Sort() []string {
 	versions := make([]*Version, len(v))
 	for i, s := range v {
@@ -443,8 +445,8 @@ func VersionMiddleware(manager *VersionManager) func(http.Handler) http.Handler 
 			}
 
 			// Add version to request context
-			ctx := context.WithValue(r.Context(), "api_version", result.Version)
-			ctx = context.WithValue(ctx, "version_info", result.VersionInfo)
+			ctx := context.WithValue(r.Context(), apiVersionKey, result.Version)
+			ctx = context.WithValue(ctx, versionInfoKey, result.VersionInfo)
 
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
