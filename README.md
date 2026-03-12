@@ -145,7 +145,7 @@ AegisGate acts as a secure proxy between your applications and AI providers:
 | Professional | $99/mo | Teams, businesses |
 | Enterprise | Custom | Large organizations |
 
-See https://aegisgatesecurity.io/pricing for complete feature comparison.
+For pricing details, please email sales@aegisgatesecurity.io
 
 ---
 
@@ -201,12 +201,12 @@ git push origin feature/your-feature
 
 | Resource | Link |
 |----------|------|
-| Documentation | https://docs.aegisgatesecurity.io |
+| Documentation | https://github.com/aegisgatesecurity/aegisgate/tree/main/docs |
 | GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
-| Website | https://aegisgatesecurity.io |
+| Website | Coming Soon |
 
 ---
 
 ## License
 
-MIT License - Copyright 2024-2026 AegisGate Security. All rights reserved.
+MIT License - Copyright 2025-2026 AegisGate Security. All rights reserved.
