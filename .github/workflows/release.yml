@@ -191,22 +191,18 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
       - name: Install Syft
-        shell: pwsh
         run: |
-          $latest = (Invoke-RestMethod "https://api.github.com/repos/anchore/syft/releases/latest").tag_name
-          $versionNum = $latest.TrimStart('v'); $url = "https://github.com/anchore/syft/releases/download/$latest/syft_$versionNum" + "_windows_amd64.zip"
-          Write-Host "Downloading Syft from $url"
-          Invoke-WebRequest -Uri $url -OutFile "syft.zip"
-          Expand-Archive -Path "syft.zip" -DestinationPath "C:\syft" -Force
-          echo "C:\syft" >> $env:GITHUB_PATH
+          SYFT_VER=$(curl -s https://api.github.com/repos/anchore/syft/releases/latest | grep -o '"tag_name": *"[^"]*' | cut -d'"' -f4 | sed 's/v//')
+          curl -sL "https://github.com/anchore/syft/releases/download/v${SYFT_VER}/syft_${SYFT_VER}_linux_amd64.tar.gz" -o syft.tar.gz
+          tar -xzf syft.tar.gz
+          echo "$(pwd)/syft_${SYFT_VER}_linux_amd64" >> $GITHUB_PATH
 
       - name: Generate SBOM
         run: |
-          C:\syft\syft.exe dir:./ -o cyclonedx-json > sbom.cyclonedx.json
-          C:\syft\syft.exe dir:./ -o spdx-json > sbom.spdx.json
-          C:\syft\syft.exe dir:./ -o table > sbom.txt
+          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
+          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
+          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
 
       - name: Upload SBOM
         uses: actions/upload-artifact@v4
