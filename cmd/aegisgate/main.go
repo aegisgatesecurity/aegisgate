@@ -20,7 +20,7 @@ import (
 )
 
 // Build info - set during build
-const version = "1.0.0"
+const version = "1.0.1"
 const commit  = "dev"
 
 // date is set at runtime

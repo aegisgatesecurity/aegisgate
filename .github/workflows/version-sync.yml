@@ -1,5 +1,5 @@
 # Version Sync Workflow
-# Automatically ensures VERSION and cmd/padlock/main.go are aligned
+# Automatically ensures VERSION and cmd/aegisgate/main.go are aligned
 
 name: Version Sync
 
@@ -8,7 +8,7 @@ on:
     branches: [main]
     paths:
       - VERSION
-      - cmd/padlock/main.go
+      - cmd/aegisgate/main.go
   pull_request:
     branches: [main]
     paths:
@@ -38,7 +38,7 @@ jobs:
       - name: Read main.go version
         id: main_version
         run: |
-          MAIN_VERSION=$(grep -o 'const version = "[^"]*"' cmd/padlock/main.go | grep -o '[0-9.]*')
+          MAIN_VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
           echo "main_version=$MAIN_VERSION" >> $GITHUB_OUTPUT
           echo "main.go version: $MAIN_VERSION"
 
@@ -46,7 +46,7 @@ jobs:
         if: steps.version.outputs.version != steps.main_version.outputs.main_version
         run: |
           VERSION="${{ steps.version.outputs.version }}"
-          sed -i "s/const version = \"[0-9.]*\"/const version = \"$VERSION\"/" cmd/padlock/main.go
+          sed -i "s/const version = \"[0-9.]*\"/const version = \"$VERSION\"/" cmd/aegisgate/main.go
           echo "Updated main.go to version $VERSION"
 
       - name: Commit and push if changed
@@ -54,6 +54,6 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add cmd/padlock/main.go
+          git add cmd/aegisgate/main.go
           git commit -m "chore: Sync version to ${{ steps.version.outputs.version }}"
           git push

@@ -28,7 +28,7 @@ jobs:
 
       - name: Verify VERSION in main.go
         run: |
-          MAIN_GO_VERSION=$(grep -o 'const version = "[^"]*"' cmd/padlock/main.go | grep -o '[0-9.]*')
+          MAIN_GO_VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
           echo "main.go version: $MAIN_GO_VERSION"
           
           if [ "${{ steps.version.outputs.version }}" != "$MAIN_GO_VERSION" ]; then
