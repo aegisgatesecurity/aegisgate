@@ -20,6 +20,7 @@ type OAuthEndpoints struct {
 	Scopes      []string
 }
 
+// OAuthProviderEndpoints maps provider names to their OAuth endpoints.
 var OAuthProviderEndpoints = map[Provider]OAuthEndpoints{
 	ProviderGoogle: {
 		AuthURL:     "https://accounts.google.com/o/oauth2/v2/auth",
@@ -117,6 +118,7 @@ func (m *Manager) InitOAuthFlow(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, authURL, http.StatusFound)
 }
 
+// HandleOAuthCallback processes the OAuth callback response.
 func (m *Manager) HandleOAuthCallback(w http.ResponseWriter, r *http.Request) {
 	code := r.URL.Query().Get("code")
 	state := r.URL.Query().Get("state")

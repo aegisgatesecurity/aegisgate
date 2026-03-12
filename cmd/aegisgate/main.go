@@ -150,6 +150,7 @@ func main() {
 	log.Println("AegisGate stopped")
 }
 
+// Chain chains together the HTTP handler with tier-based middleware and metrics.
 func Chain(h http.Handler, tier core.Tier, metricsMgr *metrics.Manager) http.Handler {
 	h = middleware.TierBasedResponse(h)
 	return h

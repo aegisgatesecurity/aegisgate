@@ -13,7 +13,9 @@ import (
 type Provider string
 
 const (
-	ProviderGoogle      Provider = "google" // ProviderGoogle identifies Google OAuth provider
+
+// ProviderGoogle identifies the Google OAuth provider.
+	ProviderGoogle      Provider = "google"
 	ProviderMicrosoft   Provider = "microsoft"
 	ProviderGitHub      Provider = "github"
 	ProviderOkta        Provider = "okta"
@@ -29,7 +31,9 @@ const (
 type Role string
 
 const (
-	RoleAdmin    Role = "admin" // RoleAdmin is the highest privilege level
+
+// RoleAdmin defines the administrator role level.
+	RoleAdmin    Role = "admin"
 	RoleOperator Role = "operator"
 	RoleViewer   Role = "viewer"
 	RoleService  Role = "service"
@@ -50,7 +54,9 @@ func (r Role) AtLeast(required Role) bool {
 type Permission string
 
 const (
-	PermViewDashboard  Permission = "view:dashboard" // PermViewDashboard allows viewing the dashboard
+
+// PermViewDashboard is the permission to view the dashboard.
+	PermViewDashboard  Permission = "view:dashboard"
 	PermManagePolicies Permission = "manage:policies"
 	PermManageCerts    Permission = "manage:certificates"
 	PermViewLogs       Permission = "view:logs"

@@ -13,9 +13,10 @@ import (
 	)
 
 // Compliance framework types
-type Framework string
+// Framework represents a compliance framework identifier.
 
 const (
+// FrameworkATLAS is the MITRE ATLAS framework.
 	FrameworkATLAS   Framework = "ATLAS"
 	FrameworkNIST1500 Framework = "NIST.AI-1.500"
 	FrameworkOWASP    Framework = "OWASP"
@@ -39,6 +40,7 @@ const (
 )
 
 const (
+// CriticalSeverity indicates critical security severity level.
 	CriticalSeverity Severity = "Critical"
 	SeverityCritical Severity = "Critical"
 	SeverityHigh     Severity = "High"
