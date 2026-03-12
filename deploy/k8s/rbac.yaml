@@ -1,0 +1,83 @@
+# ServiceAccount for AegisGate
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: aegisgate
+  namespace: aegisgate
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: rbac
+---
+# ClusterRole for AegisGate (cluster-wide permissions)
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: aegisgate-cluster
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: rbac
+rules:
+- apiGroups: [""]
+  resources: ["configmaps", "secrets", "services", "endpoints"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
+  verbs: ["get", "list", "watch"]
+- apiGroups: ["autoscaling"]
+  resources: ["horizontalpodautoscalers"]
+  verbs: ["get", "list", "watch"]
+---
+# ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: aegisgate-cluster-binding
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: rbac
+subjects:
+- kind: ServiceAccount
+  name: aegisgate
+  namespace: aegisgate
+roleRef:
+  kind: ClusterRole
+  name: aegisgate-cluster
+  apiGroup: rbac.authorization.k8s.io
+---
+# Role for namespace-scoped permissions
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: aegisgate
+  namespace: aegisgate
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: rbac
+rules:
+- apiGroups: [""]
+  resources: ["pods", "pods/log"]
+  verbs: ["get", "list"]
+- apiGroups: [""]
+  resources: ["configmaps"]
+  verbs: ["get", "create", "update", "patch"]
+- apiGroups: [""]
+  resources: ["secrets"]
+  verbs: ["get", "create", "update"]
+---
+# RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: aegisgate-binding
+  namespace: aegisgate
+  labels:
+    app.kubernetes.io/name: aegisgate
+    app.kubernetes.io/component: rbac
+subjects:
+- kind: ServiceAccount
+  name: aegisgate
+  namespace: aegisgate
+roleRef:
+  kind: Role
+  name: aegisgate
+  apiGroup: rbac.authorization.k8s.io
