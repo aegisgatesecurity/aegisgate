@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.1] - 2026-03-11
+
+### Fixed
+- Context keys issue in pkg/api/versioning.go - properly defined apiVersionKey and versionInfoKey
+- ShouldBlock logic in pkg/scanner/patterns.go - severity threshold corrected
+- Dockerfile configuration for production builds
+
+### Changed
+- Repository cleanup - removed 150+ temporary files
+- Updated .gitignore to exclude development artifacts
+
+---
+
 ## [1.0.0] - 2026-03-10
 
 ### Added

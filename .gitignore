@@ -67,3 +67,13 @@ temp/
 
 # Test coverage
 coverage/
+
+# Development tools
+.goose/
+dev/
+.hooks/
+
+# AegisGate specific
+commit_msg.txt
+aegisgate.exe
+TODO.md

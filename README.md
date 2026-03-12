@@ -14,6 +14,37 @@
 
 ---
 
+## Why AegisGate?
+
+In an era where AI powers critical business operations, security isn't optional—it's foundational. AegisGate provides enterprise-grade protection for your AI infrastructure without compromising performance or usability.
+
+### The Business Case
+
+| Challenge | AegisGate Solution |
+|-----------|-------------------|
+| **Prompt Injection Attacks** | Multi-layer detection blocks malicious prompts before they reach your AI |
+| **Data Leakage / PII Exposure** | Automatic PII redaction keeps sensitive data out of AI logs |
+| **Shadow AI Usage** | Centralized proxy gives you visibility into all AI traffic |
+| **Compliance Overhead** | Out-of-the-box support for SOC2, HIPAA, GDPR, PCI-DSS, ISO 27001 |
+| **Cost Anomalies** | ML-powered detection identifies unusual spending patterns |
+| **Vendor Lock-in** | Unified API supports OpenAI, Anthropic, Azure, AWS, Cohere—switch providers without code changes |
+
+### Key Differentiators
+
+- **Zero-Latency Security**: Inline processing adds <5ms to request latency
+- **Transparent Deployment**: No code changes required—deploy as a drop-in proxy
+- **Enterprise-Ready**: SSO/SAML, RBAC, audit logging, mTLS support
+- **Cost-Effective**: Up to 70% cheaper than competitors like Palo Alto AI Security or Microsoft Copilot Security
+
+### Who Uses AegisGate?
+
+- **Financial Services**: Protect LLM-powered trading algorithms and customer service bots
+- **Healthcare**: Ensure HIPAA compliance for AI-assisted diagnosis tools
+- **Enterprise**: Centralize AI governance across hundreds of internal applications
+- **SaaS Providers**: Add security layer to AI-powered products without development overhead
+
+---
+
 ## What is AegisGate?
 
 AegisGate is an enterprise-grade AI API security platform that provides comprehensive protection for organizations deploying AI services at scale. Acting as a secure proxy gateway, AegisGate monitors, filters, and secures all traffic between your applications and AI providers like OpenAI, Anthropic, Azure OpenAI, AWS Bedrock, and Cohere.
