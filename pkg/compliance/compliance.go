@@ -9,21 +9,30 @@ import (
 	"strings"
 	"sync"
 	"time"
+)
 
-	)
-
-// Compliance framework types
 // Framework represents a compliance framework identifier.
+type Framework string
 
+// Compliance frameworks
 const (
-// FrameworkATLAS is the MITRE ATLAS framework.
-	FrameworkATLAS   Framework = "ATLAS"
-	FrameworkNIST1500 Framework = "NIST.AI-1.500"
-	FrameworkOWASP    Framework = "OWASP"
-	FrameworkGDPR     Framework = "GDPR"
-	FrameworkHIPAA    Framework = "HIPAA"
-	FrameworkPCIDSS   Framework = "PCI-DSS"
-	FrameworkSOC2     Framework = "SOC2"
+	// FrameworkNIST1500 is the NIST AI Risk Management Framework.
+	FrameworkNIST1500 Framework = "NIST_AI_RMF"
+	// FrameworkATLAS is the MITRE ATLAS framework.
+	FrameworkATLAS Framework = "ATLAS"
+	// FrameworkSOC2 is the SOC 2 framework.
+	FrameworkSOC2 Framework = "SOC2"
+	// FrameworkGDPR is the GDPR framework.
+	FrameworkGDPR Framework = "GDPR"
+	// FrameworkHIPAA is the HIPAA framework.
+	FrameworkHIPAA Framework = "HIPAA"
+	// FrameworkPCIDSS is the PCI-DSS framework.
+	FrameworkPCIDSS Framework = "PCI_DSS"
+	// FrameworkOWASP is the OWASP framework.
+	FrameworkOWASP Framework = "OWASP"
+	// FrameworkISO27001 is the ISO 27001 framework.
+	FrameworkISO27001 Framework = "ISO27001"
+	// FrameworkISO42001 is the ISO/IEC 42001 framework.
 	FrameworkISO42001 Framework = "ISO/IEC 42001"
 )
 
@@ -32,21 +41,16 @@ type Severity string
 
 // Severity aliases for backward compatibility with submodules using old naming
 const (
-	SeverityCritical2 Severity = "Critical"
-	SeverityHigh2     Severity = "High"
-	SeverityMedium2   Severity = "Medium"
-	SeverityLow2      Severity = "Low"
-	SeverityInfo2     Severity = "Info"
-)
-
-const (
-// CriticalSeverity indicates critical security severity level.
-	CriticalSeverity Severity = "Critical"
+	// SeverityCritical indicates critical severity level.
 	SeverityCritical Severity = "Critical"
-	SeverityHigh     Severity = "High"
-	SeverityMedium   Severity = "Medium"
-	SeverityLow      Severity = "Low"
-	SeverityInfo     Severity = "Info"
+	// SeverityHigh indicates high severity level.
+	SeverityHigh Severity = "High"
+	// SeverityMedium indicates medium severity level.
+	SeverityMedium Severity = "Medium"
+	// SeverityLow indicates low severity level.
+	SeverityLow Severity = "Low"
+	// SeverityInfo indicates informational severity level.
+	SeverityInfo Severity = "Info"
 )
 
 // ControlSeverity is an alias for backward compatibility
@@ -68,24 +72,24 @@ type Finding struct {
 	Pattern     string    `json:"pattern,omitempty"`
 }
 
-// ComplianceResult contains the results of a compliance check
-type ComplianceResult struct {
-	Passed           bool               `json:"passed"`
-	Findings         []Finding          `json:"findings"`
+// Result represents the outcome of a compliance check.
+type Result struct {
+	Passed            bool               `json:"passed"`
+	Findings          []Finding          `json:"findings"`
 	FrameworksChecked []Framework        `json:"frameworks_checked"`
-	CheckedAt        time.Time          `json:"checked_at"`
-	Duration         time.Duration      `json:"duration"`
-	Metadata         map[string]string  `json:"metadata,omitempty"`
+	CheckedAt         time.Time          `json:"checked_at"`
+	Duration          time.Duration      `json:"duration"`
+	Metadata          map[string]string  `json:"metadata,omitempty"`
 }
 
-// Manager handles compliance checking
+// Manager handles compliance operations.
 type Manager struct {
-	config         *Config
-	frameworks     map[Framework]FrameworkChecker
-	patterns       map[Framework][]*Pattern
-	mu             sync.RWMutex
-	tierManager    *TierManager
-	reportHistory  []ComplianceResult
+	config        *Config
+	frameworks    map[Framework]FrameworkChecker
+	patterns      map[Framework][]*Pattern
+	mu            sync.RWMutex
+	tierManager   *TierManager
+	reportHistory []Result
 }
 
 // Config holds compliance manager configuration
@@ -142,8 +146,6 @@ func NewManager(config *Config) (*Manager, error) {
 		mgr.patterns[FrameworkATLAS] = atlas.GetPatterns()
 	}
 
-
-
 	return mgr, nil
 }
 
@@ -165,14 +167,14 @@ func DefaultConfig() *Config {
 }
 
 // Check performs compliance checking against all enabled frameworks
-func (m *Manager) Check(content string, direction string) (*ComplianceResult, error) {
+func (m *Manager) Check(content string, direction string) (*Result, error) {
 	startTime := time.Now()
-	result := &ComplianceResult{
-		Passed:           true,
-		Findings:         []Finding{},
+	result := &Result{
+		Passed:            true,
+		Findings:          []Finding{},
 		FrameworksChecked: []Framework{},
-		CheckedAt:        startTime,
-		Metadata:         map[string]string{"direction": direction},
+		CheckedAt:         startTime,
+		Metadata:          map[string]string{"direction": direction},
 	}
 
 	m.mu.RLock()
@@ -180,14 +182,14 @@ func (m *Manager) Check(content string, direction string) (*ComplianceResult, er
 
 	for framework, checker := range m.frameworks {
 		result.FrameworksChecked = append(result.FrameworksChecked, framework)
-		
+
 		findings, err := checker.Check(content)
 		if err != nil {
 			return nil, fmt.Errorf("framework %s check failed: %w", framework, err)
 		}
-		
+
 		result.Findings = append(result.Findings, findings...)
-		
+
 		// Update passed status
 		blocked := false
 		for _, f := range findings {
@@ -201,7 +203,7 @@ func (m *Manager) Check(content string, direction string) (*ComplianceResult, er
 	}
 
 	result.Duration = time.Since(startTime)
-	
+
 	// Add to history
 	m.reportHistory = append(m.reportHistory, *result)
 	if len(m.reportHistory) > 100 {
@@ -212,13 +214,13 @@ func (m *Manager) Check(content string, direction string) (*ComplianceResult, er
 }
 
 // CheckFramework checks content against a specific framework
-func (m *Manager) CheckFramework(content string, framework Framework) (*ComplianceResult, error) {
+func (m *Manager) CheckFramework(content string, framework Framework) (*Result, error) {
 	startTime := time.Now()
-	result := &ComplianceResult{
-		Passed:           true,
-		Findings:         []Finding{},
+	result := &Result{
+		Passed:            true,
+		Findings:          []Finding{},
 		FrameworksChecked: []Framework{},
-		CheckedAt:        startTime,
+		CheckedAt:         startTime,
 	}
 
 	m.mu.RLock()
@@ -292,10 +294,10 @@ func (m *Manager) GenerateReport() (string, error) {
 	defer m.mu.RUnlock()
 
 	report := map[string]interface{}{
-		"generated_at":        time.Now(),
-		"active_frameworks":   len(m.frameworks),
-		"total_findings":     0,
-		"findings_by_severity": map[string]int{},
+		"generated_at":          time.Now(),
+		"active_frameworks":     len(m.frameworks),
+		"total_findings":        0,
+		"findings_by_severity":   map[string]int{},
 		"findings_by_framework": map[string]int{},
 	}
 
@@ -339,7 +341,7 @@ func (m *Manager) GetStatus() map[string]interface{} {
 	status := map[string]interface{}{
 		"enabled_frameworks": make([]string, 0),
 		"total_patterns":     0,
-		"recent_findings":    0,
+		"recent_findings":   0,
 	}
 
 	for f := range m.frameworks {
@@ -404,7 +406,7 @@ func (m *Manager) DetectFrameworks(content string) []Framework {
 }
 
 // GetReportHistory returns compliance report history
-func (m *Manager) GetReportHistory(limit int) []ComplianceResult {
+func (m *Manager) GetReportHistory(limit int) []Result {
 	m.mu.RLock()
 	defer m.mu.RUnlock()
 
@@ -418,7 +420,7 @@ func (m *Manager) GetReportHistory(limit int) []ComplianceResult {
 func (m *Manager) ClearHistory() {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-	m.reportHistory = []ComplianceResult{}
+	m.reportHistory = []Result{}
 }
 
 // ExportFindings exports findings in various formats
@@ -463,7 +465,7 @@ func (s Severity) String() string {
 	return string(s)
 }
 
-// FrameworkString returns string representation of framework
+// String returns string representation of framework
 func (f Framework) String() string {
 	return string(f)
 }
@@ -481,13 +483,19 @@ type Requirement struct {
 // ComplianceManager is an alias for Manager (for backward compatibility)
 type ComplianceManager = Manager
 
-// ComplianceReport type (for reporting integration)
-type ComplianceReport struct {
+// Report represents a compliance assessment report.
+type Report struct {
 	Summary    string
 	Findings   []Finding
 	Frameworks []Framework
 	Timestamp  time.Time
 }
+
+// ComplianceReport is an alias for Report (for backward compatibility)
+type ComplianceReport = Report
+
+// ComplianceResult is an alias for Result (for backward compatibility)
+type ComplianceResult = Result
 
 // NewNIST1500Framework returns a stub (NIST framework not fully implemented)
 func NewNIST1500Framework() FrameworkChecker {

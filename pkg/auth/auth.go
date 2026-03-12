@@ -16,6 +16,7 @@ const (
 
 // ProviderGoogle identifies the Google OAuth provider.
 	ProviderGoogle      Provider = "google"
+// ProviderMicrosoft identifies the Microsoft OAuth provider.
 	ProviderMicrosoft   Provider = "microsoft"
 	ProviderGitHub      Provider = "github"
 	ProviderOkta        Provider = "okta"
@@ -34,6 +35,7 @@ const (
 
 // RoleAdmin defines the administrator role level.
 	RoleAdmin    Role = "admin"
+// RoleOperator defines the operator role level.
 	RoleOperator Role = "operator"
 	RoleViewer   Role = "viewer"
 	RoleService  Role = "service"

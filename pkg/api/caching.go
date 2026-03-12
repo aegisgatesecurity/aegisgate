@@ -677,6 +677,7 @@ func (e *ETagger) GenerateForFile(modTime time.Time, size int64) string {
 }
 
 // HandleETag handles ETag-based conditional requests
+// Handle handles ETag-related HTTP requests.
 func (e *ETagger) Handle(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Only handle GET/HEAD
