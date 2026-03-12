@@ -1,4 +1,4 @@
-# Padlock Makefile
+# AegisGate Makefile
 
 .PHONY: all build test clean dev docker-build docker-run docker-stop help
 
@@ -7,19 +7,19 @@ all: help
 
 # Build the binary
 build:
-	@echo "Building Padlock..."
-	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/padlock ./cmd/padlock
-	@echo "Build complete: bin/padlock"
+	@echo "Building AegisGate..."
+	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o bin/aegisgate ./cmd/aegisgate
+	@echo "Build complete: bin/aegisgate"
 
 # Build for multiple platforms
 build-all:
 	@echo "Building for all platforms..."
 	@mkdir -p bin
-	GOOS=linux GOARCH=amd64 go build -o bin/padlock-linux-amd64 ./cmd/padlock
-	GOOS=linux GOARCH=arm64 go build -o bin/padlock-linux-arm64 ./cmd/padlock
-	GOOS=darwin GOARCH=amd64 go build -o bin/padlock-darwin-amd64 ./cmd/padlock
-	GOOS=darwin GOARCH=arm64 go build -o bin/padlock-darwin-arm64 ./cmd/padlock
-	GOOS=windows GOARCH=amd64 go build -o bin/padlock-windows-amd64.exe ./cmd/padlock
+	GOOS=linux GOARCH=amd64 go build -o bin/aegisgate-linux-amd64 ./cmd/aegisgate
+	GOOS=linux GOARCH=arm64 go build -o bin/aegisgate-linux-arm64 ./cmd/aegisgate
+	GOOS=darwin GOARCH=amd64 go build -o bin/aegisgate-darwin-amd64 ./cmd/aegisgate
+	GOOS=darwin GOARCH=arm64 go build -o bin/aegisgate-darwin-arm64 ./cmd/aegisgate
+	GOOS=windows GOARCH=amd64 go build -o bin/aegisgate-windows-amd64.exe ./cmd/aegisgate
 	@echo "All builds complete in bin/"
 
 # Run tests
@@ -61,21 +61,21 @@ fmt:
 dev:
 	@echo "Starting development mode..."
 	@echo "Note: Implement live reload as needed"
-	go run ./cmd/padlock serve --config ./config/community.env
+	go run ./cmd/aegisgate serve --config ./config/community.env
 
 # Run Docker container (local build)
 docker-build:
 	@echo "Building Docker image..."
-	docker build -t padlock/padlock:latest -f deploy/docker/Dockerfile .
+	docker build -t aegisgate/aegisgate:latest -f deploy/docker/Dockerfile .
 
 # Run Docker Compose
 docker-run:
-	@echo "Starting Padlock with Docker Compose..."
+	@echo "Starting AegisGate with Docker Compose..."
 	cd deploy/docker && docker-compose up -d
 
 # Stop Docker Compose
 docker-stop:
-	@echo "Stopping Padlock..."
+	@echo "Stopping AegisGate..."
 	cd deploy/docker && docker-compose down
 
 # Docker development
@@ -112,11 +112,11 @@ generate:
 
 # Show help
 help:
-	@echo "Padlock Build System"
-	@echo "===================="
+	@echo "AegisGate Build System"
+	@echo "======================"
 	@echo ""
 	@echo "Available targets:"
-	@echo "  make build          - Build the Padlock binary"
+	@echo "  make build          - Build the AegisGate binary"
 	@echo "  make build-all     - Build for all platforms"
 	@echo "  make test          - Run tests"
 	@echo "  make test-coverage - Run tests with coverage report"

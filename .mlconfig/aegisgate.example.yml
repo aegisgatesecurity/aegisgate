@@ -171,7 +171,7 @@ siem:
   rfc5424:
     enabled: true
     hostname: "padlock-gateway"
-    app_name: "padlock"
+    app_name: "aegisgate"
     proc_id: "main"
     
   # What to send
