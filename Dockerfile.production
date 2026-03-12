@@ -1,14 +1,42 @@
-# Padlock Production Docker Image
+# AegisGate Production Docker Image
+# Multi-stage build: builder stage compiles, production stage uses distroless for security
+FROM golang:1.24-alpine AS builder
+
+# Install build dependencies
+RUN apk add --no-cache git ca-certificates
+
+WORKDIR /build
+
+# Copy go mod files first for better caching
+COPY go.mod ./
+COPY go.sum ./
+
+# Copy source code
+COPY cmd/ ./cmd/
+COPY pkg/ ./pkg/
+COPY config/ ./config/
+
+# Build the application
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
+    -ldflags="-s -w -X main.version=production" \
+    -o /build/aegisgate \
+    ./cmd/aegisgate
+
+# Final stage - distroless minimal production image
 FROM gcr.io/distroless/base-debian12
 
 WORKDIR /app
 
-COPY --from=builder /app/padlock /app/padlock
-COPY --from=builder /app/config /app/config
+# Copy binary from builder
+COPY --from=builder /build/aegisgate /app/aegisgate
+COPY --from=builder /build/config/aegisgate.yml.example /app/aegisgate.yml
 
-EXPOSE 8080 8443
+# Expose ports (HTTP, HTTPS, Metrics)
+EXPOSE 8080 8443 9090
 
-USER nonroot:nonroot
+# Use non-root user (distroless provides 'nonroot' user)
+USER nonroot
 
-ENTRYPOINT ["/app/padlock"]
-CMD ["--config=/app/config/config.yaml"]
+# Set entrypoint
+ENTRYPOINT ["/app/aegisgate"]
+CMD ["-bind", "0.0.0.0:8080", "-target", "https://api.openai.com", "-tier", "community"]

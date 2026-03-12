@@ -95,6 +95,7 @@ type User struct {
 	CreatedAt     time.Time
 }
 
+// HasPermission checks if the user has a specific permission.
 func (u *User) HasPermission(perm Permission) bool {
 	for _, p := range u.Permissions {
 		if p == perm {
@@ -104,6 +105,7 @@ func (u *User) HasPermission(perm Permission) bool {
 	return false
 }
 
+// IsAdmin returns true if user has admin role.
 func (u *User) IsAdmin() bool {
 	return u.Role == RoleAdmin
 }
@@ -121,14 +123,17 @@ type Session struct {
 	Active       bool
 }
 
+// IsExpired checks if the session has expired.
 func (s *Session) IsExpired() bool {
 	return time.Now().After(s.ExpiresAt)
 }
 
+// IsValid checks if the session is valid and not expired.
 func (s *Session) IsValid() bool {
 	return s.Active && !s.IsExpired()
 }
 
+// Refresh updates the session expiration time.
 func (s *Session) Refresh(duration time.Duration) {
 	s.LastActivity = time.Now()
 	s.ExpiresAt = time.Now().Add(duration)
