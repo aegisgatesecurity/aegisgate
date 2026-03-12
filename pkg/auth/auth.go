@@ -13,7 +13,7 @@ import (
 type Provider string
 
 const (
-	ProviderGoogle      Provider = "google"
+	ProviderGoogle      Provider = "google" // ProviderGoogle identifies Google OAuth provider
 	ProviderMicrosoft   Provider = "microsoft"
 	ProviderGitHub      Provider = "github"
 	ProviderOkta        Provider = "okta"
@@ -29,7 +29,7 @@ const (
 type Role string
 
 const (
-	RoleAdmin    Role = "admin"
+	RoleAdmin    Role = "admin" // RoleAdmin is the highest privilege level
 	RoleOperator Role = "operator"
 	RoleViewer   Role = "viewer"
 	RoleService  Role = "service"
@@ -50,7 +50,7 @@ func (r Role) AtLeast(required Role) bool {
 type Permission string
 
 const (
-	PermViewDashboard  Permission = "view:dashboard"
+	PermViewDashboard  Permission = "view:dashboard" // PermViewDashboard allows viewing the dashboard
 	PermManagePolicies Permission = "manage:policies"
 	PermManageCerts    Permission = "manage:certificates"
 	PermViewLogs       Permission = "view:logs"
@@ -96,6 +96,7 @@ type User struct {
 }
 
 // HasPermission checks if the user has a specific permission.
+// HasPermission checks if the user has a specific permission.
 func (u *User) HasPermission(perm Permission) bool {
 	for _, p := range u.Permissions {
 		if p == perm {
@@ -105,6 +106,7 @@ func (u *User) HasPermission(perm Permission) bool {
 	return false
 }
 
+// IsAdmin returns true if user has admin role.
 // IsAdmin returns true if user has admin role.
 func (u *User) IsAdmin() bool {
 	return u.Role == RoleAdmin
@@ -124,15 +126,18 @@ type Session struct {
 }
 
 // IsExpired checks if the session has expired.
+// IsExpired checks if the session has expired.
 func (s *Session) IsExpired() bool {
 	return time.Now().After(s.ExpiresAt)
 }
 
 // IsValid checks if the session is valid and not expired.
+// IsValid checks if the session is valid and not expired.
 func (s *Session) IsValid() bool {
 	return s.Active && !s.IsExpired()
 }
 
+// Refresh updates the session expiration time.
 // Refresh updates the session expiration time.
 func (s *Session) Refresh(duration time.Duration) {
 	s.LastActivity = time.Now()

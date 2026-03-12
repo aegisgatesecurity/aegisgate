@@ -11,6 +11,8 @@ import (
 	"time"
 )
 
+// OAuthEndpoints holds OAuth provider endpoint URLs.
+// OAuthEndpoints defines OAuth provider endpoint URLs.
 type OAuthEndpoints struct {
 	AuthURL     string
 	TokenURL    string
@@ -45,6 +47,8 @@ var OAuthProviderEndpoints = map[Provider]OAuthEndpoints{
 	},
 }
 
+// OAuthTokenResponse contains OAuth token response data.
+// OAuthTokenResponse contains the OAuth token response from the provider.
 type OAuthTokenResponse struct {
 	AccessToken  string
 	TokenType    string
@@ -54,6 +58,8 @@ type OAuthTokenResponse struct {
 	Scope        string
 }
 
+// OAuthUserInfo contains user information from OAuth provider.
+// OAuthUserInfo represents user information returned by OAuth provider.
 type OAuthUserInfo struct {
 	ID            string
 	Email         string
@@ -65,6 +71,8 @@ type OAuthUserInfo struct {
 	Provider      string
 }
 
+// InitOAuthFlow initiates the OAuth authentication flow.
+// InitOAuthFlow initiates OAuth authentication flow for the given provider.
 func (m *Manager) InitOAuthFlow(w http.ResponseWriter, r *http.Request) {
 	state := generateRandomString(32)
 	if state == "" {
