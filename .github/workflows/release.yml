@@ -4,306 +4,157 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release (e.g., v0.21.2)'
-        required: true
-        type: string
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  GO_VERSION: '1.24'
 
 jobs:
-  # ============================================
-  # Phase 0: Version Consistency Check
-  # ============================================
-  version-check:
-    name: Verify Version Consistency
-    runs-on: ubuntu-latest
-    outputs:
-      version: ${{ steps.extract.outputs.version }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Extract version from tag
-        id: extract
-        shell: pwsh
-        run: |
-          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
-            $version = "${{ github.event.inputs.version }}"
-          } else {
-            $version = "${{ github.ref_name }}"
-          }
-          # Remove 'v' prefix for comparison
-          $versionNum = $version.TrimStart('v')
-          Write-Output "version=$version" >> $env:GITHUB_OUTPUT
-          Write-Output "version_num=$versionNum" >> $env:GITHUB_OUTPUT
-          Write-Host "Release version: $version"
-
-      - name: Verify VERSION file matches
-        shell: pwsh
-        run: |
-          $expectedVersion = (Get-Content VERSION -Raw).Trim()
-          $tagVersion = "${{ steps.extract.outputs.version_num }}"
-          Write-Host "VERSION file: $expectedVersion"
-          Write-Host "Tag version: $tagVersion"
-          if ($expectedVersion -ne $tagVersion) {
-            Write-Host "::warning::VERSION file ($expectedVersion) does not match tag version ($tagVersion)"
-          }
-
-      - name: Verify CHANGELOG has entry
-        shell: pwsh
-        run: |
-          $version = "${{ steps.extract.outputs.version_num }}"
-          $escapedVersion = [regex]::Escape($version)
-          $pattern = "\[$escapedVersion\]|## $escapedVersion"
-          if (Select-String -Path CHANGELOG.md -Pattern $pattern -Quiet) {
-            Write-Host "CHANGELOG.md has entry for $version"
-          } else {
-            Write-Host "::warning::CHANGELOG.md may be missing entry for $version"
-          }
-
-  # ============================================
-  # Phase 1: Run Tests
-  # ============================================
-  test:
-    name: Run Tests
-    needs: version-check
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Download dependencies
-        run: go mod download
-
-      - name: Run tests
-        # Note: -race flag removed because self-hosted Windows runner lacks GCC
-        # Race detection requires CGO which requires a C compiler
-        shell: pwsh
-        run: |
-          # Clean up any leftover artifacts from previous runs
-          Get-ChildItem -Recurse -Force -Directory -Filter ".out" -ErrorAction SilentlyContinue | Remove-Item -Force -Recurse
-          if (Test-Path "coverage.out") { Remove-Item "coverage.out" -Force }
-          go test -v "-coverprofile=coverage.out" ./...
-
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-report
-          path: coverage.out
-
-  # ============================================
-  # Phase 2: Build Cross-Platform Binaries
-  # ============================================
-  build-binaries:
-    name: Build Binaries
-    needs: test
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:
-          # Linux
-          - goos: linux
-            goarch: amd64
-            suffix: -linux-amd64
-          - goos: linux
-            goarch: arm64
-            suffix: -linux-arm64
-          - goos: linux
-            goarch: "386"
-            suffix: -linux-386
-          # Windows
-          - goos: windows
-            goarch: amd64
-            suffix: -windows-amd64.exe
-          - goos: windows
-            goarch: arm64
-            suffix: -windows-arm64.exe
-          # macOS
-          - goos: darwin
-            goarch: amd64
-            suffix: -darwin-amd64
-          - goos: darwin
-            goarch: arm64
-            suffix: -darwin-arm64
-          # FreeBSD
-          - goos: freebsd
-            goarch: amd64
-            suffix: -freebsd-amd64
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-
-      - name: Build binary
-        shell: pwsh
-        env:
-          GOOS: ${{ matrix.goos }}
-          GOARCH: ${{ matrix.goarch }}
-        run: |
-          $OUTPUT_NAME = "aegisgate${{ matrix.suffix }}"
-          Write-Host "Building for ${{ matrix.goos }}/${{ matrix.goarch }} -> $OUTPUT_NAME"
-          $env:CGO_ENABLED = "0"
-          go build -ldflags "-s -w -X main.Version=${{ needs.version-check.outputs.version }}" -trimpath -o "$OUTPUT_NAME" ./cmd/aegisgate
-          Get-Item "$OUTPUT_NAME"
-
-      - name: Calculate checksum
-        shell: pwsh
-        run: |
-          $OUTPUT_NAME = "aegisgate${{ matrix.suffix }}"
-          $hash = Get-FileHash "$OUTPUT_NAME" -Algorithm SHA256
-          "$($hash.Hash)  $OUTPUT_NAME" | Out-File -FilePath "$($OUTPUT_NAME).sha256" -Encoding ascii
-
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}
-          path: |
-            aegisgate-*
-            *.sha256
-
-  # ============================================
-  # Phase 3: Generate SBOM
-  # ============================================
-  generate-sbom:
-    name: Generate SBOM
-    needs: build-binaries
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: read
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Install Syft
-        run: |
-          SYFT_VER=$(curl -s https://api.github.com/repos/anchore/syft/releases/latest | grep -o '"tag_name": *"[^"]*' | cut -d'"' -f4 | sed 's/v//')
-          curl -sL "https://github.com/anchore/syft/releases/download/v${SYFT_VER}/syft_${SYFT_VER}_linux_amd64.tar.gz" -o syft.tar.gz
-          tar -xzf syft.tar.gz
-          echo "$(pwd)/syft_${SYFT_VER}_linux_amd64" >> $GITHUB_PATH
-
-      - name: Generate SBOM
-        run: |
-          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
-          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
-          syft dir:./ -o cyclonedx-json > sbom.cyclonedx.json
-
-      - name: Upload SBOM
-        uses: actions/upload-artifact@v4
-        with:
-          name: sbom
-          path: |
-            sbom.cyclonedx.json
-            sbom.spdx.json
-            sbom.txt
-          retention-days: 30
-
-  # ============================================
-  # Phase 4: Create GitHub Release
-  # ============================================
-  create-release:
-    name: Create GitHub Release
-    needs: [version-check, build-binaries, generate-sbom]
-    runs-on: ubuntu-latest
+  release:
+    runs-on: ubuntu-24.04
     permissions:
       contents: write
       packages: write
+      pull-requests: read
+      attestations: write
+      id-token: write
+
+    env:
+      REGISTRY: ghcr.io
+      IMAGE_NAME: aegisgatesecurity/aegisgate
+      GO_VERSION: 1.24
+
+    outputs:
+      version: ${{ steps.get_version.outputs.version }}
+      sha: ${{ github.sha }}
 
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Download release artifacts
-        uses: actions/download-artifact@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
         with:
-          pattern: binaries-*
-          path: artifacts
-          merge-multiple: true
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+          cache-dependency-path: go.sum
 
-      - name: Download SBOM artifact
-        uses: actions/download-artifact@v4
+      - name: Get version from tag
+        id: get_version
+        run: echo "version=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
         with:
-          name: sbom
-          path: artifacts/sbom
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare release assets
-        shell: pwsh
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+        with:
+          install: true
+          driver-opts: |
+            image=moby/buildkit:v0.14.1
+            network=host
+          platforms: linux/amd64,linux/arm64,linux/arm
+          version: v0.14.1
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          platforms: linux/amd64,linux/arm64,linux/arm
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.get_version.outputs.version }}, ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          provenance: false
+          sbom: false
+
+      - name: Install Syft
+        uses: anchore/sbom-action/download-syft@v0
+        id: syft
+
+      - name: Generate SBOM
         run: |
-          New-Item -ItemType Directory -Force -Path release
-          
-          # Copy all binaries
-          Get-ChildItem -Path artifacts -Filter "padlock-*" -Recurse | Copy-Item -Destination release
-          
-          # Copy SBOM
-          if (Test-Path "artifacts/sbom") {
-            New-Item -ItemType Directory -Force -Path release/sbom
-            Copy-Item -Path artifacts/sbom/* -Destination release/sbom
-          }
-          
-          # Generate checksums file
-          Set-Location release
-          $binaries = Get-ChildItem -Filter "padlock-*"
-          if ($binaries) {
-            $checksums = @()
-            foreach ($file in $binaries) {
-              $hash = Get-FileHash $file -Algorithm SHA256
-              $checksums += "$($hash.Hash)  $($file.Name)"
-            }
-            $checksums | Out-File -FilePath checksums.txt -Encoding ascii
-          }
-          
-          Get-ChildItem
+          ${{ steps.syft.outputs.syft-path }} dir:./ -o cyclonedx-json > sb.cyclonedx.json
+          ${{ steps.syft.outputs.syft-path }} dir:./ -o spdx-json > sb.spdx.json
+          ${{ steps.syft.outputs.syft-path }} dir:./ -o table > sb.txt
 
-      - name: Extract changelog for this version
-        id: changelog
-        shell: pwsh
+      - name: Build Go binaries
         run: |
-          $version = "${{ needs.version-check.outputs.version_num }}"
-          Write-Host "Extracting changelog for version: $version"
-          
-          # Extract changelog section for this version
-          $content = Get-Content CHANGELOG.md -Raw
-          $versionEscaped = [regex]::Escape($version)
-          $pattern = "(?s)## \[?$versionEscaped\]?[-\s\[].*?(?=## \[|## \[Unreleased\]|$)"
-          if ($content -match $pattern) {
-            $notes = $Matches[0]
-            # Write to file for release notes
-            $notes | Out-File -FilePath release_notes.md -Encoding utf8
-            Write-Host "Changelog extracted successfully"
-          } else {
-            Write-Host "No changelog entry found for $version"
-            "Release notes not available." | Out-File -FilePath release_notes.md -Encoding utf8
-          }
+          GOOS=linux GOARCH=amd64 go build -o aegisgate-linux-amd64 ./cmd/aegisgate
+          GOOS=linux GOARCH=arm64 go build -o aegisgate-linux-arm64 ./cmd/aegisgate
+          GOOS=windows GOARCH=amd64 go build -o aegisgate-windows-amd64.exe ./cmd/aegisgate
+          GOOS=darwin GOARCH=amd64 go build -o aegisgate-darwin-amd64 ./cmd/aegisgate
+          GOOS=darwin GOARCH=arm64 go build -o aegisgate-darwin-arm64 ./cmd/aegisgate
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
+      - name: Create release archive
+        run: |
+          tar -czf aegisgate-${{ steps.get_version.outputs.version }}-linux-amd64.tar.gz aegisgate-linux-amd64
+          tar -czf aegisgate-${{ steps.get_version.outputs.version }}-linux-arm64.tar.gz aegisgate-linux-arm64
+          zip aegisgate-${{ steps.get_version.outputs.version }}-windows-amd64.zip aegisgate-windows-amd64.exe
+          tar -czf aegisgate-${{ steps.get_version.outputs.version }}-darwin-amd64.tar.gz aegisgate-darwin-amd64
+          tar -czf aegisgate-${{ steps.get_version.outputs.version }}-darwin-arm64.tar.gz aegisgate-darwin-arm64
+
+      - name: Attestation
+        uses: actions/attest-build-provenance@v1
         with:
-          name: AegisGate ${{ needs.version-check.outputs.version }}
-          body_path: release_notes.md
+          subject-path: aegisgate-linux-amd64
+
+      - name: Upload SBOMs as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sb-files
+          path: sb.*
+          retention-days: 30
+
+      - name: Upload binaries as artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: binaries
+          path: |
+            aegisgate-${{ steps.get_version.outputs.version }}-linux-amd64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-linux-arm64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-windows-amd64.zip
+            aegisgate-${{ steps.get_version.outputs.version }}-darwin-amd64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-darwin-arm64.tar.gz
+          retention-days: 30
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ steps.get_version.outputs.version }}
+          body: |
+            ## AegisGate ${{ steps.get_version.outputs.version }}
+            
+            ### Changes
+            - See CHANGELOG.md for details
+            
+            ### Installation
+            Download the appropriate binary for your platform:
+            - Linux (AMD64): aegisgate-${{ steps.get_version.outputs.version }}-linux-amd64.tar.gz
+            - Linux (ARM64): aegisgate-${{ steps.get_version.outputs.version }}-linux-arm64.tar.gz
+            - Windows (AMD64): aegisgate-${{ steps.get_version.outputs.version }}-windows-amd64.zip
+            - macOS (AMD64): aegisgate-${{ steps.get_version.outputs.version }}-darwin-amd64.tar.gz
+            - macOS (ARM64): aegisgate-${{ steps.get_version.outputs.version }}-darwin-arm64.tar.gz
+            
+            ### Container Image
+            Pull the container image:
+            ```bash
+            docker pull ghcr.io/aegisgatesecurity/aegisgate:${{ steps.get_version.outputs.version }}
+            ```
           files: |
-            release/padlock-*
-            release/checksums.txt
-            release/sbom/*
-          draft: false
-          prerelease: false
-          generate_release_notes: true
+            aegisgate-${{ steps.get_version.outputs.version }}-linux-amd64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-linux-arm64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-windows-amd64.zip
+            aegisgate-${{ steps.get_version.outputs.version }}-darwin-amd64.tar.gz
+            aegisgate-${{ steps.get_version.outputs.version }}-darwin-arm64.tar.gz
+            sb.cyclonedx.json
+            sb.spdx.json
+            sb.txt
+          generate_release_notes: false
+          make_latest: true
+          prerelease: ${{ contains(github.ref_name, 'rc') }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
