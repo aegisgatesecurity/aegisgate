@@ -17,7 +17,7 @@ type Framework string
 // Compliance frameworks
 const (
 	// FrameworkNIST1500 is the NIST AI Risk Management Framework.
-	FrameworkNIST1500 Framework = "NIST_AI_RMF"
+	FrameworkNIST1500 Framework = "NIST.AI-1.500"
 	// FrameworkATLAS is the MITRE ATLAS framework.
 	FrameworkATLAS Framework = "ATLAS"
 	// FrameworkSOC2 is the SOC 2 framework.
@@ -27,7 +27,7 @@ const (
 	// FrameworkHIPAA is the HIPAA framework.
 	FrameworkHIPAA Framework = "HIPAA"
 	// FrameworkPCIDSS is the PCI-DSS framework.
-	FrameworkPCIDSS Framework = "PCI_DSS"
+	FrameworkPCIDSS Framework = "PCI-DSS"
 	// FrameworkOWASP is the OWASP framework.
 	FrameworkOWASP Framework = "OWASP"
 	// FrameworkISO27001 is the ISO 27001 framework.
