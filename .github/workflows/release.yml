@@ -156,10 +156,10 @@ jobs:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
         run: |
-          $OUTPUT_NAME = "padlock${{ matrix.suffix }}"
+          $OUTPUT_NAME = "aegisgate${{ matrix.suffix }}"
           Write-Host "Building for ${{ matrix.goos }}/${{ matrix.goarch }} -> $OUTPUT_NAME"
           $env:CGO_ENABLED = "0"
-          go build -ldflags "-s -w -X main.Version=${{ needs.version-check.outputs.version }}" -trimpath -o "$OUTPUT_NAME" ./cmd/padlock
+          go build -ldflags "-s -w -X main.Version=${{ needs.version-check.outputs.version }}" -trimpath -o "$OUTPUT_NAME" ./cmd/aegisgate
           Get-Item "$OUTPUT_NAME"
 
       - name: Calculate checksum
@@ -300,7 +300,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v1
         with:
-          name: Padlock ${{ needs.version-check.outputs.version }}
+          name: AegisGate ${{ needs.version-check.outputs.version }}
           body_path: release_notes.md
           files: |
             release/padlock-*
