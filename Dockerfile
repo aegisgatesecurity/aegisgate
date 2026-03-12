@@ -18,8 +18,8 @@ COPY config/ ./config/
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
     -ldflags="-s -w" \
-    -o /build/padlock \
-    ./cmd/padlock
+    -o /build/aegisgate \
+    ./cmd/aegisgate
 
 # Final stage - minimal runtime image
 FROM alpine:latest
@@ -27,21 +27,21 @@ FROM alpine:latest
 RUN apk --no-cache add ca-certificates
 
 # Create non-root user
-RUN addgroup -g 1001 padlock && \
-    adduser -u 1001 -G padlock -s /bin/false -D padlock
+RUN addgroup -g 1001 aegisgate && \
+    adduser -u 1001 -G aegisgate -s /bin/false -D aegisgate
 
 WORKDIR /app
 
 # Copy binary from builder
-COPY --from=builder /build/padlock /app/padlock
-COPY config/aegisgate.yml.example /app/padlock.yml
+COPY --from=builder /build/aegisgate /app/aegisgate
+COPY config/aegisgate.yml.example /app/aegisgate.yml
 
 # Use non-root user
-USER padlock
+USER aegisgate
 
 # Expose ports
 EXPOSE 8080 8443 8444
 
 # Set entrypoint
-ENTRYPOINT ["/app/padlock"]
-CMD ["--config", "/app/padlock.yml"]
+ENTRYPOINT ["/app/aegisgate"]
+CMD ["--config", "/app/aegisgate.yml"]

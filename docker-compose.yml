@@ -5,19 +5,25 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: aegisgatesecurity/aegisgate:latest
+    container_name: aegisgate
     ports:
+      - "8080:8080"
       - "8443:8443"
+      - "8444:8444"
     volumes:
       - ./config:/app/config:ro
       - ./certs:/app/certs:ro
     environment:
       - LOG_LEVEL=debug
       - COMPLIANCE_ENABLED=true
+      - AEGISGATE_TIER=community
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8443/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
       interval: 30s
       timeout: 10s
       retries: 3
+      start_period: 10s
     restart: unless-stopped
     deploy:
       resources:
@@ -27,3 +33,9 @@ services:
         reservations:
           cpus: '0.5'
           memory: 256M
+    networks:
+      - aegisgate-network
+
+networks:
+  aegisgate-network:
+    driver: bridge
