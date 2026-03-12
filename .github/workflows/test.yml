@@ -64,8 +64,8 @@ jobs:
     - name: Upload binary
       uses: actions/upload-artifact@v4
       with:
-        name: padlock-${{ runner.os }}-amd64
-        path: bin/padlock
+        name: aegisgate-${{ runner.os }}-amd64
+        path: bin/aegisgate
 
   docker:
     runs-on: ubuntu-latest
@@ -77,11 +77,11 @@ jobs:
     - name: Download built binary
       uses: actions/download-artifact@v4
       with:
-        name: padlock-${{ runner.os }}-amd64
+        name: aegisgate-${{ runner.os }}-amd64
         path: bin/
 
     - name: Copy binary for Docker build
-      run: cp bin/padlock ./padlock
+      run: cp bin/aegisgate ./aegisgate
 
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
@@ -91,6 +91,6 @@ jobs:
       with:
         context: .
         push: false
-        tags: padlock/padlock:ci
+        tags: aegisgate/aegisgate:ci
         cache-from: type=gha
         cache-to: type=gha,mode=max
