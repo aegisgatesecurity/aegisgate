@@ -165,7 +165,7 @@ jobs:
       - name: Calculate checksum
         shell: pwsh
         run: |
-          $OUTPUT_NAME = "padlock${{ matrix.suffix }}"
+          $OUTPUT_NAME = "aegisgate${{ matrix.suffix }}"
           $hash = Get-FileHash "$OUTPUT_NAME" -Algorithm SHA256
           "$($hash.Hash)  $OUTPUT_NAME" | Out-File -FilePath "$($OUTPUT_NAME).sha256" -Encoding ascii
 
@@ -174,7 +174,7 @@ jobs:
         with:
           name: binaries-${{ matrix.goos }}-${{ matrix.goarch }}
           path: |
-            padlock-*
+            aegisgate-*
             *.sha256
 
   # ============================================
