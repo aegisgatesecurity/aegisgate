@@ -7,6 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+## [1.0.2] - 2026-03-12
+
+### Fixed
+- **Build System** - Fixed Makefile to produce `aegisgate` binary instead of old `padlock` name
+- **GitHub Actions** - Updated release.yml, test.yml to use correct artifact names (aegisgate-* instead of padlock-*)
+- **CI/CD Pipeline** - Resolved Docker build failures due to missing cmd/padlock directory
+- **Compliance Package** - Fixed duplicate const blocks causing "undefined: Framework" errors
+- **Type Naming** - Fixed type stuttering (ComplianceResult→Result, etc.)
+- **Documentation** - Added missing Go doc comments on exported symbols
+- **Docker** - Updated Dockerfile binary names and user references
+
+### Changed
+- All Padlock references replaced with AegisGate throughout codebase
+- Binary output path: `bin/aegisgate` (was `bin/padlock`)
+
+---
+
 ## [1.0.1] - 2026-03-11
 
 ### Fixed
