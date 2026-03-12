@@ -22,44 +22,43 @@ import (
 // Build info - set during build
 const version = "1.0.1"
 const commit  = "dev"
-
-// date is set at runtime
 var date = time.Now().Format(time.RFC3339)
 
+// Management endpoints that should NOT be proxied
+var managementEndpoints = map[string]bool{
+	"/health":  true,
+	"/version": true,
+	"/stats":   true,
+}
+
 func main() {
-	// Parse command line flags
 	showVersion := flag.Bool("version", false, "Show version information")
-	tierName := flag.String("tier", "community", "License tier (community, developer, professional, enterprise)")
+	tierName := flag.String("tier", "community", "License tier")
 	targetURL := flag.String("target", "https://api.openai.com", "Target AI provider URL")
 	bindAddress := flag.String("bind", "0.0.0.0:8080", "Bind address")
 	flag.Parse()
 
-	// Show version and exit
 	if *showVersion {
 		fmt.Printf("AegisGate %s (commit: %s, date: %s)\n", version, commit, date)
 		os.Exit(0)
 	}
 
-	// Parse tier
 	tier := core.GetTierByName(*tierName)
 	log.Printf("Starting AegisGate v%s with tier: %s", version, tier.String())
 
-	// Get limits for the tier
 	limits := tier.GetTierLimits()
 	log.Printf("Rate limit: %s requests/min", limits.FormatLimit("MaxRequestsPerMinute"))
 	log.Printf("Max users: %s", limits.FormatLimit("MaxUsers"))
 
-	// Create metrics manager
 	metricsMgr := metrics.NewManager(nil)
 
-	// Create proxy server with tier-based configuration
 	proxyOpts := &proxy.Options{
 		BindAddress:         *bindAddress,
 		Upstream:            *targetURL,
-		MaxBodySize:         10 * 1024 * 1024, // 10MB
+		MaxBodySize:         10 * 1024 * 1024,
 		Timeout:             30 * time.Second,
 		RateLimit:           limits.MaxRequestsPerMinute,
-		EnableMLDetection:   tier != core.TierCommunity, // ML starts at Developer
+		EnableMLDetection:   tier != core.TierCommunity,
 		MLSensitivity:       "medium",
 		EnablePromptInjectionDetection: tier != core.TierCommunity,
 		EnableContentAnalysis:         tier == core.TierProfessional || tier == core.TierEnterprise,
@@ -68,57 +67,51 @@ func main() {
 
 	proxyServer := proxy.New(proxyOpts)
 
-	// Create HTTP server
+	// Create single mux that handles both management and proxy routes
 	mux := http.NewServeMux()
 	
-	// Health check endpoint
+	// Management endpoints - handle locally
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		health := proxyServer.GetHealth()
 		w.Header().Set("Content-Type", "application/json")
 		
-		// Check if enabled
 		enabled, ok := health["enabled"].(bool)
 		if !ok || !enabled {
 			w.WriteHeader(http.StatusServiceUnavailable)
-			fmt.Fprintf(w, `{"status":"unhealthy","tier":"%s","proxy_enabled":false}`, tier.String())
+			fmt.Fprintf(w, "{\"status\":\"unhealthy\"}")
 			return
 		}
-		
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"status":"healthy","tier":"%s","proxy_enabled":true}`, tier.String())
+		fmt.Fprintf(w, "{\"status\":\"healthy\",\"tier\":\"%s\"}", tier.String())
 	})
 
-	// Version endpoint
 	mux.HandleFunc("/version", func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/json")
+		w.Header().Set("X-AegisGate-Version", version)
 		w.WriteHeader(http.StatusOK)
-		fmt.Fprintf(w, `{"version":"%s","commit":"%s","date":"%s"}`, version, commit, date)
+		fmt.Fprintf(w, "{\"version\":\"%s\",\"commit\":\"%s\"}", version, commit)
 	})
 
-	// Stats endpoint
 	mux.HandleFunc("/stats", func(w http.ResponseWriter, r *http.Request) {
 		stats := proxyServer.GetStats()
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
-		
 		reqCount, _ := stats["request_count"].(int64)
-		fmt.Fprintf(w, `{"request_count":%d,"enabled":%v}`, reqCount, stats["enabled"])
+		fmt.Fprintf(w, "{\"request_count\":%d}", reqCount)
 	})
 
-	// Proxy handler - forward to AI provider
-	mux.HandleFunc("/v1/", func(w http.ResponseWriter, r *http.Request) {
+	// Forward everything else to proxy handler
+	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		// Don't proxy management endpoints
+		if managementEndpoints[r.URL.Path] {
+			// Already handled above, but safeguard
+			w.WriteHeader(http.StatusNotFound)
+			return
+		}
+		// Use proxy as handler
 		proxyServer.ServeHTTP(w, r)
 	})
 
-	// Also handle root path for proxy
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		// Skip if it's one of our management endpoints
-		if r.URL.Path != "/health" && r.URL.Path != "/version" && r.URL.Path != "/stats" {
-			proxyServer.ServeHTTP(w, r)
-		}
-	})
-
-	// Apply middleware
 	handler := Chain(mux, tier, metricsMgr)
 
 	httpServer := &http.Server{
@@ -129,31 +122,25 @@ func main() {
 		IdleTimeout:  120 * time.Second,
 	}
 
-	// Start proxy
-	if err := proxyServer.Start(); err != nil {
-		log.Fatalf("Failed to start proxy: %v", err)
+	log.Printf("Proxy server configured, forwarding to: %s", *targetURL)
+	log.Printf("HTTP server listening on %s", *bindAddress)
+
+	// Start single HTTP server (NOT proxyServer.Start() which creates a separate server!)
+	if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+		log.Fatalf("HTTP server error: %v", err)
 	}
-	log.Printf("Proxy server started, forwarding to: %s", *targetURL)
 
-	// Start HTTP server in goroutine
-	go func() {
-		log.Printf("HTTP server listening on %s", *bindAddress)
-		if err := httpServer.ListenAndServe(); err != nil && err != http.ErrServerClosed {
-			log.Fatalf("HTTP server error: %v", err)
-		}
-	}()
-
-	// Wait for interrupt signal
+	// Wait for interrupt
 	quit := make(chan os.Signal, 1)
 	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
 	<-quit
 
 	log.Println("Shutting down server...")
 
-	// Graceful shutdown
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-
+	
+	// Stop proxy (cleanup rate limiters, etc)
 	proxyServer.Stop(ctx)
 	
 	if err := httpServer.Shutdown(ctx); err != nil {
@@ -163,10 +150,7 @@ func main() {
 	log.Println("AegisGate stopped")
 }
 
-// Chain applies middleware in order
 func Chain(h http.Handler, tier core.Tier, metricsMgr *metrics.Manager) http.Handler {
-	// Feature gating - adds tier headers to responses
 	h = middleware.TierBasedResponse(h)
-
 	return h
 }

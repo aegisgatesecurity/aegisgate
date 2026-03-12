@@ -42,6 +42,6 @@ USER aegisgate
 # Expose ports
 EXPOSE 8080 8443 8444
 
-# Set entrypoint
+# Set entrypoint - use command-line flags, not --config
 ENTRYPOINT ["/app/aegisgate"]
-CMD ["--config", "/app/aegisgate.yml"]
+CMD ["-bind", "0.0.0.0:8080", "-target", "https://api.openai.com", "-tier", "community"]
