@@ -74,7 +74,14 @@ dev/
 .hooks/
 
 # AegisGate specific
+# Development tools
+.goose/
+dev/
+.hooks/
+
+# AegisGate specific
 commit_msg.txt
+tag_msg.txt
 aegisgate.exe
 TODO.md
 

@@ -1,3 +1,0 @@
-\"AegisGate v1.0.2 - Bug fix release\" 
- 
-\"Fixed workflow build failures from Padlock rebranding\"
