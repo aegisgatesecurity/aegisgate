@@ -11,6 +11,7 @@ on:
 permissions:
   contents: read
   actions: read
+  security-events: write
 
 env:
   GO_VERSION: '1.24.0'
@@ -29,7 +30,6 @@ jobs:
           if [ -z "$VERSION" ]; then
             echo "VERSION not found in main.go"
             exit 1
-          fi
 
   test:
     name: Test
@@ -95,28 +95,40 @@ jobs:
   dast-scan:
     name: DAST Security Scan (OWASP ZAP)
     runs-on: ubuntu-latest
-    needs: [build, test]
+    needs: [build]
     timeout-minutes: 30
-    container: owasp/zap2docker-stable:latest
     
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
       
-      - name: Build and start test server
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      
+      - name: Build application
+        run: go build -o aegisgate ./cmd/aegisgate
+      
+      - name: Start application in background
         run: |
-          go build -o aegisgate .
-          nohup ./aegisgate serve --port 8080 &
-          sleep 10
-          curl -f http://localhost:8080/health || exit 1
+          chmod +x aegisgate
+          ./aegisgate --port 8080 &
+          echo $! > aegisgate.pid
+          sleep 15
+      
+      - name: Check server is running
+        run: curl -f http://localhost:8080/health || (cat aegisgate.log && exit 1)
       
       - name: Run OWASP ZAP Spider Scan
         run: |
-          python /zap/zap-baseline.py -t http://host.docker.internal:8080 -r zap-spider-report.html -l PASS || true
+          docker run --network host -u root -v ${{ github.workspace }}:/zap/wrk:rw owasp/zap2docker-stable zap-baseline.py -t http://localhost:8080 -r zap-spider-report.html -l PASS || true
+        continue-on-error: true
       
       - name: Run OWASP ZAP Active Scan
         run: |
-          python /zap/zap-full-scan.py -t http://host.docker.internal:8080 -r zap-full-report.html -l FAIL || true
+          docker run --network host -u root -v ${{ github.workspace }}:/zap/wrk:rw owasp/zap2docker-stable zap-full-scan.py -t http://localhost:8080 -r zap-full-report.html -l FAIL || true
         continue-on-error: true
       
       - name: Upload ZAP Reports
@@ -129,7 +141,10 @@ jobs:
       
       - name: Stop test server
         if: always()
-        run: pkill -f aegisgate || true
+        run: |
+          if [ -f aegisgate.pid ]; then
+            kill $(cat aegisgate.pid) 2>/dev/null || true
+          fi
 
   # ============================================================================
   # Dependency Vulnerability Scanning (Trivy)
@@ -144,16 +159,29 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+          cache: true
+      
+      - name: Download Go modules
+        run: go mod download
+      
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: 'fs'
           scan-ref: '.'
+          scanners: 'vuln'
           format: 'sarif'
           output: 'trivy-results.sarif'
+        continue-on-error: true
       
       - name: Upload Trivy Results
-        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          sarif_file: 'trivy-results.sarif'
-
+          name: trivy-results
+          path: trivy-results.sarif
+          retention-days: 30

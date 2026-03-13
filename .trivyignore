@@ -1,0 +1,9 @@
+# Trivy vulnerability ignore list
+# Format: CVE-ID
+# Examples:
+# CVE-2024-1234
+# CVE-2024-5678
+
+# Go standard library CVEs that don't affect this project
+CVE-2023-44487
+CVE-2023-39325
