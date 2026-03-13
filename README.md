@@ -60,7 +60,7 @@ This release includes critical security improvements:
 - **📋 Unified 4-Tier Model** - Consistent Community→Developer→Professional→Enterprise licensing
 - **🧹 Sensitive Data Cleanup** - Removed internal documentation from public repository
 
-**Existing installations**: See [MIGRATION.md](MIGRATION.md) for license upgrade instructions.
+**Existing installations**: See [MIGRATION.md](Migration.md) for license upgrade instructions.
 
 ### Key Capabilities
 
@@ -282,26 +282,26 @@ If you discover a vulnerability:
 ## Documentation
 
 ### Getting Started
-- [Quick Start Guide](docs/quickstart.md)
-- [Architecture Overview](docs/architecture.md)
-- [Configuration Reference](docs/configuration.md)
+- [Quick Start Guide](docs/getting-started.md)
+- [Architecture Overview](docs/ARCHITECTURE.md)
+- [Configuration Reference](docs/CONFIGURATION.md)
 
 ### Deployment
-- [Docker Deployment](docs/deploy/docker.md)
-- [Kubernetes/Helm](docs/deploy/kubernetes.md)
-- [Terraform](docs/deploy/terraform.md)
-- [Air-Gapped](docs/deploy/airgapped.md)
+- [Docker Deployment](docs/DEPLOYMENT_GUIDE.md)
+- [Kubernetes/Helm](docs/DEPLOYMENT_GUIDE.md)
+- [Terraform](docs/DEPLOYMENT_GUIDE.md)
+- [Air-Gapped](docs/DEPLOYMENT_GUIDE_BEGINNER.md)
 
 ### Security
-- [Threat Model](docs/security/threat-model.md)
-- [Compliance Guide](docs/compliance/README.md)
-- [License Security](docs/security/license-security.md)
+- [Threat Model](docs/SECURITY.md)
+- [Compliance Guide](docs/COMPLIANCE_REPORTS_GUIDE.md)
+- [License Security](docs/LICENSE_EVALUATION.md)
 
 ---
 
 ## Contributing
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
+We welcome contributions! Please see our [Contributing Guide](Contributing.md) for details.
 
 ### Development Setup
 
