@@ -51,7 +51,7 @@ In an era where AI powers critical business operations, security isn't optionalâ
 
 AegisGate is a comprehensive, enterprise-grade security platform designed specifically for AI API gateways. It provides real-time threat detection, compliance monitoring, secure proxying, and advanced ML-based behavioral analytics to protect your AI infrastructure.
 
-### What's New in v1.0.4 - Security Hardening Release
+### What's New in v1.0.6 - Security Hardening Release
 
 This release includes critical security improvements:
 
@@ -234,9 +234,9 @@ AegisGate uses a unified 4-tier licensing model with cryptographic validation.
 
 **License**: Not required (defaults to Community)
 
-### Paid Tiers
+### Paid Tiers\n\n> Contact sales@aegisgate.io for pricing information
 
-| Feature | Developer ($29/mo) | Professional ($99/mo) | Enterprise (Custom) |
+| Feature | Developer | Professional | Enterprise |
 |---------|-------------------|----------------------|---------------------|
 | Requests/min | 1,000 | 5,000 | Unlimited |
 | Users | 10 | 25 | Unlimited |
