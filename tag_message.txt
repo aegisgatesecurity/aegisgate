@@ -1,0 +1,1 @@
+AegisGate v1.0.4 - Production Helm Charts Release

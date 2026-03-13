@@ -1,9 +1,9 @@
 apiVersion: v2
-name: aegisgate
+name: aegisgate-ml
 description: "AegisGate - AI/ML Chatbot Security Gateway with Anomaly Detection"
 type: application
-version: 0.1.0
-appVersion: "0.38.0"
+version: 1.0.3
+appVersion: "1.0.3"
 
 keywords:
   - security
@@ -18,7 +18,7 @@ keywords:
 
 maintainers:
   - name: AegisGate Team
-    email: security@aegisgatesecurity.ioaegisgatesecurity.io
+    email: security@aegisgate.io
 
 sources:
   - https://github.com/aegisgatesecurity/aegisgate

@@ -71,7 +71,7 @@ jobs:
           sbom: false
 
       - name: Install Syft
-        uses: anchore/sbom-action/download-syft@v1
+        uses: anchore/sbom-action/download-syft@v0.16.1
         id: syft
 
       - name: Generate SBOM

@@ -1,0 +1,35 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "aegisgate.fullname" . }}-config
+  labels:
+    {{- include "aegisgate.labels" . | nindent 4 }}
+data:
+  config.yaml: |
+    server:
+      host: {{ .Values.config.server.host | quote }}
+      port: {{ .Values.config.server.port }}
+      max_connections: {{ .Values.config.server.max_connections }}
+      read_timeout: {{ .Values.config.server.read_timeout | quote }}
+      write_timeout: {{ .Values.config.server.write_timeout | quote }}
+    
+    websocket:
+      ping_interval: {{ .Values.config.websocket.ping_interval | quote }}
+      pong_timeout: {{ .Values.config.websocket.pong_timeout | quote }}
+      max_message_size: {{ .Values.config.websocket.max_message_size }}
+      compression: {{ .Values.config.websocket.compression }}
+    
+    security:
+      rate_limit: {{ .Values.config.security.rate_limit }}
+      burst_limit: {{ .Values.config.security.burst_limit }}
+      tls_version: {{ .Values.config.security.tls_version | quote }}
+      hsts_enabled: {{ .Values.config.security.hsts_enabled }}
+    
+    logging:
+      level: {{ .Values.config.logging.level | quote }}
+      format: {{ .Values.config.logging.format | quote }}
+    
+    metrics:
+      enabled: {{ .Values.config.metrics.enabled }}
+      port: {{ .Values.config.metrics.port }}
+      path: {{ .Values.config.metrics.path | quote }}
