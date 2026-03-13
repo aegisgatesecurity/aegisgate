@@ -88,3 +88,72 @@ jobs:
         with:
           name: gosec-results
           path: gosec.sarif
+
+  # ============================================================================
+  # DAST (Dynamic Application Security Testing) - OWASP ZAP
+  # ============================================================================
+  dast-scan:
+    name: DAST Security Scan (OWASP ZAP)
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    timeout-minutes: 30
+    container: owasp/zap2docker-stable:latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Build and start test server
+        run: |
+          go build -o aegisgate .
+          nohup ./aegisgate serve --port 8080 &
+          sleep 10
+          curl -f http://localhost:8080/health || exit 1
+      
+      - name: Run OWASP ZAP Spider Scan
+        run: |
+          python /zap/zap-baseline.py -t http://host.docker.internal:8080 -r zap-spider-report.html -l PASS || true
+      
+      - name: Run OWASP ZAP Active Scan
+        run: |
+          python /zap/zap-full-scan.py -t http://host.docker.internal:8080 -r zap-full-report.html -l FAIL || true
+        continue-on-error: true
+      
+      - name: Upload ZAP Reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-reports
+          path: zap-*.html
+          retention-days: 30
+      
+      - name: Stop test server
+        if: always()
+        run: pkill -f aegisgate || true
+
+  # ============================================================================
+  # Dependency Vulnerability Scanning (Trivy)
+  # ============================================================================
+  dependency-scan:
+    name: Dependency Vulnerability Scan
+    runs-on: ubuntu-latest
+    needs: [build]
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+      
+      - name: Upload Trivy Results
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: 'trivy-results.sarif'
+
