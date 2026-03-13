@@ -17,113 +17,19 @@ env:
 
 jobs:
   version-check:
-    name: Version from main.go
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Read version from main.go
-        run: |
-          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
-          echo "VERSION from main.go: $VERSION"
-          if [ -z "$VERSION" ]; then
-            echo "ERROR: No version found in main.go"
-            exit 1
-          fi
-
-  test:
-    name: Test
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-      - name: Download dependencies
-        run: go mod download
-      - name: Run tests
-        run: go test -v -coverprofile=coverage.out -skip TestHTTP3 ./...
-      - name: Upload coverage
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: coverage.out
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: [test, version-check]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-      - name: Build
-        run: go build -v -o aegisgate ./cmd/aegisgate
-      - name: Verify binary
-        run: |
-          if [ -f aegisgate ]; then
-            size=$(stat -c%s aegisgate)
-            echo "Binary size: $size bytes"
-          fi
-
-  security:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ env.GO_VERSION }}
-          cache: true
-      - name: Install gosec
-        run: curl -sSL https://github.com/securego/gosec/releases/download/v2.23.0/gosec_2.23.0_linux_amd64.tar.gz | tar -xz
-      - name: Run gosec
-        run: ./gosec -no-fail -fmt sarif -out gosec.sarif ./...
-      - name: Upload SARIF
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: gosec-results
-          path: gosec.sarif# CI - Main Continuous Integration Workflow
-name: CI
-
-on:
-  push:
-    branches: [main, master, develop]
-  pull_request:
-    branches: [main, master]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  actions: read
-
-env:
-  GO_VERSION: '1.24.0'
-
-jobs:
-  version-check:
     name: Version Consistency
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Check VERSION file
+      - name: Check main.go version
         run: |
-          if [ ! -f VERSION ]; then
-            echo "VERSION file not found"
+          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
+          echo "Version: $VERSION"
+          if [ -z "$VERSION" ]; then
+            echo "VERSION not found in main.go"
             exit 1
           fi
-          echo "VERSION: $(cat VERSION)"
 
   test:
     name: Test
@@ -160,12 +66,6 @@ jobs:
           cache: true
       - name: Build
         run: go build -v -o aegisgate ./cmd/aegisgate
-      - name: Verify binary
-        run: |
-          if [ -f aegisgate ]; then
-            size=$(stat -c%s aegisgate)
-            echo "Binary size: $size bytes"
-          fi
 
   security:
     name: Security Scan
