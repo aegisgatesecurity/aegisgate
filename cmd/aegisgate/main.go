@@ -20,7 +20,7 @@ import (
 )
 
 // Build info - set during build
-const version = "v1.0.5"
+const version = "v1.0.6"
 const commit  = "dev"
 var date = time.Now().Format(time.RFC3339)
 
