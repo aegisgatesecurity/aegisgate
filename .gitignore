@@ -1,89 +1,126 @@
-# .gitignore
+# ==========================================
+# AEGISGATE .GITIGNORE
+# Security-critical: Protect sensitive files
+# ==========================================
 
-# Binaries
-bin/
+# ----------------------------------------
+# BUILD OUTPUT
+# ----------------------------------------
+aegisgate
+aegisgate.exe
 *.exe
-*.exe~
 *.dll
 *.so
 *.dylib
-
-# Test binary
+aegisgate-debug
+gencerts
+licensegen
+padlock
 *.test
-
-# Output of the go coverage tool
 *.out
-coverage.out
-coverage.html
-
-# Go workspace file
+*.log
 go.work
+dist/
+build/
+bin/
 
-# Dependency directories
-vendor/
+# ----------------------------------------
+# CONFIGURATION & SECRETS (CRITICAL)
+# ----------------------------------------
+config/*.env
+!config/*.env.example
+config/production*.yml
+.mlintel/
+.mlintel_config/
+ml_config/
+configs/*.yml
+!configs/*.example.yml
+!configs/siem.yaml
+.env.local
+.env.*.local
+.env.backup
+.env.production
 
-# IDE
+# ----------------------------------------
+# PROPRIETARY / INTERNAL CODE
+# ----------------------------------------
+cmd/licensegen/
+cmd/padlock/
+cmd/debug/
+cmd/gencerts/
+.hooks/
+.git/hooks/
+scripts/*.ps1
+scripts/*.sh
+
+# ----------------------------------------
+# DEVELOPMENT ARTIFACTS
+# ----------------------------------------
 .idea/
 .vscode/
 *.swp
 *.swo
 *~
-
-# OS
 .DS_Store
 Thumbs.db
-
-# Environment files
-.env
-.env.local
-.env.*.local
-
-# Build artifacts
-dist/
-build/
-
-# Docker
-.docker/
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-tmp/
-temp/
 *.tmp
+*.temp
+*.bak
+*.backup
+*~
+_commit_msg.txt
+tag_message.txt
+push_fixes.ps1
+commit_release.ps1
+VERSION
 
-# Database
-*.db
-*.sqlite
-*.sqlite3
+# ----------------------------------------
+# TEST & BENCHMARK OUTPUTS
+# ----------------------------------------
+pkg/**/benchmark_results.txt
+tests/**/benchmark*.txt
+*_benchmark*.txt
+coverage.out
+coverage.html
+*.cov
+tests/integration/fixtures/
+tests/integration/aiapifixtures/
 
-# Certificates (keep these secure!)
-*.pem
-*.key
-*.crt
-!examples/*.pem
+# ----------------------------------------
+# DEPLOYMENT & INFRASTRUCTURE
+# ----------------------------------------
+deploy/k8s/*-secret.yaml
+deploy/k8s/*-secret.yml
+*.tfstate
+*.tfstate.*
+.terraform/
+volumes/
 
-# Test coverage
-coverage/
+# ----------------------------------------
+# SECURITY SCANS & AUDITS
+# ----------------------------------------
+security_scan_results*
+vulnerability_report*
+*.sarif
 
-# Development tools
-.goose/
-dev/
-.hooks/
+# ----------------------------------------
+# EXTERNAL & DEPENDENCIES
+# ----------------------------------------
+node_modules/
+vendor/
+packages/
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+venv/
+env/
 
-# AegisGate specific
-# Development tools
-.goose/
-dev/
-.hooks/
-
-# AegisGate specific
-commit_msg.txt
-tag_msg.txt
-aegisgate.exe
-TODO.md
-
-# Rebranding artifacts
-cmd/padlock/
+# ----------------------------------------
+# LICENSE & COMPLIANCE
+# ----------------------------------------
+*.lic
+license.key
+licenses/
+compliance_evidence/
+audit_logs/
