@@ -4,7 +4,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8.svg)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.0.4-green.svg)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Version](https://img.shields.io/badge/version-v1.0.6-green.svg)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://docker.com/)
 [![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5.svg)](https://kubernetes.io/)
 
