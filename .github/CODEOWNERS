@@ -1,0 +1,20 @@
+# CODEOWNERS - AegisGate Project
+
+# Core Team
+* @aegisgate/core-team
+
+# Security
+/pkg/security/ @aegisgate/security-team
+/pkg/auth/ @aegisgate/security-team
+/tests/security/ @aegisgate/security-team
+
+# API & Gateway
+/pkg/proxy/ @aegisgate/api-team
+/pkg/api/ @aegisgate/api-team
+
+# Infrastructure
+/deploy/ @aegisgate/devops
+/.github/ @aegisgate/devops
+
+# Testing
+/tests/ @aegisgate/qa-team
