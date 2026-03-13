@@ -55,7 +55,6 @@ AegisGate is a comprehensive, enterprise-grade security platform designed specif
 
 This release includes critical security improvements:
 
-- **✅ DEV_MODE Bypass Removed** - Eliminated environment variable bypass that allowed unlimited access
 - **🔐 Cryptographic License Validation** - HMAC-SHA256 (Developer/Professional) and RSA-PKCS1v15 (Enterprise) signatures
 - **🛡️ Hardware ID Binding** - Enterprise licenses bound to specific machines via hardware fingerprinting
 - **📋 Unified 4-Tier Model** - Consistent Community→Developer→Professional→Enterprise licensing
@@ -234,19 +233,9 @@ AegisGate uses a unified 4-tier licensing model with cryptographic validation.
 
 **License**: Not required (defaults to Community)
 
-### Paid Tiers\n\n> Contact sales@aegisgate.io for pricing information
+### Paid Tiers
 
-| Feature | Developer | Professional | Enterprise |
-|---------|-------------------|----------------------|---------------------|
-| Requests/min | 1,000 | 5,000 | Unlimited |
-| Users | 10 | 25 | Unlimited |
-| AI Providers | 4 | 6 | All |
-| Compliance | OWASP + NIST | All frameworks | All + ISO 42001 |
-| SSO | OAuth | SAML/OIDC | Full LDAP |
-| ML Features | Basic | Advanced | Custom models |
-| SIEM | Dashboard only | Full integration | All platforms |
-| Support | Email | Priority | 24/7 Dedicated |
-| Deployment | Docker/K8s | K8s/Helm | Air-gapped/HSM |
+> Contact sales@aegisgate.io for pricing information
 
 ### License Format
 
@@ -254,29 +243,6 @@ Licenses use cryptographic signing:
 
 - Developer/Professional: `base64(JSON).base64(HMAC-SHA256)`
 - Enterprise: `base64(JSON).base64(RSA-SIGNATURE)` + hardware binding
-
-### Generating a License
-
-```bash
-# Generate Developer/Professional license
-go run cmd/licensegen/main.go \
-  -tier=professional \
-  -email=user@company.com \
-  -days=365 \
-  -secret=/path/to/.license-secret
-
-# Generate Enterprise license with hardware binding
-go run cmd/licensegen/main.go \
-  -tier=enterprise \
-  -email=admin@enterprise.com \
-  -days=365 \
-  -hardware-id="$(cat /sys/class/net/eth0/address | tr -d ':')$(cat /proc/cpuinfo | grep Serial | cut -d' ' -f2)" \
-  -secret=/path/to/.license-secret
-```
-
----
-
-## Security
 
 ### Security-First Design
 
