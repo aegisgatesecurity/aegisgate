@@ -1,0 +1,1 @@
+docs: Remove DEV_MODE reference from README 
