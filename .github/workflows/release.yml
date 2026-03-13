@@ -71,14 +71,14 @@ jobs:
           sbom: false
 
       - name: Install Syft
-        uses: anchore/sbom-action/download-syft@v0
+        uses: anchore/sbom-action/download-syft@v1
         id: syft
 
       - name: Generate SBOM
         run: |
-          ${{ steps.syft.outputs.syft-path }} dir:./ -o cyclonedx-json > sb.cyclonedx.json
-          ${{ steps.syft.outputs.syft-path }} dir:./ -o spdx-json > sb.spdx.json
-          ${{ steps.syft.outputs.syft-path }} dir:./ -o table > sb.txt
+          ${{ steps.syft.outputs.syft-path }} ./ -o cyclonedx-json=sb.cyclonedx.json
+          ${{ steps.syft.outputs.syft-path }} ./ -o spdx-json=sb.spdx.json
+          ${{ steps.syft.outputs.syft-path }} ./ -o table=sb.txt
 
       - name: Build Go binaries
         run: |
