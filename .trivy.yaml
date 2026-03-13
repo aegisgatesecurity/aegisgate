@@ -10,7 +10,6 @@ severity:
 
 scan:
   security: true
- 漏洞: true
 
 ignorefile: .trivyignore
 
