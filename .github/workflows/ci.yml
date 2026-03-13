@@ -25,11 +25,13 @@ jobs:
         uses: actions/checkout@v4
       - name: Check main.go version
         run: |
-          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
-          echo "Version: $VERSION"
-          if [ -z "$VERSION" ]; then
-            echo "VERSION not found in main.go"
+          echo "Checking version in main.go..."
+          VERSION_LINE=$(grep 'const version = ' cmd/aegisgate/main.go)
+          if [ -z "$VERSION_LINE" ]; then
+            echo "ERROR: Version constant not found in main.go"
             exit 1
+          fi
+          echo "Found version line: $VERSION_LINE"
 
   test:
     name: Test
