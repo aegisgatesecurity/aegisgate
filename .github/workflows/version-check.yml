@@ -19,25 +19,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Read VERSION file
+      - name: Read version from main.go
         id: version
         run: |
-          VERSION=$(cat VERSION | tr -d '[:space:]')
+          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "VERSION: $VERSION"
-
-      - name: Verify VERSION in main.go
-        run: |
-          MAIN_GO_VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
-          echo "main.go version: $MAIN_GO_VERSION"
-          
-          if [ "${{ steps.version.outputs.version }}" != "$MAIN_GO_VERSION" ]; then
-            echo "ERROR: Version mismatch!"
-            echo "  VERSION file: ${{ steps.version.outputs.version }}"
-            echo "  main.go:      $MAIN_GO_VERSION"
-            exit 1
-          fi
-          echo "✓ Version consistency verified"
 
       - name: Verify VERSION matches git tag (if tagged)
         if: startsWith(github.ref, 'refs/tags/')
@@ -46,19 +33,20 @@ jobs:
           echo "Git tag: v$GIT_TAG"
           
           if [ "${{ steps.version.outputs.version }}" != "$GIT_TAG" ]; then
-            echo "ERROR: VERSION file does not match git tag!"
-            echo "  VERSION file: ${{ steps.version.outputs.version }}"
-            echo "  Git tag:      v$GIT_TAG"
+            echo "ERROR: Version in main.go does not match git tag!"
+            echo "  main.go:     ${{ steps.version.outputs.version }}"
+            echo "  Git tag:     v$GIT_TAG"
             exit 1
           fi
-          echo "✓ Git tag matches VERSION"
+          echo "✓ Git tag matches main.go version"
 
       - name: Check go.mod Go version
         run: |
           GO_VERSION=$(grep '^go ' go.mod | awk '{print $2}')
           echo "go.mod Go version: $GO_VERSION"
-          
-          # Check CI uses consistent Go version
-          if grep -q 'GO_VERSION.*${{ steps.version.outputs.go_version }}' .github/workflows/*.yml 2>/dev/null; then
-            echo "✓ Go version consistent in CI workflows"
-          fi
+
+      - name: Get git tags for verification
+        run: |
+          git fetch --tags origin main
+          TAG_COUNT=$(git tag | wc -l)
+          echo "Total tags: $TAG_COUNT"
