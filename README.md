@@ -98,28 +98,22 @@ AegisGate is an enterprise-grade AI API security platform that provides comprehe
 
 ### Docker
 
-```bash
 docker-compose up -d
-```
 
 Access the dashboard at: http://localhost:8080
 
 ### From Source
 
-```bash
 git clone https://github.com/aegisgatesecurity/aegisgate.git
 cd aegisgate
 make build
 ./bin/aegisgate -tier community
-```
 
 ### Configuration
 
-```bash
 export AEGISGATE_BIND=0.0.0.0:8080
 export AEGISGATE_TARGET=https://api.openai.com
 export AEGISGATE_TIER=community
-```
 
 ---
 
@@ -138,7 +132,7 @@ AegisGate acts as a secure proxy between your applications and AI providers:
 
 ## Kubernetes Deployment
 
-AegisGate v1.0.3+ includes production-ready Kubernetes manifests for enterprise deployments.
+AegisGate v1.0.3+ includes production-ready Kubernetes manifests and Helm charts for enterprise deployments.
 
 ### Included Kubernetes Resources
 
@@ -146,56 +140,83 @@ AegisGate v1.0.3+ includes production-ready Kubernetes manifests for enterprise 
 |----------|-------------|
 | **Deployment** | Production-ready deployment with resource limits |
 | **Service** | ClusterIP service for internal access |
+| **ServiceAccount** | Kubernetes service account for pod |
+| **ConfigMap** | Configuration management |
+| **Secret** | Secure credential storage (mount secrets as volumes) |
 | **HorizontalPodAutoscaler (HPA)** | Auto-scaling based on CPU/memory metrics |
 | **PodDisruptionBudget (PDB)** | Ensure minimum availability during disruptions |
 | **NetworkPolicy** | Pod-level network security controls |
-| **RBAC** | ServiceAccount, ClusterRole, and ClusterRoleBinding |
-| **ConfigMap** | Configuration management |
-| **Secret** | Secure credential storage (mount secrets as volumes) |
 
 ### Deploy to Kubernetes
 
-```bash
 # Apply Kubernetes manifests
-kubectl apply -f k8s/production/
+kubectl apply -f deploy/k8s/
 
-# Or use Helm
-helm install aegisgate ./helm/aegisgate
-```
+# Or use Helm (recommended)
+helm install aegisgate ./deploy/helm/aegisgate
 
-### Helm Chart
+### Helm Charts
 
-AegisGate includes a Helm chart for easy Kubernetes deployment:
+AegisGate includes two production-ready Helm charts:
 
-```bash
-# Add Helm repository (if published)
-helm repo add aegisgate https://aegisgatesecurity.github.io/helm-charts
-helm repo update
-helm install aegisgate aegisgate/aegisgate
-```
+#### Basic Chart (aegisgate)
 
-### Configuration via ConfigMap
+For standard deployments with core security features:
 
-The Kubernetes deployment uses a ConfigMap for configuration:
+helm install aegisgate ./deploy/helm/aegisgate
 
-```yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: aegisgate-config
-data:
-  AEGISGATE_BIND: ":8080"
-  AEGISGATE_TIER: "enterprise"
-  AEGISGATE_LOG_LEVEL: "info"
-```
+#### ML-Enabled Chart (aegisgate-ml)
+
+For deployments requiring ML anomaly detection:
+
+helm install aegisgate-ml ./deploy/helm/aegisgate-ml
+
+| Chart | Purpose | Resources |
+|-------|---------|-----------|
+| aegisgate | Core proxy + security | Deployment, Service, ConfigMap, ServiceAccount |
+| aegisgate-ml | + ML anomaly detection | All basic + HPA, Ingress, PVC, NetworkPolicy |
+
+### Helm Chart Validation Results (v1.0.3)
+
+| Test | Status |
+|------|--------|
+| helm lint | PASS (0 failures) |
+| helm template | Renders successfully |
+| helm install --dry-run | Passes API validation |
+| Live Kubernetes deployment | Running |
+| Version alignment | 1.0.3 across all |
 
 ---
 
 ## Release Notes
 
-### v1.0.3 (Current)
+### v1.0.4 (Current)
 
-**Release Date:** March 2026
+**Release Date:** March 12, 2026
+
+#### New Features
+- **Production-Ready Helm Charts**: Full Kubernetes deployment support with:
+  - Basic chart (aegisgate) for core security
+  - ML-enabled chart (aegisgate-ml) for anomaly detection
+  - Both charts validated and tested in live Kubernetes
+
+#### Improvements
+- **Helm Chart**: Fixed template naming (padlock.* to aegisgate.*), array syntax, missing templates
+- **Helm Chart**: Fixed version alignment (0.1.0/0.2.0 to 1.0.3)
+- **Docker**: Production image built with Go 1.24.0, distroless base, 45.6MB
+
+#### Bug Fixes
+- Release workflow now uses anchore/sbom-action/download-syft@v0 with dynamic path resolution
+- Added missing serviceaccount.yaml to basic chart
+- Added missing service.yaml to basic chart
+- Added missing configmap.yaml to basic chart
+- Fixed array syntax in ML chart ingress template
+
+---
+
+### v1.0.3
+
+**Release Date:** March 12, 2026
 
 #### New Features
 - **Kubernetes Production Manifests**: Added full K8s deployment with:
@@ -204,13 +225,6 @@ data:
   - PodDisruptionBudget for high availability
   - NetworkPolicy for pod-level security
   - ConfigMap for configuration management
-
-#### Improvements
-- **Helm Chart**: Fixed Helm chart version compatibility
-- **GitHub Actions Workflow**: Fixed Syft SBOM generation using dynamic path resolution
-
-#### Bug Fixes
-- Release workflow now uses `anchore/sbom-action/download-syft@v0` with `steps.syft.outputs.syft-path` instead of hardcoded paths
 
 ---
 
@@ -256,7 +270,6 @@ See SECURITY.md for full disclosure guidelines.
 
 ### API Reference
 
-```bash
 # Health check
 curl http://localhost:8080/health
 
@@ -265,7 +278,6 @@ curl http://localhost:9090/metrics
 
 # Version info
 curl http://localhost:8080/version
-```
 
 ---
 
@@ -273,14 +285,12 @@ curl http://localhost:8080/version
 
 We welcome contributions! Please read CONTRIBUTING.md before submitting PRs.
 
-```bash
 git clone https://github.com/aegisgatesecurity/aegisgate.git
 cd aegisgate
 git checkout -b feature/your-feature
 make test
 git commit -m "Add your feature"
 git push origin feature/your-feature
-```
 
 ---
 
