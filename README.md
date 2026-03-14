@@ -133,47 +133,108 @@ rate_limit:
 
 ## 🏗️ Architecture
 
-                            YOUR APPLICATION
-                  (LLM SDK, REST API, LangChain, etc.)
-                                   │
-                                   │ 🔒 TLS 1.3 + mTLS
-                                   ▼
-                    ┌──────────────────────────────┐
-                    │      AEGISGATE GATEWAY        │
-                    │  ┌────────────────────────┐  │
-                    │  │    SECURITY LAYER      │  │
-                    │  │  ┌───────┐ ┌─────────┐│  │
-                    │  │  │Filter │ │ Response││  │
-                    │  │  │Injection│ │   DLP  ││  │
-                    │  │  └───────┘ └─────────┘│  │
-                    │  │  ┌───────────────────┐│  │
-                    │  │  │  Threat Intel     ││  │
-                    │  │  │  STIX/TAXII      ││  │
-                    │  │  └───────────────────┘│  │
-                    │  └────────────────────────┘  │
-                    │  ┌────────────────────────┐  │
-                    │  │  COMPLIANCE LAYER      │  │
-                    │  │  Policy │Audit│Reporter│  │
-                    │  │  RBAC   │Logs │ SOC2   │  │
-                    │  └────────────────────────┘  │
-                    │  ┌────────────────────────┐  │
-                    │  │     PROXY LAYER       │  │
-                    │  │  HTTP/2 │HTTP/3│gRPC  │  │
-                    │  │    < 5ms latency      │  │
-                    │  └────────────────────────┘  │
-                    └──────────┬───────────────────┘
-                               │
-               ┌───────────────┴───────────────┐
-               ▼                               ▼
-        ┌─────────────┐                 ┌─────────────┐
-        │   OPENAI    │                 │  ANTHROPIC  │
-        │api.openai.com                 │api.anthropic│.com
-        └─────────────┘                 └─────────────┘
-                 │                               │
-                 └───────────┬───────────────────┘
-                             ▼
-                  [Additional Providers]
-            Azure | AWS Bedrock | Cohere | Ollama
+```mermaid
+%%{ init: { 
+    'theme': 'dark',
+    'themeVariables': { 
+        'primaryColor': '#0d47a1',
+        'primaryBorderColor': '#1565c0',
+        'primaryTextColor': '#ffffff',
+        'lineColor': '#ffffff',
+        'background': '#000000'
+    } 
+} }%%
+graph TD
+    subgraph Clients
+        C1[Web Applications]
+        C2[Mobile Apps]
+        C3[API Clients]
+        C4[Server Services]
+    end
+
+    subgraph "AegisGate Platform"
+        subgraph "API Gateway Layer"
+            AG[API Gateway<br/>Load Balancing & Routing]
+        end
+
+        subgraph "Security Layer"
+            AUTH[Authentication<br/>OAuth2/JWT]
+            AUTHZ[Authorization<br/>RBAC/ABAC]
+            RATE[Rate Limiting]
+            THREAT[Threat Detection]
+        end
+
+        subgraph "Core Services"
+            PROXY[AI Proxy<br/>Provider Abstraction]
+            COMP[Compliance<br/>PII Redaction & Audit]
+            OBS[Observability<br/>Metrics & Logging]
+        end
+
+        subgraph "AI Intelligence"
+            ML[ML Detection<br/>Content Safety]
+            TRANS[Transform Engine<br/>Request/Response]
+        end
+    end
+
+    subgraph "AI Providers"
+        OPENAI[OpenAI]
+        ANTHROPIC[Anthropic]
+        GOOGLE[Google AI]
+        AZURE[Azure OpenAI]
+        COHERE[Cohere]
+    end
+
+    C1 --> AG
+    C2 --> AG
+    C3 --> AG
+    C4 --> AG
+
+    AG --> AUTH
+    AUTH --> AUTHZ
+    AUTHZ --> RATE
+    RATE --> THREAT
+    THREAT --> PROXY
+
+    PROXY --> COMP
+    COMP --> OBS
+    OBS --> TRANS
+    TRANS --> ML
+    ML --> OPENAI
+    ML --> ANTHROPIC
+    ML --> GOOGLE
+    ML --> AZURE
+    ML --> COHERE
+
+    %% Blue‑tinted classes for a dark background
+    classDef client fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px;
+    classDef gateway fill:#1e40af,stroke:#60a5fa,stroke-width:2px;
+    classDef security fill:#1d4ed8,stroke:#93c5fd,stroke-width:2px;
+    classDef core fill:#2563eb,stroke:#bfdbfe,stroke-width:2px;
+    classDef ml fill:#3b82f6,stroke:#dbeafe,stroke-width:2px;
+    classDef provider fill:#0ea5e9,stroke:#bae6fd,stroke-width:2px;
+
+    class C1,C2,C3,C4 client;
+    class AG gateway;
+    class AUTH,AUTHZ,RATE,THREAT security;
+    class PROXY,COMP,OBS core;
+    class TRANS,ML ml;
+    class OPENAI,ANTHROPIC,GOOGLE,AZURE,COHERE provider;
+```
+
+### 📦 Package Structure
+
+| Package | Purpose | Size |
+|---------|---------|------|
+| pkg/proxy/ | HTTP/2, HTTP/3, mTLS proxying, load balancing | 86KB |
+| pkg/compliance/ | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001 frameworks | 35KB |
+| pkg/threatintel/ | STIX/TAXII threat intel, IOC management | 71KB |
+| pkg/ml/ | Anomaly detection, behavioral analysis ML models | 49KB |
+| pkg/siem/ | Splunk, Elastic, Datadog, QRadar event streaming | 37KB |
+| pkg/sso/ | SAML 2.0, OIDC, OAuth 2.0, LDAP integration | 27KB |
+| pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
+
+---
+
 
 ### 📦 Package Structure
 
