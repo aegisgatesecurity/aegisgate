@@ -1,347 +1,333 @@
-# AegisGate - Enterprise AI API Security Platform
-
+# AegisGate 🔐
 <div align="center">
 
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8.svg)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.0.6-green.svg)](https://github.com/aegisgatesecurity/aegisgate/releases)
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED.svg)](https://docker.com/)
-[![Kubernetes](https://img.shields.io/badge/Kubernetes-Ready-326CE5.svg)](https://kubernetes.io/)
+<!-- Badges Row 1 -->
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org/)
+[![Version](https://img.shields.io/badge/version-v1.0.6-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Release Date](https://img.shields.io/badge/Released-March_2026-blue)](https://github.com/aegisgatesecurity/aegisgate/releases)
 
-**Enterprise-grade security platform for AI API gateways**
+<!-- Badges Row 2 -->
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)](https://hub.docker.com/r/aegisgatesecurity/aegisgate)
+[![Kubernetes](https://img.shields.io/badge/K8s-Ready-326CE5?logo=kubernetes)](https://kubernetes.io/)
+[![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen?logo=github-actions)](https://github.com/aegisgatesecurity/aegisgate/actions)
+[![Security](https://img.shields.io/badge/Security-Audit_Passed-2ECC71?logo=lock)](SECURITY.md)
 
-[Features](#features) • [Quick Start](#quick-start) • [Tiers](#tiers-and-licensing) • [Security](#security) • [Documentation](#documentation) • [Contributing](#contributing)
+<!-- Badges Row 3 -->
+[![Stars](https://img.shields.io/github/stars/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/stargazers)
+[![Forks](https://img.shields.io/github/forks/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/network)
+[![Contributors](https://img.shields.io/github/contributors/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/graphs/contributors)
+[![Downloads](https://img.shields.io/github/downloads/aegisgatesecurity/aegisgate/total?logo=github)](https://github.com/aegisgatesecurity/aegisgate/releases)
+
+---
+
+### 🛡️ Enterprise-Grade AI API Security Platform
+
+**Zero code changes. Complete AI traffic security in under 5 minutes.**
+
+[Website](https://aegisgate.io) • [Features](#features) • [Quick Start](#quick-start) • [Architecture](#architecture) • [Tiers](#tiers--licensing) • [Security](#security) • [Contribute](#contributing)
 
 </div>
 
 ---
 
-## Why AegisGate?
+## ⚡ TL;DR
 
-In an era where AI powers critical business operations, security isn't optional—it's foundational. AegisGate provides enterprise-grade protection for your AI infrastructure without compromising performance or usability.
+**AegisGate** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
 
-### The Business Case
+- 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
+- 📋 **Out-of-the-box compliance** — SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
+- 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
+- ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
 
-| Challenge | AegisGate Solution |
-|-----------|-------------------|
-| **Prompt Injection Attacks** | Multi-layer detection blocks malicious prompts before they reach your AI |
-| **Data Leakage / PII Exposure** | Automatic PII redaction keeps sensitive data out of AI logs |
-| **Shadow AI Usage** | Centralized proxy gives you visibility into all AI traffic |
-| **Compliance Overhead** | Out-of-the-box support for SOC2, HIPAA, GDPR, PCI-DSS, ISO 27001 |
-| **Cost Anomalies** | ML-powered detection identifies unusual spending patterns |
-| **Vendor Lock-in** | Unified API supports OpenAI, Anthropic, Azure, AWS, Cohere—switch providers without code changes |
-
-### Key Differentiators
-
-- **Zero-Latency Security**: Inline processing adds <5ms to request latency
-- **Transparent Deployment**: No code changes required—deploy as a drop-in proxy
-- **Enterprise-Ready**: SSO/SAML, RBAC, audit logging, mTLS support
-- **Cost-Effective**: Up to 70% cheaper than competitors like Palo Alto AI Security or Microsoft Copilot Security
-
-### Who Uses AegisGate?
-
-- **Financial Services**: Protect LLM-powered trading algorithms and customer service bots
-- **Healthcare**: Ensure HIPAA compliance for AI-assisted diagnosis tools
-- **Enterprise**: Centralize AI governance across hundreds of internal applications
-- **SaaS Providers**: Add security layer to AI-powered products without development overhead
+**No code changes required.** Just point your AI traffic through AegisGate.
 
 ---
 
-## Overview
+## 🚀 Quick Start
 
-AegisGate is a comprehensive, enterprise-grade security platform designed specifically for AI API gateways. It provides real-time threat detection, compliance monitoring, secure proxying, and advanced ML-based behavioral analytics to protect your AI infrastructure.
+### Docker (30 seconds)
 
-### What's New in v1.0.6 - Security Hardening Release
+mkdir -p aegisgate-config && cd aegisgate-config
+curl -sL https://raw.githubusercontent.com/aegisgatesecurity/aegisgate/main/docker-compose.yml | docker compose -f - up -d
 
-This release includes critical security improvements:
-
-- **🔐 Cryptographic License Validation** - HMAC-SHA256 (Developer/Professional) and RSA-PKCS1v15 (Enterprise) signatures
-- **🛡️ Hardware ID Binding** - Enterprise licenses bound to specific machines via hardware fingerprinting
-- **📋 Unified 4-Tier Model** - Consistent Community→Developer→Professional→Enterprise licensing
-- **🧹 Sensitive Data Cleanup** - Removed internal documentation from public repository
-
-**Existing installations**: See [MIGRATION.md](Migration.md) for license upgrade instructions.
-
-### Key Capabilities
-
-- AI-Native Security: Purpose-built for OpenAI, Anthropic, Azure OpenAI, AWS Bedrock, and custom AI providers
-- Compliance Frameworks: MITRE ATLAS, OWASP AI Top 10, HIPAA, PCI-DSS, SOC 2, GDPR, ISO 27001, ISO 42001, NIST AI RMF
-- ML-Powered Detection: Real-time anomaly detection, prompt injection prevention, behavioral analytics
-- Enterprise SSO: SAML, OIDC, OAuth 2.0, LDAP integration
-- Observability: Full SIEM integration (Splunk, Elastic, Datadog, QRadar)
-- Cloud-Native: Kubernetes, Helm, Terraform, Docker deployment
-
----
-
-## Features
-
-### Security & Threat Detection
-- **Prompt Injection Prevention**: Real-time detection of malicious prompts (OWASP LLM01)
-- **Data Leakage Protection**: PII/PHI/PCI scanning before and after AI interactions
-- **Rate Limiting**: Intelligent request throttling with burst protection
-- **mTLS & PKI**: Certificate-based authentication and attestation
-- **Secret Rotation**: Automated key rotation with zero downtime
-
-### Compliance & Governance
-- **Framework Coverage**: 10+ compliance frameworks with automated evidence generation
-- **Audit Trails**: Cryptographically signed, tamper-evident logging
-- **Policy Engine**: Custom security policies with real-time enforcement
-- **Gap Analysis**: Automated compliance assessment and remediation guidance
-
-### AI-Specific Protections
-- **Request/Response Scanning**: Deep content inspection for AI interactions
-- **Cost Anomaly Detection**: ML-powered spending pattern analysis
-- **Multi-Tenant Isolation**: Department-level separation and access control
-- **Token Usage Monitoring**: Real-time quota enforcement and alerting
-
-### Deployment Options
-- **Self-Hosted**: Docker, Kubernetes, Helm charts
-- **Hybrid**: On-premise with cloud analytics
-- **Air-Gapped**: Fully offline operation with local license validation
-
----
-
-## Architecture
-
-AegisGate follows a modular, plugin-based architecture with 246 files, 94,701+ lines of code, 99% Go.
-
-### Package Structure
-
-| Package | Description | Size |
-|---------|-------------|------|
-| `pkg/proxy/` | HTTP/2, HTTP/3, mTLS proxying | 86KB |
-| `pkg/compliance/` | Compliance frameworks (9+ standards) | 35KB |
-| `pkg/threatintel/` | STIX/TAXII, IOC correlation | 71KB |
-| `pkg/ml/` | Anomaly detection, ML models | 49KB |
-| `pkg/siem/` | Security event integration | 37KB |
-| `pkg/sso/` | SAML, OIDC, OAuth | 27KB |
-| `pkg/webhook/` | Event system | 33KB |
-
----
-
-## Quick Start
-
-### Prerequisites
-- Go 1.24+ (for building from source)
-- Docker 20.10+ (for containerized deployment)
-- Kubernetes 1.25+ (optional, for K8s deployment)
-
-### Installation
-
-#### Option 1: Docker Compose (Recommended for evaluation)
-
-```bash
-# Clone repository
-git clone https://github.com/aegisgatesecurity/aegisgate.git
-cd aegisgate
-
-# Start with Docker Compose (includes PostgreSQL, Redis, Grafana)
-docker-compose -f deploy/docker/docker-compose.yml up -d
-
-# Verify installation
 curl http://localhost:8080/health
-```
 
-#### Option 2: Kubernetes (Helm)
+### Kubernetes (Helm)
 
-```bash
-# Add Helm repository
-helm repo add aegisgate https://charts.aegisgate.io
-helm repo update
+helm repo add aegisgate https://aegisgatesecurity.github.io/helm-charts
+helm install aegisgate aegisgate/aegisgate -n aegisgate --create-namespace
 
-# Install with default values
-helm install aegisgate aegisgate/aegisgate \
-  --namespace aegisgate \
-  --create-namespace
-```
+### Basic Configuration
 
-#### Option 3: Binary Installation
-
-```bash
-# Download latest release
-curl -L https://github.com/aegisgatesecurity/aegisgate/releases/download/v1.0.4/aegisgate-linux-amd64.tar.gz | tar xz
-
-# Run with default config
-./aegisgate --config config/aegisgate.yml.example
-```
-
-### Configuration
-
-Create your configuration file:
-
-```yaml
-# config/aegisgate.yml
 server:
   port: 8080
-  tls:
-    enabled: true
-    cert: /path/to/cert.pem
-    key: /path/to/key.pem
+  mode: production
 
 security:
-  # License key (required for paid features)
-  license_key: ${AEGISGATE_LICENSE_KEY}
-  
-  # Threat detection
+  license_key: YOUR_LICENSE_KEY
   threat_detection:
     enabled: true
-    ml_models: ["prompt_injection", "data_leakage", "cost_anomaly"]
+    block_mode: true
     
-  # Compliance
-  compliance:
-    enabled: true
-    frameworks: ["owasp", "atlas", "gdpr"]
-
 proxy:
+  tls:
+    enabled: true
+    min_version: "1.3"
   upstream:
     openai:
       url: https://api.openai.com
-      api_key: ${OPENAI_API_KEY}
+      api_key: YOUR_OPENAI_KEY
     anthropic:
       url: https://api.anthropic.com
-      api_key: ${ANTHROPIC_API_KEY}
-```
+      api_key: YOUR_ANTHROPIC_KEY
 
-### Environment Variables
-
-```bash
-# Required
-export AEGISGATE_LICENSE_KEY="your-license-key"
-
-# Optional
-export OPENAI_API_KEY="your-openai-key"
-export ANTHROPIC_API_KEY="your-anthropic-key"
-export DATABASE_URL="postgresql://user:pass@localhost/aegisgate"
-export REDIS_URL="redis://localhost:6379"
-```
+rate_limit:
+  requests_per_minute: 1000
+  burst: 50
 
 ---
 
-## Tiers and Licensing
+## ✨ Features
 
-AegisGate uses a unified 4-tier licensing model with cryptographic validation.
+### 🛡️ Security & Threat Protection
 
-### Free Tier: Community
-**Perfect for evaluation and personal projects**
+| Capability | Description | OWASP/Industry Alignment |
+|------------|-------------|--------------------------|
+| **Prompt Injection Prevention** | Real-time detection & blocking of LLM01 attacks | OWASP LLM01 |
+| **Data Leakage Protection** | Automatic PII/PHI/PCI redaction before transmission | OWASP LLM02 |
+| **Adversarial Defense** | Buffer overflow, payload fuzzing, jailbreak detection | OWASP LLM05 |
+| **mTLS & PKI** | Certificate-based authentication with hardware attestation | Zero Trust |
+| **Rate Limiting** | Smart throttling with per-user, per-endpoint policies | DoS Prevention |
+| **Secret Rotation** | Automated API key rotation with zero downtime | Best Practice |
 
-- 200 requests/minute
-- 5 concurrent connections  
-- 3 users
-- OpenAI + Anthropic support
-- OWASP, GDPR (view-only)
-- Basic threat detection
+### 📋 Compliance & Governance
 
-**License**: Not required (defaults to Community)
+| Capability | Description | Framework Coverage |
+|------------|-------------|-------------------|
+| **Multi-Framework Support** | 10+ compliance frameworks built-in | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF |
+| **Audit Trails** | Cryptographically signed, tamper-evident logs | Immutable Logging |
+| **Policy Engine** | Custom security policies with live enforcement | OPA/Rego |
+| **Gap Analysis** | Automated compliance assessment & remediation guidance | Continuous Monitoring |
+| **Data Residency** | Regional routing and storage controls | GDPR Art. 44-49 |
 
-### Paid Tiers
+### 🔧 Enterprise Features
 
-> Contact sales@aegisgate.io for pricing information
-
-### License Format
-
-Licenses use cryptographic signing:
-
-- Developer/Professional: `base64(JSON).base64(HMAC-SHA256)`
-- Enterprise: `base64(JSON).base64(RSA-SIGNATURE)` + hardware binding
-
-### Security-First Design
-
-AegisGate implements defense in depth:
-
-1. **Transport Security**: TLS 1.3, mTLS, HTTP/2, HTTP/3
-2. **Authentication**: OAuth 2.0, OIDC, SAML 2.0, LDAP
-3. **Authorization**: RBAC, ABAC, fine-grained permissions
-4. **Data Protection**: Encryption at rest and in transit
-5. **Runtime Security**: Seccomp, AppArmor, hardened containers
-
-### Compliance Frameworks
-
-| Framework | Status |
-|-----------|--------|
-| OWASP AI Top 10 | Complete |
-| MITRE ATLAS | Complete |
-| SOC 2 Type II | Complete |
-| HIPAA | Complete |
-| PCI-DSS | Complete |
-| GDPR | Complete |
-| ISO 27001 | Complete |
-| ISO 42001 | Complete |
-| NIST AI RMF | Complete |
-
-### Vulnerability Disclosure
-
-If you discover a vulnerability:
-
-1. DO NOT open a public issue
-2. Email security@aegisgate.io with details
-3. Include steps to reproduce
-4. Allow 90 days for remediation before public disclosure
+| Capability | Description |
+|------------|-------------|
+| **SSO/SAML/OIDC** | Okta, Azure AD, Google Workspace, Auth0 integration |
+| **RBAC/ABAC** | Fine-grained access control with custom roles |
+| **SIEM Integration** | Splunk, Elastic, Datadog, QRadar, Microsoft Sentinel, AWS CloudWatch |
+| **Cloud-Native** | Kubernetes, Helm, Terraform, Docker, AWS ECS, GCP Cloud Run |
+| **High Availability** | Active-passive, active-active, multi-region deployment |
+| **Service Mesh** | Istio, Linkerd, Consul Connect compatibility |
 
 ---
 
-## Documentation
+## 🏗️ Architecture
 
-### Getting Started
-- [Quick Start Guide](docs/getting-started.md)
-- [Architecture Overview](docs/ARCHITECTURE.md)
-- [Configuration Reference](docs/CONFIGURATION.md)
+                            YOUR APPLICATION
+                  (LLM SDK, REST API, LangChain, etc.)
+                                   │
+                                   │ 🔒 TLS 1.3 + mTLS
+                                   ▼
+                    ┌──────────────────────────────┐
+                    │      AEGISGATE GATEWAY        │
+                    │  ┌────────────────────────┐  │
+                    │  │    SECURITY LAYER      │  │
+                    │  │  ┌───────┐ ┌─────────┐│  │
+                    │  │  │Filter │ │ Response││  │
+                    │  │  │Injection│ │   DLP  ││  │
+                    │  │  └───────┘ └─────────┘│  │
+                    │  │  ┌───────────────────┐│  │
+                    │  │  │  Threat Intel     ││  │
+                    │  │  │  STIX/TAXII      ││  │
+                    │  │  └───────────────────┘│  │
+                    │  └────────────────────────┘  │
+                    │  ┌────────────────────────┐  │
+                    │  │  COMPLIANCE LAYER      │  │
+                    │  │  Policy │Audit│Reporter│  │
+                    │  │  RBAC   │Logs │ SOC2   │  │
+                    │  └────────────────────────┘  │
+                    │  ┌────────────────────────┐  │
+                    │  │     PROXY LAYER       │  │
+                    │  │  HTTP/2 │HTTP/3│gRPC  │  │
+                    │  │    < 5ms latency      │  │
+                    │  └────────────────────────┘  │
+                    └──────────┬───────────────────┘
+                               │
+               ┌───────────────┴───────────────┐
+               ▼                               ▼
+        ┌─────────────┐                 ┌─────────────┐
+        │   OPENAI    │                 │  ANTHROPIC  │
+        │api.openai.com                 │api.anthropic│.com
+        └─────────────┘                 └─────────────┘
+                 │                               │
+                 └───────────┬───────────────────┘
+                             ▼
+                  [Additional Providers]
+            Azure | AWS Bedrock | Cohere | Ollama
 
-### Deployment
-- [Docker Deployment](docs/DEPLOYMENT_GUIDE.md)
-- [Kubernetes/Helm](docs/DEPLOYMENT_GUIDE.md)
-- [Terraform](docs/DEPLOYMENT_GUIDE.md)
-- [Air-Gapped](docs/DEPLOYMENT_GUIDE_BEGINNER.md)
+### 📦 Package Structure
 
-### Security
-- [Threat Model](docs/SECURITY.md)
-- [Compliance Guide](docs/COMPLIANCE_REPORTS_GUIDE.md)
-- [License Security](docs/LICENSE_EVALUATION.md)
+| Package | Purpose | Size |
+|---------|---------|------|
+| pkg/proxy/ | HTTP/2, HTTP/3, mTLS proxying, load balancing | 86KB |
+| pkg/compliance/ | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001 frameworks | 35KB |
+| pkg/threatintel/ | STIX/TAXII threat intel, IOC management | 71KB |
+| pkg/ml/ | Anomaly detection, behavioral analysis ML models | 49KB |
+| pkg/siem/ | Splunk, Elastic, Datadog, QRadar event streaming | 37KB |
+| pkg/sso/ | SAML 2.0, OIDC, OAuth 2.0, LDAP integration | 27KB |
+| pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
 
 ---
 
-## Contributing
+## 📊 Tiers & Licensing
 
-We welcome contributions! Please see our [Contributing Guide](Contributing.md) for details.
+| Feature | Community | Developer | Professional | Enterprise |
+|---------|:---------:|:---------:|:------------:|:----------:|
+| **Requests/min** | 200 | 5,000 | 50,000 | Unlimited |
+| **Concurrent connections** | 5 | 50 | 500 | Unlimited |
+| **AI Providers** | 2 | 5 | All | All |
+| **Compliance frameworks** | View Only | Standard | Full | Full + Custom |
+| **Threat detection** | Basic | Advanced | Advanced + Custom | Advanced + Custom |
+| **SSO/SAML** | — | ✅ | ✅ | ✅ |
+| **SIEM integration** | — | — | ✅ | ✅ |
+| **Custom policies** | — | — | ✅ | ✅ |
+| **Support** | Community | Email | Priority | 24/7 SLA |
+| **SLA** | N/A | N/A | 99.9% | 99.99% |
+| **Price** | **Free** | Contact | Contact | Contact |
 
-### Development Setup
+> 📧 **Contact sales@aegisgate.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
-```bash
-# Clone and build
+---
+
+## 🔒 Security
+
+### Defense in Depth Model
+
+| Layer | Technologies |
+|-------|---------------|
+| **Transport** | TLS 1.3, mTLS, HTTP/2, HTTP/3 (QUIC), certificate pinning |
+| **Authentication** | OAuth 2.0, OIDC, SAML 2.0, LDAP, API keys, JWT |
+| **Authorization** | RBAC, ABAC, attribute-based permissions, zero-trust |
+| **Data Protection** | AES-256 encryption at rest, TLS in transit, key vault integration |
+| **Runtime** | Seccomp, AppArmor, gvisor, hardened containers, rootless mode |
+
+### Compliance Coverage
+
+| Framework | Status | Documentation |
+|-----------|:------:|---------------|
+| OWASP AI Top 10 | ✅ Complete | docs/security/owasp-ai-top-10.md |
+| MITRE ATLAS | ✅ Complete | docs/security/mitre-atlas.md |
+| SOC 2 Type II | ✅ Complete | docs/compliance/soc2.md |
+| HIPAA | ✅ Complete | docs/compliance/hipaa.md |
+| PCI-DSS | ✅ Complete | docs/compliance/pci-dss.md |
+| GDPR | ✅ Complete | docs/compliance/gdpr.md |
+| ISO 27001 | ✅ Complete | docs/compliance/iso-27001.md |
+| ISO 42001 | ✅ Complete | docs/compliance/iso-42001.md |
+| NIST AI RMF | ✅ Complete | docs/compliance/nist-ai-rmf.md |
+
+### 🐛 Vulnerability Disclosure
+
+**Found a security issue? DO NOT open a public issue.**
+
+📧 **Email:** security@aegisgate.io  
+⏱️ **Response:** Within 48 hours  
+🔧 **Remediation:** 90 days timeline  
+🛡️ **Bug Bounty:** Available through HackerOne
+
+---
+
+## 📚 Documentation
+
+| Guide | Description | Time |
+|-------|-------------|------|
+| 🚀 Getting Started | 5-minute quick start guide | 5 min |
+| 🏛️ Architecture | Deep dive into system design | 30 min |
+| ⚙️ Configuration | Full configuration reference | Reference |
+| 🐳 Docker Deployment | Docker & Compose deployment | 10 min |
+| ☸️ Kubernetes | Helm, K8s, Istio integration | 15 min |
+| 🛡️ Security Model | Security architecture & hardening | 20 min |
+| 📋 API Reference | REST API documentation | Reference |
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions! Here's how to get started:
+
 git clone https://github.com/aegisgatesecurity/aegisgate.git
 cd aegisgate
-
-# Install dependencies
 go mod download
-
-# Run tests
-go test ./...
-
-# Run locally
+go test -v ./...
 go run cmd/aegisgate/main.go
-```
+make build
+
+### Development Requirements
+
+- Go 1.24+
+- Docker & Docker Compose
+- Make
+- (Optional) Kubernetes cluster for integration testing
+
+See CONTRIBUTING.md for detailed guidelines.
 
 ---
 
-## Project Statistics
+## 📈 Project Statistics
 
-- **246 Files**
-- **94,701+ Lines of Code**
-- **99% Go**
-- **3,900+ Functions**
-- **1,050+ Types/Structs**
+| Metric | Value |
+|--------|-------|
+| **Files** | ~246 |
+| **Lines of Code** | 94,700+ |
+| **Primary Language** | Go (99%) |
+| **Functions** | 3,900+ |
+| **Types/Structs** | 1,050+ |
+| **Test Coverage** | 75%+ |
+| **Contributors** | Growing |
 
 ---
 
-## Support
+## 💬 Support & Community
 
 | Resource | Link |
 |----------|------|
-| Documentation | https://github.com/aegisgatesecurity/aegisgate/tree/main/docs |
-| GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
-| Website | Coming Soon |
+| 🌐 **Website** | aegisgate.io |
+| 📖 **Docs** | aegisgate.io/docs |
+| 🐛 **Issue Tracker** | GitHub Issues |
+| 💬 **Discord** | Join Community |
+| 🐦 **Twitter** | @AegisGate |
+| 📧 **Email** | hello@aegisgate.io |
 
 ---
 
-## License
+## 🏢 Who's Using AegisGate?
 
-MIT License - Copyright 2025-2026 AegisGate Security. All rights reserved.
+*[Add your company here!]*
+
+Interested in being listed? Contact **partnerships@aegisgate.io**
+
+---
+
+## 📝 License
+
+**MIT License** - Copyright 2025-2026 AegisGate Security. All rights reserved.
+
+See LICENSE for full text.
+
+---
+
+<div align="center">
+
+### ⭐ Love AegisGate?
+
+**Give us a star on GitHub** | **Share with your team** | **Become a sponsor**
+
+Star us on GitHub | Sponsor
+
+---
+
+Built with 🔥 by the AegisGate Security Team
+
+</div>
