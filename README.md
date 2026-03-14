@@ -234,20 +234,6 @@ graph TD
 | pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
 
 
-### 📦 Package Structure
-
-| Package | Purpose | Size |
-|---------|---------|------|
-| pkg/proxy/ | HTTP/2, HTTP/3, mTLS proxying, load balancing | 86KB |
-| pkg/compliance/ | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001 frameworks | 35KB |
-| pkg/threatintel/ | STIX/TAXII threat intel, IOC management | 71KB |
-| pkg/ml/ | Anomaly detection, behavioral analysis ML models | 49KB |
-| pkg/siem/ | Splunk, Elastic, Datadog, QRadar event streaming | 37KB |
-| pkg/sso/ | SAML 2.0, OIDC, OAuth 2.0, LDAP integration | 27KB |
-| pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
-
----
-
 ## 📊 Performance Benchmarks
 
 ### 🚀 Industry-Leading Performance
