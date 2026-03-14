@@ -1,4 +1,4 @@
-name: Padlock ML Pipeline
+name: AegisGate ML Pipeline
 
 on:
   push:

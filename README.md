@@ -296,12 +296,14 @@ rate_limit:
 
 We welcome contributions! Here's how to get started:
 
+```bash
 git clone https://github.com/aegisgatesecurity/aegisgate.git
 cd aegisgate
 go mod download
 go test -v ./...
 go run cmd/aegisgate/main.go
 make build
+```
 
 ### Development Requirements
 
