@@ -18,7 +18,7 @@
 [![Stars](https://img.shields.io/github/stars/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/stargazers)
 [![Forks](https://img.shields.io/github/forks/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/network)
 [![Contributors](https://img.shields.io/github/contributors/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/graphs/contributors)
-[![Downloads](https://img.shields.io/github/downloads/aegisgatesecurity/aegisgate/total?logo=github)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Downloads](https://img.shields.io/github/downloads/aegisgatesecurity/aegisgate/total?logo=github)](https://github.com/aegisgatesecurity/aegisgate/releases/latest)
 
 ---
 
@@ -335,7 +335,6 @@ graph TD
 📧 **Email:** security@aegisgate.io  
 ⏱️ **Response:** Within 48 hours  
 🔧 **Remediation:** 90 days timeline  
-🛡️ **Bug Bounty:** Available through HackerOne
 
 ---
 
@@ -343,13 +342,13 @@ graph TD
 
 | Guide | Description | Time |
 |-------|-------------|------|
-| 🚀 Getting Started | 5-minute quick start guide | 5 min |
-| 🏛️ Architecture | Deep dive into system design | 30 min |
-| ⚙️ Configuration | Full configuration reference | Reference |
-| 🐳 Docker Deployment | Docker & Compose deployment | 10 min |
-| ☸️ Kubernetes | Helm, K8s, Istio integration | 15 min |
-| 🛡️ Security Model | Security architecture & hardening | 20 min |
-| 📋 API Reference | REST API documentation | Reference |
+| [🚀 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
+| [🏛️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
+| [⚙️ Configuration](docs/configuration.md) | Full configuration reference | Reference |
+| [🐳 Docker Deployment](docs/docker-deployment.md) | Docker & Compose deployment | 10 min |
+| [☸️ Kubernetes](docs/kubernetes.md) | Helm, K8s, Istio integration | 15 min |
+| [🛡️ Security Model](docs/security-model.md) | Security architecture & hardening | 20 min |
+| [📋 API Reference](docs/api-reference.md) | REST API documentation | Reference |
 
 ---
 
@@ -373,7 +372,7 @@ make build
 - Make
 - (Optional) Kubernetes cluster for integration testing
 
-See CONTRIBUTING.md for detailed guidelines.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
@@ -408,7 +407,7 @@ See CONTRIBUTING.md for detailed guidelines.
 
 *[Add your company here!]*
 
-Interested in being listed? Contact **partnerships@aegisgate.io**
+Interested in being listed? Contact **support@aegisgatesecurity.io**
 
 ---
 
@@ -416,7 +415,7 @@ Interested in being listed? Contact **partnerships@aegisgate.io**
 
 **MIT License** - Copyright 2025-2026 AegisGate Security. All rights reserved.
 
-See LICENSE for full text.
+See [LICENSE](LICENSE) for full text.
 
 ---
 
@@ -424,9 +423,9 @@ See LICENSE for full text.
 
 ### ⭐ Love AegisGate?
 
-**Give us a star on GitHub** | **Share with your team** | **Become a sponsor**
+**[Give us a star on GitHub](https://github.com/aegisgatesecurity/aegisgate)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
 
-Star us on GitHub | Sponsor
+[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers) | [Sponsor](https://github.com/sponsors/aegisgatesecurity)
 
 ---
 
