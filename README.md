@@ -233,8 +233,6 @@ graph TD
 | pkg/sso/ | SAML 2.0, OIDC, OAuth 2.0, LDAP integration | 27KB |
 | pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
 
----
-
 
 ### 📦 Package Structure
 
