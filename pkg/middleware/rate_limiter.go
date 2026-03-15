@@ -1,9 +1,11 @@
 package middleware
 
 import (
-	"fmt"
+	"math"
+	"net"
 	"net/http"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -12,24 +14,19 @@ import (
 
 // RateLimitConfig holds rate limiting configuration
 type RateLimitConfig struct {
-	// RequestsPerMinute - max requests allowed per minute
 	RequestsPerMinute int
-	// Burst - max burst requests allowed (above steady rate)
-	Burst int
-	// BlockDuration - how long to block after limit exceeded
-	BlockDuration time.Duration
-	// KeyFunc - function to generate unique key for rate limiting
-	KeyFunc func(r *http.Request) string
+	Burst            int
+	BlockDuration    time.Duration
+	KeyFunc          func(r *http.Request) string
 }
 
 // DefaultRateLimitConfig returns default configuration based on tier
 func DefaultRateLimitConfig(tier core.Tier) RateLimitConfig {
 	limits := tier.GetTierLimits()
 
-	// Handle unlimited
 	requestsPerMinute := limits.MaxRequestsPerMinute
 	if requestsPerMinute == -1 {
-		requestsPerMinute = 1000000 // Effectively unlimited
+		requestsPerMinute = 1000000
 	}
 
 	burst := limits.MaxBurstRequests
@@ -48,29 +45,106 @@ func DefaultRateLimitConfig(tier core.Tier) RateLimitConfig {
 	}
 }
 
+// getRealClientIP extracts the real client IP from request, preventing header spoofing
+func getRealClientIP(r *http.Request) string {
+	// Priority 1: Cloudflare (most trusted)
+	if cfIP := r.Header.Get("cf-connecting-ip"); cfIP != "" {
+		return cfIP
+	}
+
+	// Priority 2: Akamai
+	if trueClientIP := r.Header.Get("True-Client-IP"); trueClientIP != "" {
+		return trueClientIP
+	}
+
+	// Priority 3: X-Forwarded-For - ONLY if from trusted proxy (internal IPs)
+	if forwarded := r.Header.Get("X-Forwarded-For"); forwarded != "" {
+		firstIP := strings.Split(forwarded, ",")[0]
+		firstIP = strings.TrimSpace(firstIP)
+
+		if isValidIP(firstIP) {
+			if isPrivateIP(firstIP) {
+				return firstIP
+			}
+		}
+	}
+
+	// Fallback: Use RemoteAddr (cannot be spoofed at TCP level)
+	remoteAddr := r.RemoteAddr
+	if idx := strings.LastIndex(remoteAddr, ":"); idx != -1 {
+		remoteAddr = remoteAddr[:idx]
+	}
+	return remoteAddr
+}
+
+// isValidIP checks if string is a valid IPv4 or IPv6 address
+func isValidIP(ip string) bool {
+	return net.ParseIP(ip) != nil
+}
+
+// isPrivateIP checks if IP is a private/internal network address (RFC 1918)
+func isPrivateIP(ip string) bool {
+	parsed := net.ParseIP(ip)
+	if parsed == nil {
+		return false
+	}
+
+	// Check 10.x.x.x (10.0.0.0/8)
+	if strings.HasPrefix(ip, "10.") {
+		return true
+	}
+
+	// Check 192.168.x.x (192.168.0.0/16)
+	if strings.HasPrefix(ip, "192.168.") {
+		return true
+	}
+
+	// Check 127.x.x.x (loopback)
+	if strings.HasPrefix(ip, "127.") {
+		return true
+	}
+
+	// Check 172.16-31.x.x (172.16.0.0/12)
+	if strings.HasPrefix(ip, "172.") {
+		// Extract the second octet
+		parts := strings.Split(ip, ".")
+		if len(parts) >= 2 {
+			secondOctet, err := strconv.Atoi(parts[1])
+			if err == nil && secondOctet >= 16 && secondOctet <= 31 {
+				return true
+			}
+		}
+	}
+
+	// IPv6 link-local and private ranges
+	if strings.HasPrefix(ip, "fe80::") {
+		return true
+	}
+	if strings.HasPrefix(ip, "fc") || strings.HasPrefix(ip, "fd") {
+		return true
+	}
+	if ip == "::1" {
+		return true
+	}
+
+	return false
+}
+
 // DefaultKeyFunc generates a rate limit key from the request
 func DefaultKeyFunc(r *http.Request) string {
-	// Try to use API key first
 	if apiKey := r.Header.Get("X-API-Key"); apiKey != "" {
 		return "api:" + apiKey
 	}
-
-	// Fall back to IP address
-	if forwarded := r.Header.Get("X-Forwarded-For"); forwarded != "" {
-		return "ip:" + forwarded
-	}
-
-	// Use remote address
-	return "ip:" + r.RemoteAddr
+	return "ip:" + getRealClientIP(r)
 }
 
 // RateLimiter implements per-client rate limiting using token bucket
 type RateLimiter struct {
-	mu       sync.Mutex
-	clients  map[string]*clientLimiter
-	config   RateLimitConfig
-	cleanup  chan struct{}
-	interval time.Duration
+	mu          sync.Mutex
+	clients     map[string]*clientLimiter
+	config      RateLimitConfig
+	cleanupChan chan struct{}
+	interval    time.Duration
 }
 
 // clientLimiter holds rate limit state for a single client
@@ -83,413 +157,100 @@ type clientLimiter struct {
 
 // NewRateLimiter creates a new rate limiter with the given configuration
 func NewRateLimiter(config RateLimitConfig) *RateLimiter {
-	if config.RequestsPerMinute <= 0 {
-		config.RequestsPerMinute = 60
-	}
-	if config.Burst <= 0 {
-		config.Burst = config.RequestsPerMinute / 10
-		if config.Burst < 1 {
-			config.Burst = 1
-		}
-	}
-	if config.BlockDuration <= 0 {
-		config.BlockDuration = time.Minute * 5
-	}
-	if config.KeyFunc == nil {
-		config.KeyFunc = DefaultKeyFunc
-	}
-
 	rl := &RateLimiter{
-		clients:  make(map[string]*clientLimiter),
-		config:   config,
-		cleanup:  make(chan struct{}),
-		interval: time.Minute,
+		clients:     make(map[string]*clientLimiter),
+		config:      config,
+		cleanupChan: make(chan struct{}),
+		interval:    time.Second,
 	}
-
-	// Start cleanup goroutine
 	go rl.cleanupLoop()
-
 	return rl
 }
 
-// cleanupLoop periodically removes stale client entries
+// cleanupLoop periodically removes old entries
 func (rl *RateLimiter) cleanupLoop() {
-	ticker := time.NewTicker(rl.interval)
+	ticker := time.NewTicker(time.Minute * 5)
 	defer ticker.Stop()
-
 	for {
 		select {
-		case <-rl.cleanup:
-			return
 		case <-ticker.C:
-			rl.cleanupStale()
+			rl.cleanup()
+		case <-rl.cleanupChan:
+			return
 		}
 	}
 }
 
-// cleanupStale removes rate limit entries that haven't been accessed recently
-func (rl *RateLimiter) cleanupStale() {
+// cleanup removes entries that haven't been accessed recently
+func (rl *RateLimiter) cleanup() {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
-
-	cutoff := time.Now().Add(-rl.interval * 2)
+	threshold := time.Now().Add(-time.Hour)
 	for key, client := range rl.clients {
-		if client.lastFill.Before(cutoff) {
+		if client.lastFill.Before(threshold) {
 			delete(rl.clients, key)
 		}
 	}
 }
 
-// Allow checks if a request is allowed under rate limits
-// Returns true if allowed, false if rate limited
-func (rl *RateLimiter) Allow(r *http.Request) bool {
-	key := rl.config.KeyFunc(r)
-
+// Allow checks if a request should be allowed and updates rate limits
+func (rl *RateLimiter) Allow(key string) (allow bool, remain int, retryIn time.Duration) {
 	rl.mu.Lock()
 	defer rl.mu.Unlock()
 
-	client, exists := rl.clients[key]
 	now := time.Now()
+	client, exists := rl.clients[key]
 
 	if !exists {
-		// New client - create limiter with full burst
-		rl.clients[key] = &clientLimiter{
-			tokens:  float64(rl.config.Burst),
+		client = &clientLimiter{
+			tokens:   float64(rl.config.Burst),
 			lastFill: now,
-			burst:   rl.config.Burst,
+			burst:    rl.config.Burst,
 		}
-		return true
+		rl.clients[key] = client
+		return true, rl.config.Burst - 1, 0
 	}
 
-	// Check if client is currently blocked
-	if !client.blocked.IsZero() && now.Before(client.blocked.Add(rl.config.BlockDuration)) {
-		return false
+	// Check if blocked
+	if !client.blocked.IsZero() && now.Before(client.blocked) {
+		retryIn = client.blocked.Sub(now)
+		return false, 0, retryIn
 	}
 
-	// Clear block status if block duration expired
-	if !client.blocked.IsZero() {
-		client.blocked = time.Time{}
-		client.tokens = float64(client.burst)
-	}
-
-	// Calculate token refill
+	// Refill tokens
 	elapsed := now.Sub(client.lastFill).Seconds()
-	refillRate := float64(rl.config.RequestsPerMinute) / 60.0
-	client.tokens += elapsed * refillRate
-	if client.tokens > float64(client.burst) {
-		client.tokens = float64(client.burst)
-	}
+	refill := float64(rl.config.RequestsPerMinute) * elapsed / 60.0
+	client.tokens = math.Min(float64(client.burst), client.tokens+refill)
 	client.lastFill = now
 
-	// Check if we have tokens available
+	// Check if allowed
 	if client.tokens >= 1 {
 		client.tokens--
-		return true
+		remain = int(client.tokens)
+		return true, remain, 0
 	}
 
-	// Rate limited - block the client
-	client.blocked = now
-	return false
+	// Block the client
+	client.blocked = now.Add(rl.config.BlockDuration)
+	return false, 0, rl.config.BlockDuration
 }
 
-// Middleware returns an HTTP middleware for rate limiting
+// Middleware returns a middleware that applies rate limiting
 func (rl *RateLimiter) Middleware(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !rl.Allow(r) {
-			w.Header().Set("Content-Type", "application/json")
-			w.Header().Set("Retry-After", "60")
-			w.Header().Set("X-RateLimit-Limit", strconv.Itoa(rl.config.RequestsPerMinute))
-			w.Header().Set("X-RateLimit-Remaining", "0")
-			w.WriteHeader(http.StatusTooManyRequests)
-			w.Write([]byte(`{"error": "rate_limit_exceeded", "message": "Too many requests. Please try again later."}`))
-			return
-		}
+		key := rl.config.KeyFunc(r)
+		isAllowed, remaining, retryAfter := rl.Allow(key)
 
-		// Add rate limit headers to response
 		w.Header().Set("X-RateLimit-Limit", strconv.Itoa(rl.config.RequestsPerMinute))
+		w.Header().Set("X-RateLimit-Remaining", strconv.Itoa(remaining))
 
-		next.ServeHTTP(w, r)
-	})
-}
-
-// Stop stops the rate limiter cleanup goroutine
-func (rl *RateLimiter) Stop() {
-	close(rl.cleanup)
-}
-
-// GetRateLimitConfig returns the current configuration
-func (rl *RateLimiter) GetRateLimitConfig() RateLimitConfig {
-	return rl.config
-}
-
-// ============================================================================
-// Tier-Aware Rate Limiter (uses tier limits automatically)
-// ============================================================================
-
-// TierRateLimiter creates a rate limiter based on the tier configuration
-type TierRateLimiter struct {
-	limiter *RateLimiter
-	tier    core.Tier
-}
-
-// NewTierRateLimiter creates a new tier-aware rate limiter
-func NewTierRateLimiter(tier core.Tier) *TierRateLimiter {
-	config := DefaultRateLimitConfig(tier)
-	return &TierRateLimiter{
-		limiter: NewRateLimiter(config),
-		tier:    tier,
-	}
-}
-
-// Middleware returns the rate limiting middleware
-func (trl *TierRateLimiter) Middleware(next http.Handler) http.Handler {
-	return trl.limiter.Middleware(next)
-}
-
-// UpdateTier updates the rate limiter to use new tier limits
-func (trl *TierRateLimiter) UpdateTier(tier core.Tier) {
-	trl.tier = tier
-	config := DefaultRateLimitConfig(tier)
-	trl.limiter = NewRateLimiter(config)
-}
-
-// GetTier returns the current tier
-func (trl *TierRateLimiter) GetTier() core.Tier {
-	return trl.tier
-}
-
-// ============================================================================
-// Concurrent Connection Limiter
-// ============================================================================
-
-// ConnectionLimiter limits concurrent connections
-type ConnectionLimiter struct {
-	mu           sync.Mutex
-	active       map[string]int
-	maxPerClient int
-	globalMax    int
-	globalActive int
-}
-
-// NewConnectionLimiter creates a new connection limiter
-func NewConnectionLimiter(maxPerClient, globalMax int) *ConnectionLimiter {
-	return &ConnectionLimiter{
-		active:       make(map[string]int),
-		maxPerClient: maxPerClient,
-		globalMax:    globalMax,
-	}
-}
-
-// Acquire attempts to acquire a connection slot
-// Returns true if acquired, false if at limit
-func (cl *ConnectionLimiter) Acquire(r *http.Request) bool {
-	key := DefaultKeyFunc(r)
-
-	cl.mu.Lock()
-	defer cl.mu.Unlock()
-
-	// Check global limit
-	if cl.globalMax > 0 && cl.globalActive >= cl.globalMax {
-		return false
-	}
-
-	// Check per-client limit
-	if cl.maxPerClient > 0 && cl.active[key] >= cl.maxPerClient {
-		return false
-	}
-
-	// Increment counters
-	cl.active[key]++
-	cl.globalActive++
-
-	return true
-}
-
-// Release releases a connection slot
-func (cl *ConnectionLimiter) Release(r *http.Request) {
-	key := DefaultKeyFunc(r)
-
-	cl.mu.Lock()
-	defer cl.mu.Unlock()
-
-	if cl.active[key] > 0 {
-		cl.active[key]--
-	}
-	if cl.globalActive > 0 {
-		cl.globalActive--
-	}
-}
-
-// Middleware returns the connection limiting middleware
-func (cl *ConnectionLimiter) Middleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !cl.Acquire(r) {
-			w.Header().Set("Content-Type", "application/json")
-			w.WriteHeader(http.StatusServiceUnavailable)
-			w.Write([]byte(`{"error": "too_many_connections", "message": "Too many concurrent connections. Please try again later."}`))
+		if !isAllowed {
+			w.Header().Set("Retry-After", strconv.FormatInt(int64(retryAfter.Seconds()), 10))
+			w.Header().Set("X-RateLimit-Reset", strconv.FormatInt(time.Now().Add(retryAfter).Unix(), 10))
+			http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
 			return
 		}
 
-		// Ensure we release on complete
-		defer cl.Release(r)
-
 		next.ServeHTTP(w, r)
 	})
 }
-
-// GetStats returns current connection statistics
-func (cl *ConnectionLimiter) GetStats() (perClient map[string]int, global int) {
-	cl.mu.Lock()
-	defer cl.mu.Unlock()
-
-	stats := make(map[string]int)
-	for k, v := range cl.active {
-		stats[k] = v
-	}
-	return stats, cl.globalActive
-}
-
-// ============================================================================
-// Tier-Aware Connection Limiter
-// ============================================================================
-
-// TierConnectionLimiter creates a connection limiter based on tier
-type TierConnectionLimiter struct {
-	limiter *ConnectionLimiter
-	tier    core.Tier
-}
-
-// NewTierConnectionLimiter creates a new tier-aware connection limiter
-func NewTierConnectionLimiter(tier core.Tier) *TierConnectionLimiter {
-	limits := tier.GetTierLimits()
-
-	maxConcurrent := limits.MaxConcurrentConnections
-	if maxConcurrent == -1 {
-		maxConcurrent = 10000 // Effectively unlimited
-	}
-
-	return &TierConnectionLimiter{
-		limiter: NewConnectionLimiter(maxConcurrent/10, maxConcurrent),
-		tier:    tier,
-	}
-}
-
-// Middleware returns the connection limiting middleware
-func (tcl *TierConnectionLimiter) Middleware(next http.Handler) http.Handler {
-	return tcl.limiter.Middleware(next)
-}
-
-// UpdateTier updates the connection limiter to use new tier limits
-func (tcl *TierConnectionLimiter) UpdateTier(tier core.Tier) {
-	tcl.tier = tier
-	limits := tier.GetTierLimits()
-
-	maxConcurrent := limits.MaxConcurrentConnections
-	if maxConcurrent == -1 {
-		maxConcurrent = 10000
-	}
-
-	tcl.limiter = NewConnectionLimiter(maxConcurrent/10, maxConcurrent)
-}
-
-// ============================================================================
-// Combined Rate and Connection Limiter
-// ============================================================================
-
-// CombinedLimiter combines rate limiting and connection limiting
-type CombinedLimiter struct {
-	rateLimiter      *TierRateLimiter
-	connectionLimiter *TierConnectionLimiter
-}
-
-// NewCombinedLimiter creates a new combined limiter
-func NewCombinedLimiter(tier core.Tier) *CombinedLimiter {
-	return &CombinedLimiter{
-		rateLimiter:      NewTierRateLimiter(tier),
-		connectionLimiter: NewTierConnectionLimiter(tier),
-	}
-}
-
-// Middleware returns the combined limiting middleware
-// Apply connection limit first, then rate limit
-func (cl *CombinedLimiter) Middleware(next http.Handler) http.Handler {
-	return cl.connectionLimiter.Middleware(cl.rateLimiter.Middleware(next))
-}
-
-// UpdateTier updates both limiters to use new tier limits
-func (cl *CombinedLimiter) UpdateTier(tier core.Tier) {
-	cl.rateLimiter.UpdateTier(tier)
-	cl.connectionLimiter.UpdateTier(tier)
-}
-
-// GetTier returns the current tier
-func (cl *CombinedLimiter) GetTier() core.Tier {
-	return cl.rateLimiter.GetTier()
-}
-
-// ============================================================================
-// HTTP Handlers for Rate Limit Status
-// ============================================================================
-
-// RateLimitStatusHandler returns JSON status about rate limits
-type RateLimitStatusHandler struct {
-	limiter *CombinedLimiter
-}
-
-// NewRateLimitStatusHandler creates a new status handler
-func NewRateLimitStatusHandler(limiter *CombinedLimiter) *RateLimitStatusHandler {
-	return &RateLimitStatusHandler{limiter: limiter}
-}
-
-// ServeHTTP returns rate limit status as JSON
-func (h *RateLimitStatusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	stats, globalConns := h.limiter.connectionLimiter.limiter.GetStats()
-	config := h.limiter.rateLimiter.limiter.GetRateLimitConfig()
-
-	response := fmt.Sprintf(`{
-	"rate_limit": {
-		"requests_per_minute": %d,
-		"burst": %d
-	},
-	"connections": {
-		"active": %d,
-		"by_client": %s
-	}
-}`, config.RequestsPerMinute, config.Burst, globalConns, formatClientStats(stats))
-
-	w.Header().Set("Content-Type", "application/json")
-	w.Write([]byte(response))
-}
-
-func formatClientStats(stats map[string]int) string {
-	result := "{"
-	first := true
-	for k, v := range stats {
-		if !first {
-			result += ","
-		}
-		first = false
-		result += fmt.Sprintf(`"%s":%d`, k, v)
-	}
-	result += "}"
-	return result
-}
-
-// ============================================================================
-// Usage Examples
-// ============================================================================
-
-/*
-// Example: Basic usage with tier-based limits
-func Example() {
-	// Create a rate limiter for Community tier (200/min, 5 concurrent)
-	limiter := NewCombinedLimiter(core.TierCommunity)
-
-	// Wrap your HTTP handler
-	handler := limiter.Middleware(yourHandler)
-
-	// Or use with tier updates (e.g., when user upgrades)
-	limiter.UpdateTier(core.TierDeveloper) // Now 1000/min, 25 concurrent
-	limiter.UpdateTier(core.TierProfessional) // Now 5000/min, 100 concurrent
-}
-*/

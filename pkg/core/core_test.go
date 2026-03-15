@@ -221,35 +221,6 @@ func TestLicenseManager_ProfessionalRequiresLicense(t *testing.T) {
 	}
 }
 
-func TestLicenseManager_DevModeAllowsAll(t *testing.T) {
-	// Set dev mode
-	t.Setenv("AEGISGATE_DEV_MODE", "true")
-
-	lm := NewLicenseManager("")
-
-	// All tiers should be allowed in dev mode
-	if !lm.IsModuleLicensed("any-module", TierEnterprise) {
-		t.Error("Dev mode should allow all tiers")
-	}
-}
-
-func TestLicenseManager_Override(t *testing.T) {
-	lm := NewLicenseManager("")
-
-	// Set override for specific module
-	lm.SetModuleOverride("premium-module", true)
-
-	if !lm.IsModuleLicensed("premium-module", TierEnterprise) {
-		t.Error("Module override should grant access")
-	}
-
-	lm.ClearOverrides()
-
-	if lm.IsModuleLicensed("premium-module", TierEnterprise) {
-		t.Error("ClearOverrides should remove access")
-	}
-}
-
 func TestLicenseManager_GenerateLicense(t *testing.T) {
 	key, err := GenerateLicense(
 		LicenseTypeEnterprise,

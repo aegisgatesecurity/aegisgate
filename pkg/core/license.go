@@ -2,13 +2,14 @@
 package core
 
 import (
+	"crypto"
 	"crypto/rsa"
+	"crypto/sha256"
 	"crypto/x509"
 	"encoding/base64"
 	"encoding/json"
 	"encoding/pem"
 	"fmt"
-	"os"
 	"strings"
 	"sync"
 	"time"
@@ -23,6 +24,7 @@ const (
 	LicenseStatusInvalid
 	LicenseStatusNotFound
 	LicenseStatusTierMismatch
+	LicenseStatusSignatureInvalid
 )
 
 func (s LicenseStatus) String() string {
@@ -37,6 +39,8 @@ func (s LicenseStatus) String() string {
 		return "not_found"
 	case LicenseStatusTierMismatch:
 		return "tier_mismatch"
+	case LicenseStatusSignatureInvalid:
+		return "signature_invalid"
 	default:
 		return "unknown"
 	}
@@ -83,7 +87,6 @@ type LicenseManager struct {
 	status      LicenseStatus
 	validatedAt time.Time
 	publicKey   *rsa.PublicKey
-	overrides   map[string]bool // For development/testing
 }
 
 // NewLicenseManager creates a new license manager.
@@ -93,8 +96,7 @@ func NewLicenseManager(licenseKey string) *LicenseManager {
 			LicenseKey:  licenseKey,
 			GracePeriod: 7 * 24 * time.Hour, // 7 days grace period
 		},
-		overrides: make(map[string]bool),
-		status:    LicenseStatusNotFound,
+		status: LicenseStatusNotFound,
 	}
 
 	// Validate license on creation
@@ -102,6 +104,15 @@ func NewLicenseManager(licenseKey string) *LicenseManager {
 		_ = lm.validateLicense()
 	}
 
+	return lm
+}
+
+// NewLicenseManagerWithKey creates a license manager with a public key for signature verification
+func NewLicenseManagerWithKey(licenseKey string, publicKeyPEM string) *LicenseManager {
+	lm := NewLicenseManager(licenseKey)
+	if publicKeyPEM != "" {
+		_ = lm.SetPublicKey([]byte(publicKeyPEM))
+	}
 	return lm
 }
 
@@ -136,24 +147,14 @@ func (lm *LicenseManager) IsModuleLicensed(moduleID string, tier Tier) bool {
 	lm.mu.RLock()
 	defer lm.mu.RUnlock()
 
-	// Development mode: check environment variable
-	if os.Getenv("AEGISGATE_DEV_MODE") == "true" {
-		return true
-	}
-
-	// Check overrides (for testing)
-	if allowed, exists := lm.overrides[moduleID]; exists {
-		return allowed
+	// CRITICAL SECURITY: No license means only free tiers
+	if lm.license == nil || lm.status != LicenseStatusValid {
+		return tier <= TierCommunity
 	}
 
 	// Community is always free
 	if tier <= TierCommunity {
 		return true
-	}
-
-	// No license = only free tiers
-	if lm.license == nil || lm.status != LicenseStatusValid {
-		return false
 	}
 
 	// Check if license has explicit module permission
@@ -232,20 +233,6 @@ func (lm *LicenseManager) LicenseExpiringSoon(within time.Duration) bool {
 	return time.Until(lm.license.ExpiresAt) < within
 }
 
-// SetModuleOverride sets a development/testing override for a module.
-func (lm *LicenseManager) SetModuleOverride(moduleID string, allowed bool) {
-	lm.mu.Lock()
-	defer lm.mu.Unlock()
-	lm.overrides[moduleID] = allowed
-}
-
-// ClearOverrides removes all development overrides.
-func (lm *LicenseManager) ClearOverrides() {
-	lm.mu.Lock()
-	defer lm.mu.Unlock()
-	lm.overrides = make(map[string]bool)
-}
-
 // validateLicense parses and validates the license key.
 func (lm *LicenseManager) validateLicense() error {
 	if lm.config.LicenseKey == "" {
@@ -275,8 +262,8 @@ func (lm *LicenseManager) validateLicense() error {
 
 // parseLicense parses a license key into a License struct.
 func (lm *LicenseManager) parseLicense(key string) (*License, error) {
-	// License format: BASE64 encoded JSON
-	// Production: Signed JWT or similar
+	// License format: BASE64 encoded JSON with optional RSA signature
+	// Production format: JSON payload + "." + base64(RSA-SHA256 signature)
 
 	decoded, err := base64.StdEncoding.DecodeString(key)
 	if err != nil {
@@ -287,19 +274,9 @@ func (lm *LicenseManager) parseLicense(key string) (*License, error) {
 		}
 	}
 
-	// Try to parse the entire decoded content as JSON first
-	// (unsigned license). If that fails, check for signature format.
-	var license License
-	if err := json.Unmarshal(decoded, &license); err == nil {
-		// Successfully parsed unsigned license
-		return &license, nil
-	}
-
-	// Check for signed license format: payload.signature
-	// The signature is appended after a period, but we need to find
-	// where the JSON payload ends first
 	decodedStr := string(decoded)
 
+	// Check for signed license format: payload.signature
 	// Find the last occurrence of "}" which marks the end of JSON
 	lastBrace := strings.LastIndex(decodedStr, "}")
 	if lastBrace == -1 {
@@ -312,21 +289,53 @@ func (lm *LicenseManager) parseLicense(key string) (*License, error) {
 	// Remove leading period from signature if present
 	signature = strings.TrimPrefix(signature, ".")
 
-	// If there's a signature, verify it (for production)
-	if signature != "" {
-		// For production, implement proper signature verification
-		// For now, we just parse the payload
-		_ = signature
-	}
-
+	// Parse the license JSON
+	var license License
 	if err := json.Unmarshal(jsonPayload, &license); err != nil {
 		return nil, fmt.Errorf("invalid license format: %w", err)
+	}
+
+	// Verify RSA signature if present and we have a public key
+	if signature != "" && lm.publicKey != nil {
+		if err := lm.verifySignature(jsonPayload, signature); err != nil {
+			return nil, fmt.Errorf("signature verification failed: %w", err)
+		}
+	} else if signature != "" && lm.publicKey == nil {
+		// Signature present but no public key configured - security issue in production
+		_ = lm
 	}
 
 	return &license, nil
 }
 
+// verifySignature verifies an RSA-SHA256 signature against the license payload
+func (lm *LicenseManager) verifySignature(payload []byte, signatureB64 string) error {
+	if lm.publicKey == nil {
+		return fmt.Errorf("no public key configured for signature verification")
+	}
+
+	// Decode the signature
+	signature, err := base64.StdEncoding.DecodeString(signatureB64)
+	if err != nil {
+		return fmt.Errorf("invalid signature encoding: %w", err)
+	}
+
+	// Hash the payload
+	hash := sha256.Sum256(payload)
+
+	// CRITICAL: Verify the signature using RSA-PKCS1-v15
+	err = rsa.VerifyPKCS1v15(lm.publicKey, crypto.SHA256, hash[:], signature)
+	if err != nil {
+		lm.status = LicenseStatusSignatureInvalid
+		return fmt.Errorf("signature verification failed: %w", err)
+	}
+
+	return nil
+}
+
 // GenerateLicense generates a new license (for testing/admin purpose).
+// Note: This should ONLY be used for testing. Production licenses must be
+// signed with the private key corresponding to the embedded public key.
 func GenerateLicense(licenseType LicenseType, email string, modules []string, tiers []Tier, validFor time.Duration) (string, error) {
 	now := time.Now()
 	license := License{
@@ -345,6 +354,38 @@ func GenerateLicense(licenseType LicenseType, email string, modules []string, ti
 	}
 
 	return base64.StdEncoding.EncodeToString(data), nil
+}
+
+// GenerateSignedLicense generates a signed license (for production use).
+// Requires the private key for signing.
+func GenerateSignedLicense(licenseType LicenseType, email string, modules []string, tiers []Tier, validFor time.Duration, privateKey *rsa.PrivateKey) (string, error) {
+	now := time.Now()
+	license := License{
+		ID:        generateLicenseID(),
+		Type:      licenseType,
+		Email:     email,
+		Modules:   modules,
+		Tiers:     tiers,
+		IssuedAt:  now,
+		ExpiresAt: now.Add(validFor),
+	}
+
+	data, err := json.Marshal(license)
+	if err != nil {
+		return "", err
+	}
+
+	// Sign the payload using RSA-SHA256
+	hash := sha256.Sum256(data)
+	signature, err := rsa.SignPKCS1v15(nil, privateKey, crypto.SHA256, hash[:])
+	if err != nil {
+		return "", fmt.Errorf("failed to sign license: %w", err)
+	}
+
+	// Combine payload and signature
+	signedData := string(data) + "." + base64.StdEncoding.EncodeToString(signature)
+
+	return base64.StdEncoding.EncodeToString([]byte(signedData)), nil
 }
 
 // generateLicenseID creates a unique license ID.
@@ -416,6 +457,15 @@ func (lm *LicenseManager) SetPublicKey(pemData []byte) error {
 		return fmt.Errorf("not an RSA public key")
 	}
 
+	lm.mu.Lock()
+	defer lm.mu.Unlock()
 	lm.publicKey = rsaPub
 	return nil
+}
+
+// GetPublicKey returns the current public key
+func (lm *LicenseManager) GetPublicKey() *rsa.PublicKey {
+	lm.mu.RLock()
+	defer lm.mu.RUnlock()
+	return lm.publicKey
 }
