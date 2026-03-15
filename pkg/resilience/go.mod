@@ -1,3 +1,3 @@
-module github.com/jcolvin1056/padlock/pkg/resilience
+module github.com/aegisgatesecurity/aegisgate/pkg/resilience
 
-go 1.24.0
+go 1.23
