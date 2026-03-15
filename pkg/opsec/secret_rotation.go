@@ -3,8 +3,11 @@ package opsec
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"sync"
 	"time"
+
+	"github.com/aegisgatesecurity/aegisgate/pkg/core"
 )
 
 // SecretRotationConfig configures secret rotation behavior
@@ -31,13 +34,14 @@ type SecretManager struct {
 	lastRotation   time.Time
 	rotationCount  int
 	scrubber       *MemoryScrubber
+	licenseManager *core.LicenseManager // For Professional tier validation
 }
 
 // NewSecretManager creates a new secret manager with the given configuration
 func NewSecretManager(config SecretRotationConfig) *SecretManager {
 	secret := make([]byte, config.SecretLength)
 	rand.Read(secret)
-	
+
 	return &SecretManager{
 		config:        config,
 		currentSecret: secret,
@@ -46,11 +50,38 @@ func NewSecretManager(config SecretRotationConfig) *SecretManager {
 	}
 }
 
+// NewSecretManagerWithLicense creates a new secret manager with license tier validation
+// This should be used in production to enforce Professional tier requirements
+func NewSecretManagerWithLicense(config SecretRotationConfig, lm *core.LicenseManager) *SecretManager {
+	sm := NewSecretManager(config)
+	sm.licenseManager = lm
+	return sm
+}
+
+// checkProfessionalTier verifies the license tier for secret rotation operations
+// Returns error if license manager is set but tier is not Professional or higher
+func (s *SecretManager) checkProfessionalTier() error {
+	if s.licenseManager != nil {
+		if !s.licenseManager.IsModuleLicensed("secret_rotation", core.TierProfessional) {
+			return fmt.Errorf("secret rotation requires Professional tier or higher")
+		}
+	}
+	return nil
+}
+
 // EnableSecretRotation enables automatic secret rotation
-func (s *SecretManager) EnableSecretRotation() {
+// Validates that the Professional tier license is active (if license manager configured)
+func (s *SecretManager) EnableSecretRotation() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
+	// Check license tier if license manager is set
+	if err := s.checkProfessionalTier(); err != nil {
+		return err
+	}
+
 	s.config.Enabled = true
+	return nil
 }
 
 // DisableSecretRotation disables automatic secret rotation
@@ -107,7 +138,7 @@ func (s *SecretManager) IsTimeForRotation() bool {
 func (s *SecretManager) GetRotationTimeRemaining() time.Duration {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	if !s.config.Enabled {
 		return 0
 	}
@@ -121,9 +152,15 @@ func (s *SecretManager) GetRotationTimeRemaining() time.Duration {
 
 // RotateSecret manually rotates the secret
 // Returns the new secret (base64 encoded) or error
+// Requires Professional tier or higher if license manager is configured
 func (s *SecretManager) RotateSecret() (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+
+	// Check license tier for manual rotation
+	if err := s.checkProfessionalTier(); err != nil {
+		return "", err
+	}
 
 	// Securely wipe the old secret
 	if len(s.currentSecret) > 0 {
@@ -145,12 +182,18 @@ func (s *SecretManager) RotateSecret() (string, error) {
 
 // RotateIfNecessary rotates the secret if it's time
 // Returns (rotated bool, newSecret string, error)
+// Checks Professional tier before any rotation
 func (s *SecretManager) RotateIfNecessary() (bool, string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	if !s.config.Enabled || time.Since(s.lastRotation) <= s.config.RotationPeriod {
 		return false, "", nil
+	}
+
+	// Check license tier
+	if err := s.checkProfessionalTier(); err != nil {
+		return false, "", err
 	}
 
 	// Securely wipe old secret
@@ -173,11 +216,17 @@ func (s *SecretManager) RotateIfNecessary() (bool, string, error) {
 
 // GetSecret returns the current secret (base64 encoded)
 // Automatically rotates if enabled and rotation period has passed
+// Checks Professional tier before any auto-rotation
 func (s *SecretManager) GetSecret() (string, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
 	if s.config.Enabled && time.Since(s.lastRotation) > s.config.RotationPeriod {
+		// Check license tier before auto-rotation
+		if err := s.checkProfessionalTier(); err != nil {
+			return "", err
+		}
+
 		// Securely wipe old secret
 		if len(s.currentSecret) > 0 {
 			_ = s.scrubber.ScrubBytes(s.currentSecret)
@@ -201,7 +250,7 @@ func (s *SecretManager) GetSecret() (string, error) {
 func (s *SecretManager) GetSecretBytes() []byte {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	
+
 	// Return a copy
 	copy := make([]byte, len(s.currentSecret))
 	copyBytes(copy, s.currentSecret)
@@ -235,7 +284,7 @@ func (s *SecretManager) GetRotationCount() int {
 func (s *SecretManager) Destroy() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	
+
 	// Securely clear the secret from memory
 	if len(s.currentSecret) > 0 {
 		_ = s.scrubber.SecureDelete(s.currentSecret)
@@ -251,12 +300,12 @@ func (s *SecretManager) ValidateSecret(provided string) bool {
 	defer s.mu.RUnlock()
 
 	currentB64 := base64.URLEncoding.EncodeToString(s.currentSecret)
-	
+
 	// Constant-time comparison to prevent timing attacks
 	if len(provided) != len(currentB64) {
 		return false
 	}
-	
+
 	result := 0
 	for i := 0; i < len(provided); i++ {
 		result |= int(provided[i]) ^ int(currentB64[i])
