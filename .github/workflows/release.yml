@@ -72,7 +72,7 @@ jobs:
           cache-to: type=gha,mode=max
           provenance: false
           sbom: false
-        continue-on-error: true
+          continue-on-error: true
 
       - name: Fallback: Build without GHA cache
         if: steps.build-docker.outcome == 'failure'
