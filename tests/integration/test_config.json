@@ -1,0 +1,13 @@
+{
+  "atlas_enabled": true,
+  "atlas_block_mode": true,
+  "atlas_threshold": 0.75,
+  "excluded_params": ["api_key", "token", "secret"],
+  "upstream_url": "http://localhost:8080",
+  "timeout": 30,
+  "max_retries": 3,
+  "parallel": false,
+  "verbose": true,
+  "seed": 1704067200,
+  "test_timeout": 300
+}

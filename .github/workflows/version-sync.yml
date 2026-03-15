@@ -1,0 +1,56 @@
+name: Version Sync
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+    paths:
+      - cmd/aegisgate/main.go
+
+jobs:
+  version-sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Read main.go version
+        id: version
+        run: |
+          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "main.go version: $VERSION"
+
+      - name: Extract tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: tag_version
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/v}
+          echo "git_tag=$GIT_TAG" >> $GITHUB_OUTPUT
+          echo "Git tag: v$GIT_TAG"
+
+      - name: Sync main.go to match tag
+        if: startsWith(github.ref, 'refs/tags/') && steps.version.outputs.version != steps.tag_version.outputs.git_tag
+        run: |
+          VERSION="${{ steps.tag_version.outputs.git_tag }}"
+          sed -i "s/const version = \"[0-9.]*\"/const version = \"$VERSION\"/" cmd/aegisgate/main.go
+          echo "Updated main.go to version $VERSION"
+
+      - name: Commit and push if changed
+        if: startsWith(github.ref, 'refs/tags/') && steps.version.outputs.version != steps.tag_version.outputs.git_tag
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git config set advice.addIgnoredFile false
+          git add -f cmd/aegisgate/main.go
+          git commit -m "chore: Sync version to ${{ steps.tag_version.outputs.git_tag }}"
+          git push

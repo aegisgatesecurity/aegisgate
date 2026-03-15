@@ -1,0 +1,28 @@
+# AegisGate Ultra-Minimal Production Image
+# Uses distroless/static for absolute smallest footprint (~15MB vs ~50MB alpine)
+FROM golang:1.24-alpine AS builder
+
+RUN apk add --no-cache git ca-certificates
+WORKDIR /build
+
+COPY go.mod go.sum ./
+COPY cmd/ ./cmd/
+COPY pkg/ ./pkg/
+COPY config/ ./config/
+
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
+    -ldflags="-s -w -X main.version=production" \
+    -o /build/aegisgate \
+    ./cmd/aegisgate
+
+# Ultra-minimal distroless/static (no shell, no package manager)
+FROM gcr.io/distroless/static:nonroot
+
+COPY --from=builder /build/aegisgate /app/aegisgate
+
+EXPOSE 8080 8443 9090
+
+USER nonroot:nonroot
+
+ENTRYPOINT ["/app/aegisgate"]
+CMD ["-bind", "0.0.0.0:8080"]

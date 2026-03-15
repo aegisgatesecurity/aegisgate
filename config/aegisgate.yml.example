@@ -1,0 +1,52 @@
+bind_address: "0.0.0.0"
+port: 8443
+
+plugins:
+  enabled: true
+  directories:
+    - "./plugins"
+    - "/etc/aegisgate/plugins"
+  timeout: 30s
+  enable_periodic: true
+  plugin_settings: {}
+
+security_policies:
+  - name: "data_exfiltration"
+    description: "Detect large outbound data transfers"
+    enabled: true
+  - name: "prompt_injection"
+    description: "Detect potential prompt injection attempts"
+    enabled: true
+  - name: "pii_detection"
+    description: "Detect personally identifiable information"
+    enabled: true
+
+compliance_frameworks:
+  - "mitre-atlas"
+  - "nist-ai"
+  - "owasp-top-10-ai"
+
+tls:
+  decrypt_tls: true
+  certificate_file: "config/certificates/server.crt"
+  key_file: "config/certificates/server.key"
+  allow_self_signed: true
+  ca_certificate_file: "config/certificates/ca.crt"
+
+reverse_proxy:
+  upstreams:
+    - "https://backend-ai-service:443"
+  load_balance: "round-robin"
+  timeout: 30
+  max_connections: 1000
+
+logging:
+  level: "info"
+  format: "json"
+  output_file: "logs/aegisgate.log"
+
+sbom:
+  enabled: true
+  format: "spdx"
+  output_directory: "sbom"
+  include_hashes: true

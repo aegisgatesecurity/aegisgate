@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write
+
+env:
+  GO_VERSION: '1.23.0'
+
+jobs:
+  version-check:
+    name: Version Consistency
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Check main.go version
+        run: |
+          echo "Checking version in main.go..."
+          if grep -q 'const version' cmd/aegisgate/main.go; then
+            echo "Version constant found in main.go"
+            grep 'const version' cmd/aegisgate/main.go
+          else
+            echo "ERROR: Version constant not found in main.go"
+            exit 1
+          fi
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.0'
+      - name: Download dependencies
+        run: go mod download
+      - name: Run tests
+        run: go test -v -coverprofile=coverage.out -skip TestHTTP3 ./...
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage.out
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: [test, version-check]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.23.0'
+      - name: Build
+        run: |
+          go build -o aegisgate ./cmd/aegisgate
+          ls -la aegisgate
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aegisgate-binary
+          path: aegisgate

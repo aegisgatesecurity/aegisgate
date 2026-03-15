@@ -1,0 +1,165 @@
+# AegisGate ML-Enabled Docker Compose
+# ================================
+# Production-ready deployment with ML anomaly detection
+#
+# Usage:
+#   cp docker-compose.ml.yml docker-compose.yml
+#   # Edit environment variables as needed
+#   docker-compose up -d
+#
+# For development:
+#   docker-compose -f docker-compose.ml.yml -f docker-compose.dev.yml up -d
+
+services:
+  # Main AegisGate Gateway with ML
+  aegisgate:
+    image: aegisgate/aegisgate:latest
+    container_name: aegisgate-gateway
+    restart: unless-stopped
+    ports:
+      - "8443:8443"  # HTTPS gateway
+      - "8080:8080"  # Health/readiness
+      - "9090:9090"  # Metrics
+    environment:
+      # Server
+      - AEGISGATE_BIND_ADDRESS=:8443
+      - AEGISGATE_UPSTREAM=${AEGISGATE_UPSTREAM:-http://llm-backend:8080}
+      - AEGISGATE_LOG_LEVEL=info
+      
+      # ML Configuration
+      - AEGISGATE_ML_ENABLED=true
+      - AEGISGATE_ML_SENSITIVITY=${ML_SENSITIVITY:-medium}
+      - AEGISGATE_ML_SAMPLE_RATE=${ML_SAMPLE_RATE:-100}
+      
+      # TLS (using self-signed for development)
+      - AEGISGATE_TLS_MODE=${TLS_MODE:-self-signed}
+      - AEGISGATE_CERT_DIR=/certs
+      
+      # Compliance
+      - AEGISGATE_ATLAS_ENABLED=true
+      
+      # SIEM
+      - AEGISGATE_SIEM_ENABLED=${SIEM_ENABLED:-false}
+      # - SPLUNK_ENDPOINT=${SPLUNK_ENDPOINT}
+      # - SPLUNK_KEY=${SPLUNK_KEY}
+      
+      # Security
+      - AEGISGATE_FIPS_ENABLED=${FIPS_ENABLED:-false}
+      - AEGISGATE_AUDIT_LOG=true
+    volumes:
+      # Certificates
+      - ./certs:/certs:ro
+      
+      # Configuration
+      - ./config:/config:ro
+      
+      # Logs
+      - aegisgate-logs:/var/log/aegisgate
+      
+      # Audit logs (persistent)
+      - aegisgate-audit:/var/log/aegisgate/audit
+    networks:
+      - aegisgate-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+  # Mock LLM Backend (for testing)
+  llm-backend:
+    image: ghcr.io/huggingface/text-generation-inference:latest
+    container_name: llm-backend
+    restart: unless-stopped
+    environment:
+      - MODEL_ID=${MODEL_ID:-microsoft/phi-2}
+      - MAX_INPUT_LENGTH=2048
+      - MAX_TOTAL_TOKENS=4096
+    ports:
+      - "8080:80"
+    networks:
+      - aegisgate-network
+    deploy:
+      resources:
+        limits:
+          cpus: '4'
+          memory: 8G
+    # Uncomment for production with real LLM
+    # profiles:
+    #   - production
+
+  # Prometheus (for metrics)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aegisgate-prometheus
+    restart: unless-stopped
+    ports:
+      - "9091:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    networks:
+      - aegisgate-network
+    profiles:
+      - monitoring
+
+  # Grafana (for dashboards)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aegisgate-grafana
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+      - ./grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - grafana-data:/var/lib/grafana
+    networks:
+      - aegisgate-network
+    depends_on:
+      - prometheus
+    profiles:
+      - monitoring
+
+  # Splunk (optional SIEM)
+  splunk:
+    image: splunk/splunk:latest
+    container_name: aegisgate-splunk
+    restart: unless-stopped
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=${SPLUNK_PASSWORD:-changeme}
+    ports:
+      - "8000:8000"
+      - "8088:8088"
+    volumes:
+      - splunk-data:/opt/splunk/var/lib/splunk
+      - splunk-logs:/opt/splunk/var/log/splunk
+    networks:
+      - aegisgate-network
+    profiles:
+      - siem
+
+networks:
+  aegisgate-network:
+    driver: bridge
+
+volumes:
+  aegisgate-logs:
+  aegisgate-audit:
+  prometheus-data:
+  grafana-data:
+  splunk-data:
+  splunk-logs:

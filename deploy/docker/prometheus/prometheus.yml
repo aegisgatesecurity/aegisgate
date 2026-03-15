@@ -1,0 +1,36 @@
+# Prometheus configuration for AegisGate ML metrics
+
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: []
+
+rule_files: []
+
+scrape_configs:
+  # AegisGate ML metrics
+  - job_name: 'aegisgate-ml'
+    static_configs:
+      - targets: ['aegisgate:9090']
+        labels:
+          service: 'aegisgate-gateway'
+          component: 'ml-anomaly-detection'
+
+  # AegisGate health
+  - job_name: 'aegisgate-health'
+    static_configs:
+      - targets: ['aegisgate:8080']
+        labels:
+          service: 'aegisgate-gateway'
+          component: 'health'
+
+  # LLM Backend metrics
+  - job_name: 'llm-backend'
+    static_configs:
+      - targets: ['llm-backend:80']
+        labels:
+          service: 'llm-backend'

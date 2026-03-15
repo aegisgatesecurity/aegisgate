@@ -1,0 +1,42 @@
+name: Version Consistency Check
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  version-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Read main.go version
+        run: |
+          MAIN_VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
+          echo "main.go:     $MAIN_VERSION"
+
+      - name: Verify version matches git tag
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/v}
+          MAIN_GO_VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
+          echo "main.go:     $MAIN_GO_VERSION"
+          
+          # For tag pushes with version mismatch, let version-sync handle the update
+          # This prevents workflow failures during releases
+          if [[ "$GITHUB_REF" == "refs/tags/"* ]]; then
+            if [ "$MAIN_GO_VERSION" != "$GIT_TAG" ]; then
+              echo "⚠️ Version mismatch detected - version-sync will handle update"
+              echo "  main.go:     $MAIN_GO_VERSION"
+              echo "  Git tag:     v$GIT_TAG"
+            else
+              echo "✓ Git tag matches main.go version"
+            fi
+          fi

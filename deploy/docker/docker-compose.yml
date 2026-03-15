@@ -1,0 +1,107 @@
+version: '3.8'
+
+# AegisGate Docker Compose Configuration
+# Community Edition - For local development and testing
+
+services:
+  # AegisGate Core Service
+  aegisgate:
+    image: aegisgate/aegisgate:latest
+    container_name: aegisgate
+    ports:
+      - "8080:8080"   # HTTP
+      - "8443:8443"   # HTTPS
+      - "9090:9090"   # Metrics
+      - "3000:3000"   # Dashboard
+    environment:
+      # Tier Configuration
+      - AEGISGATE_TIER=community
+      
+      # Storage
+      - AEGISGATE_STORAGE_MODE=file
+      - AEGISGATE_DATA_DIR=/data
+      
+      # Security
+      - AEGISGATE_TLS_ENABLED=false
+      
+      # Logging
+      - AEGISGATE_LOG_LEVEL=info
+      
+      # Metrics
+      - AEGISGATE_METRICS_ENABLED=true
+    volumes:
+      - aegisgate_data:/data
+      - aegisgate_logs:/logs
+    restart: unless-stopped
+    networks:
+      - aegisgate_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Optional: PostgreSQL for Developer/Professional tiers
+  # Uncomment to enable PostgreSQL storage
+  #
+  # postgres:
+  #   image: postgres:14-alpine
+  #   container_name: aegisgate-postgres
+  #   environment:
+  #     - POSTGRES_USER=aegisgate
+  #     - POSTGRES_PASSWORD=your-secure-password
+  #     - POSTGRES_DB=aegisgate
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - aegisgate_network
+
+  # Optional: Redis for caching (Professional tier)
+  # Uncomment to enable Redis
+  #
+  # redis:
+  #   image: redis:7-alpine
+  #   container_name: aegisgate-redis
+  #   command: redis-server --requirepass your-redis-password
+  #   volumes:
+  #     - redis_data:/data
+  #   restart: unless-stopped
+  #   networks:
+  #     - aegisgate_network
+
+  # Optional: Grafana for monitoring (Developer tier+)
+  # Uncomment to enable Grafana dashboards
+  #
+  # grafana:
+  #   image: grafana/grafana:latest
+  #   container_name: aegisgate-grafana
+  #   ports:
+  #     - "3030:3000"
+  #   environment:
+  #     - GF_SECURITY_ADMIN_PASSWORD=admin
+  #     - GF_USERS_ALLOW_SIGN_UP=false
+  #   volumes:
+  #     - grafana_data:/var/lib/grafana
+  #   restart: unless-stopped
+  #   networks:
+  #     - aegisgate_network
+
+volumes:
+  aegisgate_data:
+    driver: local
+  aegisgate_logs:
+    driver: local
+  # Uncomment for PostgreSQL
+  # postgres_data:
+  #   driver: local
+  # Uncomment for Redis
+  # redis_data:
+  #   driver: local
+  # Uncomment for Grafana
+  # grafana_data:
+  #   driver: local
+
+networks:
+  aegisgate_network:
+    driver: bridge

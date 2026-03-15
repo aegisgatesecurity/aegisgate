@@ -1,0 +1,26 @@
+apiVersion: v2
+name: aegisgate
+description: AegisGate - Zero-Trust AI Security Gateway with ML Anomaly Detection
+icon: https://raw.githubusercontent.com/block/aegisgate/main/docs/logo.png
+type: application
+version: 1.0.3
+appVersion: "1.0.3"
+keywords:
+  - security
+  - gateway
+  - ai
+  - ml
+  - anomaly-detection
+  - zero-trust
+  - websocket
+  - mitre-atlas
+home: https://github.com/block/aegisgate
+sources:
+  - https://github.com/block/aegisgate
+maintainers:
+  - name: Block Security Team
+    email: security@aegisgate.io
+annotations:
+  category: Security
+  licenses: Apache-2.0
+dependencies: []

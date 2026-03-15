@@ -1,0 +1,72 @@
+# AegisGate Security Vulnerability Disclosure Policy
+
+## Reporting Security Vulnerabilities
+
+We take security vulnerabilities seriously. If you discover a security issue in AegisGate, please report it responsibly.
+
+## Contact
+
+**Do NOT report vulnerabilities in public GitHub issues.**
+
+Please report vulnerabilities via:
+
+- **Email**: security@aegisgatesecurity.io
+- **Encrypted**: Use PGP key from https://aegisgatesecurity.io/security/pgp-key
+
+## Response Timeline
+
+| Phase | Timeline |
+|-------|----------|
+| Initial Response | 48 hours |
+| Severity Assessment | 7 days |
+| Fix Development | Based on severity |
+| Public Disclosure | After fix is released |
+
+## Severity Levels
+
+| Level | Definition | Response Time |
+|-------|------------|--------------|
+| Critical | Remote code execution, data breach | 24 hours |
+| High | Significant security impact | 72 hours |
+| Medium | Moderate security impact | 7 days |
+| Low | Minimal security impact | 30 days |
+
+## What to Include
+
+When reporting, please include:
+
+1. Description of the vulnerability
+2. Steps to reproduce
+3. Potential impact
+4. Any suggested fixes (optional)
+
+## Scope
+
+In-scope:
+- AegisGate proxy server
+- ML detection components
+- Authentication/authorization
+- TLS/mTLS implementation
+- Configuration handling
+- API endpoints
+
+Out-of-scope:
+- Third-party AI provider vulnerabilities
+- Social engineering
+- Physical security
+- Denial of service (unless severe)
+
+## Bug Bounty
+
+Enterprise customers may be eligible for bug bounty rewards. Contact sales@aegisgatesecurity.io for details.
+
+## Acknowledgments
+
+We thank the following researchers for their responsible disclosure:
+
+[Your name could appear here]
+
+---
+
+**AegisGate Security Team**
+security@aegisgatesecurity.io

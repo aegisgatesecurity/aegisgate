@@ -1,0 +1,1 @@
+Hash Chain Validation Package - Provides cryptographic hash chain validation with Merkle tree integration for feed history integrity. Features include feed history integrity validation, tamper detection mechanisms, Merkle tree integration, audit logging, and integration with threat intel packages. API includes HashChainService and HashChainValidationService.

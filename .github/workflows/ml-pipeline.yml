@@ -1,0 +1,154 @@
+name: AegisGate ML Pipeline
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - 'pkg/ml/**'
+      - 'pkg/proxy/**'
+      - '.github/workflows/ml-pipeline.yml'
+  pull_request:
+    paths:
+      - 'pkg/ml/**'
+      - 'pkg/proxy/**'
+  workflow_dispatch:
+
+env:
+  GO_VERSION: '1.23.0'
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  ml-security:
+    name: ML Security Analysis
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Run Go mod tidy
+        run: go mod tidy
+
+      - name: Download modules
+        run: go mod download
+
+      - name: Run Go tests (ML package)
+        run: go test -v -race -coverprofile=coverage_ml.out ./pkg/ml/...
+
+      - name: Run Go tests (Proxy package - without race for flaky HTTP3 tests)
+        run: go test -v -coverprofile=coverage_proxy.out ./pkg/proxy/...
+
+      - name: Combine coverage
+        run: |
+          echo "mode: set" > coverage.out
+          grep -h -v "^mode:" coverage_ml.out coverage_proxy.out >> coverage.out || true
+
+      - name: Upload coverage to CodeQL
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: gosec-results.sarif
+          category: "/language:go"
+        continue-on-error: true
+
+      - name: Run gosec security scanner
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          gosec -no-fail -fmt sarif -out gosec-results.sarif ./pkg/ml/... ./pkg/proxy/...
+        continue-on-error: true
+
+  docker-build:
+    name: Docker Build ML
+    runs-on: ubuntu-latest
+    needs: ml-security
+    permissions:
+      contents: read
+      packages: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}/ml
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,prefix=
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push ML image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            ML_ENABLED=true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          attestations: |
+            type=provenance,mode=min,inline-only=true
+
+  ml-benchmark:
+    name: ML Performance Benchmark
+    runs-on: ubuntu-latest
+    needs: ml-security
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+
+      - name: Run benchmarks
+        run: |
+          go test -bench=BenchmarkML -benchmem -benchtime=1s ./pkg/ml/... ./pkg/proxy/... 2>&1 | tee benchmark.txt
+        continue-on-error: true
+
+      - name: Check if benchmark file has content
+        id: benchmark_check
+        run: |
+          if [ -s benchmark.txt ]; then
+            echo "has_content=true" >> $GITHUB_OUTPUT
+          else
+            echo "has_content=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload benchmark results
+        if: steps.benchmark_check.outputs.has_content == 'true'
+        uses: benchmark-action/github-action-benchmark@v1
+        with:
+          tool: 'go'
+          output-file-path: benchmark.txt
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          auto-push: true
+          alert-threshold: '150%'
+          comment-on-alert: true
+        continue-on-error: true

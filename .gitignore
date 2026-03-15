@@ -1,0 +1,33 @@
+# Build outputs
+bin/
+build/
+*.exe
+*.out
+coverage_*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Go
+vendor/
+*.test
+coverage.txt
+
+# Logs
+*.log
+logs/
+
+# Distribution
+dist/

@@ -1,0 +1,23 @@
+# Trivy Configuration for AegisGate
+# Security vulnerability scanning
+
+format: sarif
+output: trivy-results.sarif
+
+severity:
+  - CRITICAL
+  - HIGH
+
+scan:
+  security: true
+
+ignorefile: .trivyignore
+
+ignore:
+  # CVEs to ignore (temporary)
+  - CVE-2024-1234
+
+dependency:
+  ignore:
+    - path: "github.com/example/deprecated"
+      since: "2024-01-01"
