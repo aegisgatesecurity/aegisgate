@@ -584,7 +584,7 @@ func TestRefreshTokenPair(t *testing.T) {
 	t.Skip("Skipping - requires unique user handling to avoid token cache collision")
 }
 
-func TestCheckRateLimit(t *testing.T) {
+func TestJWTCheckRateLimit(t *testing.T) {
 	t.Skip("Skipping - rate limit state sharing between tests")
 }
 
