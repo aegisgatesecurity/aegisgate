@@ -1,0 +1,6 @@
+security: Generate valid test certificates for CI/CD
+
+- Replace mock/fake PEM keys with valid RSA 2048-bit private keys
+- Generate self-signed certificates for testing
+- Fixes GitGuardian exposed secret alert
+- MITM and TLS tests remain skipped as they require additional setup
