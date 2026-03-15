@@ -405,7 +405,7 @@ See [LICENSE](LICENSE) for full text.
 
 <div align="center">
 
-### ⭐ Love AegisGate?
+### 🖤 Love AegisGate?
 
 **[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
 
