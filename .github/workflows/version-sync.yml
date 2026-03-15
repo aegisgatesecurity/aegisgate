@@ -50,6 +50,7 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add cmd/aegisgate/main.go
+          git config set advice.addIgnoredFile false
+          git add -f cmd/aegisgate/main.go
           git commit -m "chore: Sync version to ${{ steps.tag_version.outputs.git_tag }}"
           git push
