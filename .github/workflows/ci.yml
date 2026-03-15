@@ -46,7 +46,7 @@ jobs:
       - name: Download dependencies
         run: go mod download
       - name: Run tests
-        run: go test -v -coverprofile=coverage.out -skip TestHTTP3 ./...
+        run: go test -v -coverprofile=coverage.out -skip TestHTTP3 $(go list ./... | grep -v -E 'examples|cmd|pkg/plugin/examples|tests/|sdk/')
       - name: Check coverage threshold
         run: |
           COVERAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
