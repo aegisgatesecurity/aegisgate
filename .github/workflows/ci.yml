@@ -47,6 +47,16 @@ jobs:
         run: go mod download
       - name: Run tests
         run: go test -v -coverprofile=coverage.out -skip TestHTTP3 ./...
+      - name: Check coverage threshold
+        run: |
+          COVERAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
+          echo "Coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 75" | bc -l) )); then
+            echo "ERROR: Coverage $COVERAGE% is below threshold 75%"
+            exit 1
+          fi
+          echo "Coverage check passed!"
+
       - name: Upload coverage
         uses: actions/upload-artifact@v4
         with:

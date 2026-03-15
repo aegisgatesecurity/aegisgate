@@ -246,8 +246,9 @@ func TestGetCertificatePaths(t *testing.T) {
 }
 
 func TestNewManagerNoConfig(t *testing.T) {
-	t.Skip("Skipped: Requires valid test certificates")
-	// Test with nil config - should use defaults
+	t.Skip("Skipping - test infrastructure needs cert fixture update")
+	t.Skip("Skipping - test infrastructure needs cert fixture update")
+	// Test with nil config - should use defaults	// Test with nil config - should use defaults
 	mgr, err := NewManager(nil)
 	if err != nil {
 		t.Fatalf("NewManager(nil) error = %v", err)
