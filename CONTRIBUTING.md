@@ -1,6 +1,35 @@
 # Contributing to AegisGate
 
-Thank you for your interest in contributing to AegisGate! We welcome contributions from the community.
+Thank you for your interest in contributing to AegisGate! We welcome contributions under strict terms to protect our IP.> **⚠️ IMPORTANT: By contributing to this project, you agree to the terms below.**
+> 
+> All contributions become the exclusive property of AegisGate Security.
+> Contributors retain no ownership claims, patents, or intellectual property rights.
+
+---
+
+## Legal Disclaimer
+
+### Intellectual Property Ownership
+
+**By submitting any contribution to AegisGate, you acknowledge and agree that:**
+
+1. **Ownership Transfer**: All contributions, including code, documentation, designs, and ideas, become the sole property of **AegisGate Security**.
+
+2. **No Retained Rights**: You irrevocably transfer all rights, title, and interest in your contributions to the Company.
+
+3. **No Compensation**: Contributions are voluntary and unpaid.
+
+4. **Warranty Representation**: You warrant that your contributions are original to you or properly licensed, and do not infringe third-party rights.
+
+5. **No Patent Claims**: You agree not to assert any patent or trade secret rights in any contribution.
+
+### Disclaimer of Warranties
+
+**CONTRIBUTIONS ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND.**
+
+---
+
+
 
 ---
 
