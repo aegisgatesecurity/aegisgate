@@ -1,13 +1,22 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+## [1.0.11] - 2026-03-16
 
-The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
-and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+### Security & Legal Protection
+- Added PROPRIETARY headers to all .go source files (155+ files)
+- Added trade secret designation to SECURITY.md
+- Added trademark (™) to AegisGate brand name in README
+- Updated .gitignore with comprehensive security exclusions
+- Created NOTICE.md with proprietary notices
+- Added Contributing section to README with CLA/DCO links
+- Added license tier validation headers to API responses (X-License-Tier, X-License-Expiry)
+- Cleaned up 24+ temporary/clutter files from repository
+- Updated CLA.md and CONTRIBUTING.md with full IP assignment
 
----
+### Dependencies
+- Updated various dependencies (see go.mod for details)
 
-## [1.0.10] - 2026-03-15
+## [1.0.10] - 2026-03## [1.0.10] - 2026-03-15
 
 ### Added
 - **Pre-commit Framework** - Comprehensive git hook automation:

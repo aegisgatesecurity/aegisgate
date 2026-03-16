@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🛡️ AegisGate 🔐
+# 🛡️ AegisGate™ 🔐
 
 <!-- Badges Row 1 -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -33,14 +33,14 @@
 
 ## ⚡ TL;DR
 
-**AegisGate** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
+**AegisGate™** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
 
 - 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
 - 📋 **Out-of-the-box compliance** — SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
 - 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
 - ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
 
-**No code changes required.** Just point your AI traffic through AegisGate.
+**No code changes required.** Just point your AI traffic through AegisGate™.
 
 ---
 
@@ -151,7 +151,7 @@ graph TD
         C4[Server Services]
     end
 
-    subgraph "AegisGate Platform"
+    subgraph "AegisGate™ Platform"
         subgraph "API Gateway Layer"
             AG[API Gateway<br/>Load Balancing & Routing]
         end
@@ -237,7 +237,7 @@ graph TD
 
 ### 🚀 Performance
 
-| Metric | AegisGate | Context |
+| Metric | AegisGate™ | Context |
 |--------|:---------:|---------|
 | **Latency (p99)** | <5ms | Per-request overhead |
 | **Throughput** | 50,000 req/s | Sustained throughput |
@@ -261,7 +261,7 @@ graph TD
 | 50,000 req/min | <5ms | 99.95% | 512MB RAM |
 | 100,000 req/min | <7ms | 99.90% | 1GB RAM |
 
-> 💡 **Key Insight**: AegisGate adds less than 5ms latency while providing enterprise-grade security—making it transparent to end users in most AI applications.
+> 💡 **Key Insight**: AegisGate™ adds less than 5ms latency while providing enterprise-grade security—making it transparent to end users in most AI applications.
 
 ---
 
@@ -381,12 +381,12 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 | 📖 **Docs** | aegisgate.io/docs |
 | 🐛 **Issue Tracker** | GitHub Issues |
 | 💬 **Discord** | Join Community |
-| 🐦 **Twitter** | @AegisGate |
+| 🐦 **Twitter** | @AegisGate™ |
 | 📧 **Email** | hello@aegisgate.io |
 
 ---
 
-## 🏢 Who's Using AegisGate?
+## 🏢 Who's Using AegisGate™?
 
 *[Add your company here!]*
 
@@ -396,7 +396,7 @@ Interested in being listed? Contact **support@aegisgatesecurity.io**
 
 ## 📝 License
 
-**MIT License** - Copyright 2025-2026 AegisGate Security. All rights reserved.
+**MIT License** - Copyright 2025-2026 AegisGate™ Security. All rights reserved.
 
 See [LICENSE](LICENSE) for full text.
 
@@ -404,13 +404,40 @@ See [LICENSE](LICENSE) for full text.
 
 <div align="center">
 
-### 🖤 Love AegisGate?
+### 🖤 Love AegisGate™?
 
 **[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
 
 ---
 
-Built with 🔐 by the AegisGate Security Team
+Built with 🔐 by the AegisGate™ Security Team
 
 </div>
 <!-- CI Trigger: 2026-03-15T03:27:07.408Z -->
+
+
+---
+
+## 🤝 Contributing
+
+We welcome contributions to AegisGate™! All contributions are subject to the following legal agreements:
+
+> **⚠️ IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
+
+| Document | Purpose |
+|----------|---------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Full contribution guidelines |
+| [CLA.md](CLA.md) | Contributor License Agreement (REQUIRED) |
+| [DCO.md](DCO.md) | Developer Certificate of Origin (sign-off required on all commits) |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community code of conduct |
+
+### Quick Steps
+
+1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
+2. Review [CLA.md](CLA.md) and [DCO.md](DCO.md)
+3. Fork the repository and create a feature branch
+4. Sign off all commits with `git commit -s`
+5. Submit a Pull Request
+
+For legal questions: **legal@aegisgate.io**
+
