@@ -2,10 +2,7 @@ version: '3.8'
 
 services:
   aegisgate:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: aegisgatesecurity/aegisgate:latest
+    image: ghcr.io/aegisgatesecurity/aegisgate:latest
     container_name: aegisgate
     ports:
       - "8080:8080"
