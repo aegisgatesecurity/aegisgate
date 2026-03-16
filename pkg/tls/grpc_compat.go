@@ -13,8 +13,8 @@ type TLSConfig struct {
 func (m *Manager) GetConfig() *TLSConfig {
 	return &TLSConfig{
 		Enabled:      m.certFile != "",
-		CertFile:    m.certFile,
-		KeyFile:     m.keyFile,
+		CertFile:     m.certFile,
+		KeyFile:      m.keyFile,
 		AutoGenerate: m.autoGenerate,
 		MinVersion:   "1.2",
 	}

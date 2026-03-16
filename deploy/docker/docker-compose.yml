@@ -16,17 +16,17 @@ services:
     environment:
       # Tier Configuration
       - AEGISGATE_TIER=community
-      
+
       # Storage
       - AEGISGATE_STORAGE_MODE=file
       - AEGISGATE_DATA_DIR=/data
-      
+
       # Security
       - AEGISGATE_TLS_ENABLED=false
-      
+
       # Logging
       - AEGISGATE_LOG_LEVEL=info
-      
+
       # Metrics
       - AEGISGATE_METRICS_ENABLED=true
     volumes:

@@ -15,9 +15,9 @@ import (
 // RateLimitConfig holds rate limiting configuration
 type RateLimitConfig struct {
 	RequestsPerMinute int
-	Burst            int
-	BlockDuration    time.Duration
-	KeyFunc          func(r *http.Request) string
+	Burst             int
+	BlockDuration     time.Duration
+	KeyFunc           func(r *http.Request) string
 }
 
 // DefaultRateLimitConfig returns default configuration based on tier
@@ -39,9 +39,9 @@ func DefaultRateLimitConfig(tier core.Tier) RateLimitConfig {
 
 	return RateLimitConfig{
 		RequestsPerMinute: requestsPerMinute,
-		Burst:            burst,
-		BlockDuration:    time.Minute * 5,
-		KeyFunc:          DefaultKeyFunc,
+		Burst:             burst,
+		BlockDuration:     time.Minute * 5,
+		KeyFunc:           DefaultKeyFunc,
 	}
 }
 

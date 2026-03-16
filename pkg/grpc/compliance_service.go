@@ -54,10 +54,10 @@ func (s *ComplianceService) RunCheck(ctx context.Context, req *RunComplianceChec
 		Status:    ComplianceStatus_PASS,
 		Summary: &ComplianceSummary{
 			TotalChecks: 0,
-			Passed:     0,
-			Failed:     0,
-			Warnings:  0,
-			Score:     100.0,
+			Passed:      0,
+			Failed:      0,
+			Warnings:    0,
+			Score:       100.0,
 		},
 	}, nil
 }
@@ -70,12 +70,12 @@ func (s *ComplianceService) GetFindings(ctx context.Context, req *GetFindingsReq
 // GenerateReport generates a compliance report
 func (s *ComplianceService) GenerateReport(ctx context.Context, req *GenerateReportRequest) (*GenerateReportResponse, error) {
 	return &GenerateReportResponse{
-		Id:         "report_" + req.Framework,
-		Framework:  req.Framework,
-		Timestamp:  0,
-		Status:     ComplianceStatus_PASS,
+		Id:        "report_" + req.Framework,
+		Framework: req.Framework,
+		Timestamp: 0,
+		Status:    ComplianceStatus_PASS,
 		Summary: &ComplianceSummary{
-			TotalChecks:    0,
+			TotalChecks:   0,
 			Passed:        0,
 			Failed:        0,
 			Warnings:      0,

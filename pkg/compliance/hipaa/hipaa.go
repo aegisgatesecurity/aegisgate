@@ -509,4 +509,3 @@ func (m *HIPAAModule) detectPHI(input string) []string {
 func (m *HIPAAModule) Dependencies() []string {
 	return []string{"scanner"}
 }
-

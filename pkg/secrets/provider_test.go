@@ -80,7 +80,7 @@ func TestManager_Get_Set(t *testing.T) {
 	defer manager.Close()
 
 	ctx := context.Background()
-	
+
 	// Test getting non-existent secret
 	_, err = manager.Get(ctx, "nonexistent")
 	if err == nil {
@@ -92,7 +92,7 @@ func TestManager_Get_Set(t *testing.T) {
 		Value:    "testvalue",
 		Metadata: map[string]string{"key": "value"},
 	}
-	
+
 	// Note: EnvProvider is read-only, so Set should fail
 	err = manager.Set(ctx, "testkey", secret)
 	if err == nil {
@@ -113,7 +113,7 @@ func TestManager_GetString(t *testing.T) {
 	defer manager.Close()
 
 	ctx := context.Background()
-	
+
 	// Test getting non-existent secret
 	_, err = manager.GetString(ctx, "nonexistent")
 	if err == nil {
@@ -134,12 +134,12 @@ func TestManager_List(t *testing.T) {
 	defer manager.Close()
 
 	ctx := context.Background()
-	
+
 	keys, err := manager.List(ctx)
 	if err != nil {
 		t.Errorf("List() error = %v", err)
 	}
-	
+
 	// List should return env vars (might be empty in test)
 	if keys == nil {
 		t.Error("List() returned nil instead of empty slice")
@@ -160,37 +160,37 @@ func TestManager_Concurrent(t *testing.T) {
 	defer manager.Close()
 
 	ctx := context.Background()
-	
+
 	var wg sync.WaitGroup
 	for i := 0; i < 50; i++ {
 		wg.Add(1)
 		go func(id int) {
 			defer wg.Done()
-			
+
 			key := "TEST_KEY"
-			
+
 			// Try to get
 			_, _ = manager.Get(ctx, key)
-			
+
 			// Try to list
 			_, _ = manager.List(ctx)
 		}(i)
 	}
-	
+
 	wg.Wait()
 }
 
 func TestDefaultConfig(t *testing.T) {
 	config := DefaultConfig()
-	
+
 	if config.Backend != "env" {
 		t.Errorf("DefaultConfig().Backend = %s, want env", config.Backend)
 	}
-	
+
 	if !config.CacheEnabled {
 		t.Error("DefaultConfig().CacheEnabled should be true")
 	}
-	
+
 	if config.CacheTTL != 5*time.Minute {
 		t.Errorf("DefaultConfig().CacheTTL = %v, want 5m", config.CacheTTL)
 	}
@@ -201,15 +201,15 @@ func TestSecretCache(t *testing.T) {
 		items: make(map[string]cacheEntry),
 		ttl:   100 * time.Millisecond,
 	}
-	
+
 	secret := Secret{
 		Value:     "test",
 		UpdatedAt: time.Now(),
 	}
-	
+
 	// Test set and get
 	cache.set("key1", secret)
-	
+
 	got, ok := cache.get("key1")
 	if !ok {
 		t.Error("cache.get() returned false for existing key")
@@ -217,14 +217,14 @@ func TestSecretCache(t *testing.T) {
 	if got.Value != "test" {
 		t.Errorf("cache.get() Value = %v, want test", got.Value)
 	}
-	
+
 	// Test delete
 	cache.delete("key1")
 	_, ok = cache.get("key1")
 	if ok {
 		t.Error("cache.get() returned true after delete")
 	}
-	
+
 	// Test expiration
 	cache.set("key2", secret)
 	time.Sleep(150 * time.Millisecond)
@@ -239,19 +239,19 @@ func TestGetManager_Singleton(t *testing.T) {
 	managerInstance = nil
 	managerOnce = sync.Once{}
 	managerErr = nil
-	
+
 	config1 := DefaultConfig()
 	m1, err := GetManager(config1)
 	if err != nil {
 		t.Fatalf("GetManager() error = %v", err)
 	}
-	
+
 	config2 := &Config{Backend: "file"}
 	m2, err := GetManager(config2)
 	if err != nil {
 		t.Fatalf("GetManager() error = %v", err)
 	}
-	
+
 	// Should return same instance
 	if m1 != m2 {
 		t.Error("GetManager() should return singleton instance")
@@ -268,7 +268,7 @@ func TestSecret_Struct(t *testing.T) {
 		Metadata:  map[string]string{"key": "value"},
 		Tags:      map[string]string{"env": "test"},
 	}
-	
+
 	if secret.Value != "test" {
 		t.Errorf("Secret.Value = %v", secret.Value)
 	}

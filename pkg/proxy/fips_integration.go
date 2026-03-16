@@ -63,7 +63,7 @@ func GetClientTLSConfig() *tls.Config {
 // ProxyMetrics holds proxy performance metrics
 type ProxyMetrics struct {
 	// Request counts
-	TotalRequests    int64
+	TotalRequests   int64
 	BlockedRequests int64
 	AllowedRequests int64
 
@@ -72,7 +72,7 @@ type ProxyMetrics struct {
 	P99Latency time.Duration
 
 	// TLS metrics
-	TLSVersions   map[string]int64
+	TLSVersions  map[string]int64
 	CipherSuites map[string]int64
 
 	// Connection metrics
@@ -83,7 +83,7 @@ type ProxyMetrics struct {
 // NewProxyMetrics creates new proxy metrics
 func NewProxyMetrics() *ProxyMetrics {
 	return &ProxyMetrics{
-		TLSVersions:   make(map[string]int64),
+		TLSVersions:  make(map[string]int64),
 		CipherSuites: make(map[string]int64),
 	}
 }

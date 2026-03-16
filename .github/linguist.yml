@@ -3,9 +3,9 @@
 
 # Primary Implementation Language
 documentation: |
-  Padlock is implemented primarily in Go (version 1.23+) using only 
+  Padlock is implemented primarily in Go (version 1.23+) using only
   the Go standard library - zero external dependencies.
-  
+
   The language breakdown is:
   - Go: ~59% (38+ files) - Core WAF implementation
   - JavaScript: ~19% (12 files) - Dashboard UI
@@ -13,7 +13,7 @@ documentation: |
   - CSS: ~5% (3 files) - Styling
   - YAML: ~6% (15+ files) - Config/K8s/CI-CD
   - Shell: ~2% (8 files) - Build scripts
-  
+
   Total Lines of Code: ~16,144
 
 # Language detection overrides
@@ -40,28 +40,28 @@ linguist-vendored:
 languages:
   Go:
     primary: true
-    pattern: 
+    pattern:
       - "**/*.go"
     exclude:
       - "**/*_test.go"
     documentation: "Go 1.23+ (Standard Library Only)"
-  
+
   JavaScript:
     pattern:
       - "ui/**/*.js"
       - "ui/frontend/**/*.js"
     documentation: "Frontend (Dashboard UI)"
-  
+
   HTML:
     pattern:
       - "ui/**/*.html"
     documentation: "UI Templates"
-  
+
   CSS:
     pattern:
       - "ui/**/*.css"
     documentation: "Styling"
-  
+
   YAML:
     pattern:
       - ".github/**/*.yml"
@@ -69,7 +69,7 @@ languages:
       - "deploy/**/*.yml"
       - "*.yml"
     documentation: "Configuration & K8s"
-  
+
   Shell:
     pattern:
       - "scripts/*.sh"

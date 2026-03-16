@@ -36,58 +36,58 @@ func NewMLStatsHandler(p *proxy.ProxyWithML) *MLStatsHandler {
 
 // MLStatsResponse represents the ML statistics API response
 type MLStatsResponse struct {
-	Middleware          *MiddlewareStats          `json:"middleware,omitempty"`
-	PromptInjection     *PromptInjectionStats    `json:"prompt_injection,omitempty"`
-	ContentAnalysis     *ContentAnalysisStats    `json:"content_analysis,omitempty"`
-	BehavioralAnalysis  *BehavioralAnalysisStats `json:"behavioral_analysis,omitempty"`
-	Sensitivity         string                   `json:"sensitivity"`
-	Enabled             bool                     `json:"enabled"`
-	RecentAnomalies     []AnomalySummary         `json:"recent_anomalies"`
+	Middleware         *MiddlewareStats         `json:"middleware,omitempty"`
+	PromptInjection    *PromptInjectionStats    `json:"prompt_injection,omitempty"`
+	ContentAnalysis    *ContentAnalysisStats    `json:"content_analysis,omitempty"`
+	BehavioralAnalysis *BehavioralAnalysisStats `json:"behavioral_analysis,omitempty"`
+	Sensitivity        string                   `json:"sensitivity"`
+	Enabled            bool                     `json:"enabled"`
+	RecentAnomalies    []AnomalySummary         `json:"recent_anomalies"`
 }
 
 // MiddlewareStats holds middleware statistics
 type MiddlewareStats struct {
-	TotalRequests     int64             `json:"total_requests"`
-	AnalyzedRequests  int64             `json:"analyzed_requests"`
-	BlockedRequests   int64             `json:"blocked_requests"`
-	AnomalyCounts    map[string]int64  `json:"anomaly_counts"`
-	LastUpdate       time.Time          `json:"last_update"`
+	TotalRequests    int64            `json:"total_requests"`
+	AnalyzedRequests int64            `json:"analyzed_requests"`
+	BlockedRequests  int64            `json:"blocked_requests"`
+	AnomalyCounts    map[string]int64 `json:"anomaly_counts"`
+	LastUpdate       time.Time        `json:"last_update"`
 }
 
 // PromptInjectionStats holds prompt injection detection stats
 type PromptInjectionStats struct {
-	TotalScanned    int64             `json:"total_scanned"`
-	ThreatsDetected int64             `json:"threats_detected"`
-	BlockedCount    int64             `json:"blocked_count"`
-	Sensitivity     int                `json:"sensitivity"`
-	ByPattern       map[string]int64  `json:"by_pattern"`
+	TotalScanned    int64            `json:"total_scanned"`
+	ThreatsDetected int64            `json:"threats_detected"`
+	BlockedCount    int64            `json:"blocked_count"`
+	Sensitivity     int              `json:"sensitivity"`
+	ByPattern       map[string]int64 `json:"by_pattern"`
 }
 
 // ContentAnalysisStats holds content analysis stats
 type ContentAnalysisStats struct {
-	TotalAnalyzed   int64             `json:"total_analyzed"`
-	ViolationsFound int64             `json:"violations_found"`
-	ByType          map[string]int64  `json:"by_type"`
+	TotalAnalyzed   int64            `json:"total_analyzed"`
+	ViolationsFound int64            `json:"violations_found"`
+	ByType          map[string]int64 `json:"by_type"`
 }
 
 // BehavioralAnalysisStats holds behavioral analysis stats
 type BehavioralAnalysisStats struct {
-	TotalClients      int64 `json:"total_clients"`
-	AnomalousClients  int64 `json:"anomalous_clients"`
+	TotalClients     int64 `json:"total_clients"`
+	AnomalousClients int64 `json:"anomalous_clients"`
 	TotalAnomalies   int64 `json:"total_anomalies"`
 	ActiveClients    int   `json:"active_clients"`
 }
 
 // AnomalySummary represents a summary of a detected anomaly
 type AnomalySummary struct {
-	Type        string    `json:"type"`
-	Severity    int       `json:"severity"`
-	Score       float64   `json:"score"`
-	ClientIP    string    `json:"client_ip"`
-	Path        string    `json:"path"`
-	Method      string    `json:"method"`
-	Timestamp   time.Time `json:"timestamp"`
-	Blocked     bool      `json:"blocked"`
+	Type      string    `json:"type"`
+	Severity  int       `json:"severity"`
+	Score     float64   `json:"score"`
+	ClientIP  string    `json:"client_ip"`
+	Path      string    `json:"path"`
+	Method    string    `json:"method"`
+	Timestamp time.Time `json:"timestamp"`
+	Blocked   bool      `json:"blocked"`
 }
 
 // HandleGetStats handles GET /api/v1/ml/stats
@@ -197,7 +197,7 @@ func (h *MLStatsHandler) HandleResetStats(w http.ResponseWriter, r *http.Request
 	// Write response
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"status": "success",
+		"status":  "success",
 		"message": "ML statistics reset successfully",
 	})
 }
@@ -221,7 +221,7 @@ func (h *MLStatsHandler) HandleUpdateConfig(w http.ResponseWriter, r *http.Reque
 	// For now, just return success
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(map[string]string{
-		"status": "success",
+		"status":  "success",
 		"message": "Configuration update not implemented yet",
 	})
 }
@@ -231,9 +231,9 @@ func (h *MLStatsHandler) HandleHealth(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
 	health := map[string]interface{}{
-		"status": "healthy",
+		"status":     "healthy",
 		"ml_enabled": h.proxyWithML != nil && h.proxyWithML.MLMiddleware != nil,
-		"timestamp": time.Now().UTC().Format(time.RFC3339),
+		"timestamp":  time.Now().UTC().Format(time.RFC3339),
 	}
 
 	if h.proxyWithML != nil && h.proxyWithML.MLMiddleware != nil {

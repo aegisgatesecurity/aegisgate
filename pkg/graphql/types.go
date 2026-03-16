@@ -61,12 +61,12 @@ type ModuleStatus string
 
 // Framework represents a compliance framework
 type Framework struct {
-	ID            FrameworkType     `json:"id"`
-	Name          string            `json:"name"`
-	Description   string            `json:"description"`
-	Version       string            `json:"version"`
-	Status        ComplianceStatus  `json:"status"`
-	FindingsCount int               `json:"findingsCount"`
+	ID            FrameworkType    `json:"id"`
+	Name          string           `json:"name"`
+	Description   string           `json:"description"`
+	Version       string           `json:"version"`
+	Status        ComplianceStatus `json:"status"`
+	FindingsCount int              `json:"findingsCount"`
 }
 
 // ComplianceFinding represents a compliance finding
@@ -81,25 +81,25 @@ type ComplianceFinding struct {
 
 // User represents a user
 type User struct {
-	ID         string    `json:"id"`
-	Username   string    `json:"username"`
-	Email      string    `json:"email"`
-	Role       Role      `json:"role"`
-	Enabled    bool      `json:"enabled"`
-	LastLogin  *Time     `json:"lastLogin"`
-	CreatedAt  Time      `json:"createdAt"`
-	UpdatedAt  Time      `json:"updatedAt"`
+	ID        string `json:"id"`
+	Username  string `json:"username"`
+	Email     string `json:"email"`
+	Role      Role   `json:"role"`
+	Enabled   bool   `json:"enabled"`
+	LastLogin *Time  `json:"lastLogin"`
+	CreatedAt Time   `json:"createdAt"`
+	UpdatedAt Time   `json:"updatedAt"`
 }
 
 // Session represents a user session
 type Session struct {
-	ID           string `json:"id"`
-	UserID       string `json:"userId"`
-	Token        string `json:"token"`
-	ExpiresAt    Time   `json:"expiresAt"`
-	CreatedAt    Time   `json:"createdAt"`
-	IPAddress    string `json:"ipAddress"`
-	UserAgent    string `json:"userAgent"`
+	ID        string `json:"id"`
+	UserID    string `json:"userId"`
+	Token     string `json:"token"`
+	ExpiresAt Time   `json:"expiresAt"`
+	CreatedAt Time   `json:"createdAt"`
+	IPAddress string `json:"ipAddress"`
+	UserAgent string `json:"userAgent"`
 }
 
 // AuthResult represents authentication result
@@ -117,10 +117,10 @@ type ProxyStats struct {
 	RequestsTotal     int64   `json:"requestsTotal"`
 	RequestsBlocked   int64   `json:"requestsBlocked"`
 	RequestsAllowed   int64   `json:"requestsAllowed"`
-	BytesIn          int64   `json:"bytesIn"`
-	BytesOut         int64   `json:"bytesOut"`
-	ActiveConnections int    `json:"activeConnections"`
-	AvgLatencyMs     float64 `json:"avgLatencyMs"`
+	BytesIn           int64   `json:"bytesIn"`
+	BytesOut          int64   `json:"bytesOut"`
+	ActiveConnections int     `json:"activeConnections"`
+	AvgLatencyMs      float64 `json:"avgLatencyMs"`
 }
 
 // Violation represents a proxy violation
@@ -145,24 +145,24 @@ type ProxyHealth struct {
 
 // SIEMEvent represents SIEM event
 type SIEMEvent struct {
-	ID        string            `json:"id"`
-	Timestamp Time              `json:"timestamp"`
-	Source    string            `json:"source"`
-	Category  string            `json:"category"`
-	Severity  Severity          `json:"severity"`
-	Message   string            `json:"message"`
+	ID         string                 `json:"id"`
+	Timestamp  Time                   `json:"timestamp"`
+	Source     string                 `json:"source"`
+	Category   string                 `json:"category"`
+	Severity   Severity               `json:"severity"`
+	Message    string                 `json:"message"`
 	Attributes map[string]interface{} `json:"attributes"`
 }
 
 // Webhook represents a webhook
 type Webhook struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
-	URL       string `json:"url"`
+	ID        string   `json:"id"`
+	Name      string   `json:"name"`
+	URL       string   `json:"url"`
 	Events    []string `json:"events"`
-	Enabled   bool `json:"enabled"`
-	CreatedAt Time `json:"createdAt"`
-	UpdatedAt Time `json:"updatedAt"`
+	Enabled   bool     `json:"enabled"`
+	CreatedAt Time     `json:"createdAt"`
+	UpdatedAt Time     `json:"updatedAt"`
 }
 
 // TLSConfig represents TLS configuration
@@ -230,8 +230,8 @@ type License struct {
 
 // DashboardStats represents dashboard statistics
 type DashboardStats struct {
-	TotalRequests      int64   `json:"totalRequests"`
-	BlockedRequests    int64   `json:"blockedRequests"`
+	TotalRequests     int64   `json:"totalRequests"`
+	BlockedRequests   int64   `json:"blockedRequests"`
 	ActiveUsers       int     `json:"activeUsers"`
 	ActiveConnections int     `json:"activeConnections"`
 	Uptime            float64 `json:"uptime"`
@@ -239,9 +239,9 @@ type DashboardStats struct {
 
 // Health represents health status
 type Health struct {
-	Status    string       `json:"status"`
-	Checks   []*HealthCheck `json:"checks"`
-	Timestamp Time         `json:"timestamp"`
+	Status    string         `json:"status"`
+	Checks    []*HealthCheck `json:"checks"`
+	Timestamp Time           `json:"timestamp"`
 }
 
 // HealthCheck represents a health check
@@ -275,7 +275,7 @@ type MetricSnapshot struct {
 
 // ComplianceReportSummary represents compliance report summary
 type ComplianceReportSummary struct {
-	TotalChecks    int     `json:"totalChecks"`
+	TotalChecks   int     `json:"totalChecks"`
 	Passed        int     `json:"passed"`
 	Failed        int     `json:"failed"`
 	Warnings      int     `json:"warnings"`
@@ -285,22 +285,22 @@ type ComplianceReportSummary struct {
 
 // ComplianceStatusSummary represents overall compliance status
 type ComplianceStatusSummary struct {
-	Overall   ComplianceStatus        `json:"overall"`
-	Frameworks []*FrameworkStatus    `json:"frameworks"`
-	LastCheck Time                   `json:"lastCheck"`
+	Overall    ComplianceStatus   `json:"overall"`
+	Frameworks []*FrameworkStatus `json:"frameworks"`
+	LastCheck  Time               `json:"lastCheck"`
 }
 
 // FrameworkStatus represents framework status
 type FrameworkStatus struct {
-	Framework FrameworkType  `json:"framework"`
+	Framework FrameworkType    `json:"framework"`
 	Status    ComplianceStatus `json:"status"`
-	Score     float64        `json:"score"`
-	LastCheck *Time          `json:"lastCheck"`
+	Score     float64          `json:"score"`
+	LastCheck *Time            `json:"lastCheck"`
 }
 
 // ConfigValidationResult represents config validation result
 type ConfigValidationResult struct {
-	Valid bool          `json:"valid"`
+	Valid  bool           `json:"valid"`
 	Errors []*ConfigError `json:"errors"`
 }
 

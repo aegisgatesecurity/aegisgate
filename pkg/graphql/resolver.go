@@ -50,8 +50,8 @@ func (r *Resolver) CurrentUser(ctx context.Context) (*User, error) {
 
 // Sessions resolves sessions
 func (r *Resolver) Sessions(ctx context.Context, args struct {
-	UserID      *string
-	Pagination  *Pagination
+	UserID     *string
+	Pagination *Pagination
 }) ([]*Session, error) {
 	return []*Session{}, nil
 }

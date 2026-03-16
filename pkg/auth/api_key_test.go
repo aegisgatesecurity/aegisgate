@@ -307,8 +307,8 @@ func TestAPIKeyServiceConcurrentAccess(t *testing.T) {
 		go func(idx int) {
 			defer wg.Done()
 			req := &APIKeyRequest{
-				Name:    "Test Key",
-				Scopes:  []APIKeyScope{ScopeRead},
+				Name:     "Test Key",
+				Scopes:   []APIKeyScope{ScopeRead},
 				Metadata: map[string]interface{}{"user_id": "user-concurrent"},
 			}
 			_, err := svc.GenerateKey(req)

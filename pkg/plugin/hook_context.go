@@ -204,20 +204,20 @@ type FilterPlugin interface {
 func NewRequestContext(r *http.Request, rw http.ResponseWriter, upstream string) *RequestContext {
 	clientIP := ""
 	proto := ""
-	
+
 	if r != nil {
 		clientIP = r.RemoteAddr
 		proto = r.Proto
 	}
-	
+
 	return &RequestContext{
-		Request:       r,
+		Request:        r,
 		ResponseWriter: rw,
-		Upstream:      upstream,
-		ClientIP:      clientIP,
-		Protocol:      proto,
-		Metadata:      make(map[string]interface{}),
-		Timestamp:     time.Now(),
+		Upstream:       upstream,
+		ClientIP:       clientIP,
+		Protocol:       proto,
+		Metadata:       make(map[string]interface{}),
+		Timestamp:      time.Now(),
 	}
 }
 
@@ -235,22 +235,22 @@ func NewResponseContext(statusCode int, headers http.Header, body []byte, latenc
 // NewConnectionContext creates a new ConnectionContext
 func NewConnectionContext(localAddr, remoteAddr string, isEncrypted bool) *ConnectionContext {
 	return &ConnectionContext{
-		LocalAddr:     localAddr,
-		RemoteAddr:    remoteAddr,
-		IsEncrypted:   isEncrypted,
-		Metadata:      make(map[string]interface{}),
-		ConnectionID:  fmt.Sprintf("%s-%d", remoteAddr, time.Now().UnixNano()),
+		LocalAddr:    localAddr,
+		RemoteAddr:   remoteAddr,
+		IsEncrypted:  isEncrypted,
+		Metadata:     make(map[string]interface{}),
+		ConnectionID: fmt.Sprintf("%s-%d", remoteAddr, time.Now().UnixNano()),
 	}
 }
 
 // NewErrorContext creates a new ErrorContext
 func NewErrorContext(err error, hook HookType, req *http.Request, connID string) *ErrorContext {
 	return &ErrorContext{
-		Error:       err,
-		Hook:        hook,
-		Request:     req,
+		Error:        err,
+		Hook:         hook,
+		Request:      req,
 		ConnectionID: connID,
-		Timestamp:   time.Now(),
-		Metadata:    make(map[string]interface{}),
+		Timestamp:    time.Now(),
+		Metadata:     make(map[string]interface{}),
 	}
 }

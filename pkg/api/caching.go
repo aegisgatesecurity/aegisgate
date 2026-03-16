@@ -69,8 +69,8 @@ type InMemoryCache struct {
 	misses    int64
 	evictions int64
 	startTime time.Time
-	maxSize   int64   // Maximum number of items
-	maxMemory int64   // Maximum memory in bytes
+	maxSize   int64 // Maximum number of items
+	maxMemory int64 // Maximum memory in bytes
 }
 
 // NewInMemoryCache creates a new in-memory cache
@@ -226,7 +226,7 @@ func (c *InMemoryCache) evictOldest() {
 type CacheKeyGenerator struct {
 	includeHeaders []string
 	includeQuery   bool
-	separator     string
+	separator      string
 }
 
 // NewCacheKeyGenerator creates a new cache key generator
@@ -329,8 +329,8 @@ func DefaultCacheConfig() *CacheConfig {
 		VaryHeaders:          []string{"Accept", "Accept-Language", "Authorization"},
 		CacheableMethods:     []string{"GET", "HEAD"},
 		CacheableStatusCodes: []int{200, 203, 300, 301},
-		Tags:                []string{},
-		Store:               NewInMemoryCache(10000, 100*1024*1024), // 10k items, 100MB
+		Tags:                 []string{},
+		Store:                NewInMemoryCache(10000, 100*1024*1024), // 10k items, 100MB
 	}
 }
 
@@ -824,8 +824,8 @@ func (w *CacheWarmer) warm(ctx context.Context, baseURL string) {
 // JSONCacheValue is a cache value for JSON responses
 type JSONCacheValue struct {
 	Data      interface{} `json:"data"`
-	ETag      string     `json:"etag"`
-	ExpiresAt time.Time  `json:"expires_at"`
+	ETag      string      `json:"etag"`
+	ExpiresAt time.Time   `json:"expires_at"`
 }
 
 // MarshalBinary marshals to binary

@@ -29,15 +29,15 @@ import (
 func TestMLMiddleware_Integration(t *testing.T) {
 	// Create ML middleware with test configuration
 	config := &MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:          "medium",
-		BlockOnHighSeverity:  false,
+		Enabled:                 true,
+		Sensitivity:             "medium",
+		BlockOnHighSeverity:     false,
 		BlockOnCriticalSeverity: true,
-		MinScoreToBlock:      3.0,
-		LogAllAnomalies:      false,
-		SampleRate:           100,
-		ExcludedPaths:        []string{"/health", "/ready"},
-		ExcludedMethods:      []string{"OPTIONS"},
+		MinScoreToBlock:         3.0,
+		LogAllAnomalies:         false,
+		SampleRate:              100,
+		ExcludedPaths:           []string{"/health", "/ready"},
+		ExcludedMethods:         []string{"OPTIONS"},
 	}
 
 	middleware, err := NewMLMiddleware(config)
@@ -61,7 +61,7 @@ func TestMLMiddleware_Integration(t *testing.T) {
 		nextCalled = false
 		req := httptest.NewRequest("GET", "/api/test", nil)
 		req.RemoteAddr = "192.168.1.1:12345"
-		
+
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, req)
 
@@ -79,7 +79,7 @@ func TestMLMiddleware_Integration(t *testing.T) {
 		nextCalled = false
 		req := httptest.NewRequest("GET", "/health", nil)
 		req.RemoteAddr = "192.168.1.1:12345"
-		
+
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, req)
 
@@ -93,7 +93,7 @@ func TestMLMiddleware_Integration(t *testing.T) {
 		nextCalled = false
 		req := httptest.NewRequest("OPTIONS", "/api/test", nil)
 		req.RemoteAddr = "192.168.1.1:12345"
-		
+
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, req)
 
@@ -108,11 +108,11 @@ func TestMLMiddleware_Integration(t *testing.T) {
 		// Simulate path traversal attack
 		req := httptest.NewRequest("GET", "/api/../../../etc/passwd", nil)
 		req.RemoteAddr = "192.168.1.1:12345"
-		
+
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, req)
 
-		// The request should still pass through because our basic 
+		// The request should still pass through because our basic
 		// implementation doesn't detect path traversal by default
 		// In production, this would be blocked based on severity
 		if !nextCalled {
@@ -124,13 +124,13 @@ func TestMLMiddleware_Integration(t *testing.T) {
 // TestMLMiddleware_Blocking tests the blocking functionality
 func TestMLMiddleware_Blocking(t *testing.T) {
 	config := &MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:          "paranoid",
-		BlockOnHighSeverity:  true,
+		Enabled:                 true,
+		Sensitivity:             "paranoid",
+		BlockOnHighSeverity:     true,
 		BlockOnCriticalSeverity: true,
-		MinScoreToBlock:      2.0, // Low threshold for testing
-		LogAllAnomalies:      false,
-		SampleRate:           100,
+		MinScoreToBlock:         2.0, // Low threshold for testing
+		LogAllAnomalies:         false,
+		SampleRate:              100,
 	}
 
 	middleware, err := NewMLMiddleware(config)
@@ -207,7 +207,7 @@ func TestMLMiddleware_SensitivityLevels(t *testing.T) {
 	for _, sensitivity := range sensitivities {
 		t.Run("Sensitivity: "+sensitivity, func(t *testing.T) {
 			config := &MLMiddlewareConfig{
-				Enabled:      true,
+				Enabled:     true,
 				Sensitivity: sensitivity,
 			}
 
@@ -233,8 +233,8 @@ func TestMLMiddleware_ConfigUpdate(t *testing.T) {
 
 	// Update configuration
 	newConfig := &MLMiddlewareConfig{
-		Enabled:           false,
-		Sensitivity:      "high",
+		Enabled:             false,
+		Sensitivity:         "high",
 		BlockOnHighSeverity: true,
 	}
 
@@ -339,7 +339,7 @@ func BenchmarkMLMiddleware_WithAnomalies(b *testing.B) {
 		`)))
 		req.RemoteAddr = "192.168.1.100:12345"
 		req.Header.Set("Content-Type", "application/json")
-		
+
 		w := httptest.NewRecorder()
 		handler.ServeHTTP(w, req)
 	}

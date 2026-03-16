@@ -12,20 +12,20 @@ type ComplianceStatus = ControlCheckStatus
 
 // CheckResult represents the result of a compliance check
 type CheckResult struct {
-	ID         string           `json:"id"`
-	Framework  Framework        `json:"framework"`
+	ID        string           `json:"id"`
+	Framework Framework        `json:"framework"`
 	Status    ComplianceStatus `json:"status"`
-	Summary    CheckSummary     `json:"summary"`
-	Findings   []Finding        `json:"findings"`
-	Timestamp  time.Time        `json:"timestamp"`
+	Summary   CheckSummary     `json:"summary"`
+	Findings  []Finding        `json:"findings"`
+	Timestamp time.Time        `json:"timestamp"`
 }
 
 // CheckSummary contains summary statistics
 type CheckSummary struct {
-	TotalChecks    int     `json:"total_checks"`
-	Passed         int     `json:"passed"`
-	Failed         int     `json:"failed"`
-	Warnings       int     `json:"warnings"`
+	TotalChecks   int     `json:"total_checks"`
+	Passed        int     `json:"passed"`
+	Failed        int     `json:"failed"`
+	Warnings      int     `json:"warnings"`
 	NotApplicable int     `json:"not_applicable"`
-	Score          float64 `json:"score"`
+	Score         float64 `json:"score"`
 }

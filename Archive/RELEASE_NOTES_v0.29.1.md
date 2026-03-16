@@ -408,7 +408,7 @@ go test -bench=BenchmarkLLM -benchmem ./tests/load/
      enabled: true
      audit_enabled: true
      memory_scrubbing: true
-   
+
    # Immutable Config (enabled by default)
    immutable_config:
      enabled: true

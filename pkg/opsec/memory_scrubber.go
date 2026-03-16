@@ -30,15 +30,15 @@ func (m *MemoryScrubber) ScrubString(s *string) error {
 	// Convert string to mutable byte slice
 	// This creates a copy, which we can then scrub
 	b := []byte(*s)
-	
+
 	// Zero out the bytes
 	for i := range b {
 		b[i] = 0
 	}
-	
+
 	// Prevent compiler optimization
 	subtle.ConstantTimeCopy(len(b), b, b)
-	
+
 	*s = ""
 	return nil
 }
@@ -60,7 +60,7 @@ func (m *MemoryScrubber) ScrubBytes(b []byte) error {
 	// Prevent compiler optimization from removing the clearing
 	// by using a side-effect in subtle package
 	subtle.ConstantTimeCopy(len(b), b, b)
-	
+
 	return nil
 }
 
@@ -83,15 +83,15 @@ func (m *MemoryScrubber) ScrubSecureString(s *string) error {
 	// While this cannot scrub the original string data (Go strings are immutable),
 	// it clears any copies that may have been made
 	b := []byte(strData)
-	
+
 	// Zero out the byte copy
 	for i := range b {
 		b[i] = 0
 	}
-	
+
 	// Prevent compiler optimization
 	subtle.ConstantTimeCopy(len(b), b, b)
-	
+
 	// Keep reference to prevent GC from reclaiming during scrub
 	runtime.KeepAlive(strData)
 

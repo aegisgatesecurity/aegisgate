@@ -75,7 +75,7 @@ security:
   threat_detection:
     enabled: true
     block_mode: true
-    
+
 proxy:
   tls:
     enabled: true
@@ -134,15 +134,15 @@ rate_limit:
 ## 🏗️ Architecture
 
 ```mermaid
-%%{ init: { 
+%%{ init: {
     'theme': 'dark',
-    'themeVariables': { 
+    'themeVariables': {
         'primaryColor': '#0d47a1',
         'primaryBorderColor': '#1565c0',
         'primaryTextColor': '#ffffff',
         'lineColor': '#ffffff',
         'background': '#000000'
-    } 
+    }
 } }%%
 graph TD
     subgraph Clients

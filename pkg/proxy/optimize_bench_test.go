@@ -13,10 +13,10 @@ import (
 // BenchmarkProxyResponseCreation benchmarks response creation (not full proxy setup)
 func BenchmarkProxyResponseCreation(b *testing.B) {
 	patterns := []string{"VisaCreditCard", "AWSKey", "PasswordInBody"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		_ = CreateOptimizedBlockedResponse(patterns)
 	}
@@ -26,10 +26,10 @@ func BenchmarkProxyResponseCreation(b *testing.B) {
 func BenchmarkProxyResponseCreationOld(b *testing.B) {
 	// This simulates the old createBlockedResponse behavior
 	patterns := []string{"VisaCreditCard", "AWSKey", "PasswordInBody"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		// Old method - creates new header each time
 		body := "Request blocked: prohibited content detected (" + strings.Join(patterns, ", ") + ")"
@@ -50,7 +50,7 @@ func BenchmarkProxyResponseCreationOld(b *testing.B) {
 func BenchmarkHeaderPooling(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		h := GetHeaderPool()
 		h.Set("Content-Type", "application/json")
@@ -62,7 +62,7 @@ func BenchmarkHeaderPooling(b *testing.B) {
 func BenchmarkHeaderCreation(b *testing.B) {
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		h := make(http.Header, 8)
 		h.Set("Content-Type", "application/json")
@@ -72,10 +72,10 @@ func BenchmarkHeaderCreation(b *testing.B) {
 // BenchmarkStringBuilderPooling benchmarks string builder pooling
 func BenchmarkStringBuilderPooling(b *testing.B) {
 	parts := []string{"part1", "part2", "part3", "part4", "part5"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		sb := GetStringBuilder()
 		for _, p := range parts {
@@ -91,10 +91,10 @@ func BenchmarkStringBuilderPooling(b *testing.B) {
 // BenchmarkStringJoin benchmarks strings.Join
 func BenchmarkStringJoin(b *testing.B) {
 	parts := []string{"part1", "part2", "part3", "part4", "part5"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		result := strings.Join(parts, " ")
 		_ = result
@@ -104,10 +104,10 @@ func BenchmarkStringJoin(b *testing.B) {
 // BenchmarkBufferPooling benchmarks buffer pooling for body reading
 func BenchmarkBufferPooling(b *testing.B) {
 	data := strings.NewReader("This is test data for reading body content")
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		data.Seek(0, 0)
 		buf := GetBuffer()
@@ -120,10 +120,10 @@ func BenchmarkBufferPooling(b *testing.B) {
 // BenchmarkBufferNaive benchmarks naive buffer allocation
 func BenchmarkBufferNaive(b *testing.B) {
 	data := strings.NewReader("This is test data for reading body content")
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		data.Seek(0, 0)
 		buf := make([]byte, 0, 8192)
@@ -135,10 +135,10 @@ func BenchmarkBufferNaive(b *testing.B) {
 // BenchmarkSafeString benchmarks safe string helper
 func BenchmarkSafeString(b *testing.B) {
 	inputs := []string{"", "value", "another"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		input := inputs[i%len(inputs)]
 		_ = SafeString(input)
@@ -148,10 +148,10 @@ func BenchmarkSafeString(b *testing.B) {
 // BenchmarkSplitHostPort benchmarks host:port splitting
 func BenchmarkSplitHostPort(b *testing.B) {
 	inputs := []string{"example.com:443", "192.168.1.1:8080", "api.server.com"}
-	
+
 	b.ResetTimer()
 	b.ReportAllocs()
-	
+
 	for i := 0; i < b.N; i++ {
 		input := inputs[i%len(inputs)]
 		host, port := SplitHostPort(input)

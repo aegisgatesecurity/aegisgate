@@ -29,10 +29,10 @@ type Response struct {
 
 // Error represents a GraphQL error
 type Error struct {
-	Message              string            `json:"message"`
-	Locations            []Location        `json:"locations,omitempty"`
-	Path                 []interface{}     `json:"path,omitempty"`
-	Extensions           map[string]interface{} `json:"extensions,omitempty"`
+	Message    string                 `json:"message"`
+	Locations  []Location             `json:"locations,omitempty"`
+	Path       []interface{}          `json:"path,omitempty"`
+	Extensions map[string]interface{} `json:"extensions,omitempty"`
 }
 
 // Location represents a location in GraphQL source
@@ -78,8 +78,8 @@ func (e *Executor) parse(query string) (*document, error) {
 	for _, match := range matches {
 		if len(match) >= 2 {
 			op := &operation{
-				Name:          match[1],
-				SelectionSet:  []selection{},
+				Name:           match[1],
+				SelectionSet:   []selection{},
 				VariableValues: map[string]interface{}{},
 			}
 
@@ -330,26 +330,26 @@ type document struct {
 
 // operation represents a GraphQL operation
 type operation struct {
-	Name          string
-	OperationType string
-	SelectionSet  []selection
+	Name           string
+	OperationType  string
+	SelectionSet   []selection
 	VariableValues map[string]interface{}
 }
 
 // selection represents a field selection
 type selection struct {
-	Name       string
-	Alias      string
-	Arguments  map[string]interface{}
+	Name         string
+	Alias        string
+	Arguments    map[string]interface{}
 	SelectionSet []selection
 }
 
 // defaultComplexity defines default field complexity
 var defaultComplexity = map[string]int{
-	"users":                   2,
-	"user":                    1,
-	"sessions":                3,
-	"violations":              5,
-	"complianceFindings":     10,
-	"siemEvents":             10,
+	"users":              2,
+	"user":               1,
+	"sessions":           3,
+	"violations":         5,
+	"complianceFindings": 10,
+	"siemEvents":         10,
 }

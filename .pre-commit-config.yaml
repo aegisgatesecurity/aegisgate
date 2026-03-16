@@ -1,0 +1,162 @@
+# AegisGate Pre-Commit Hook Configuration
+# =========================================
+# 
+# This configuration provides comprehensive automated checks that run
+# before each commit to ensure code quality and catch issues early.
+#
+# INSTALLATION:
+#   pip install pre-commit
+#   cd AegisGate
+#   pre-commit install
+#
+# MANUAL RUN:
+#   pre-commit run --all-files           # Run all hooks on all files
+#   pre-commit run --all-files --show-diff-on-failure
+#
+# UPDATE HOOKS:
+#   pre-commit autoupdate                # Update hook versions
+
+repos:
+  # ---------------------------------------------------------------------
+  # Essential pre-commit hooks (file validation)
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      # Check for files containing merge conflict markers
+      - id: check-merge-conflict
+        description: Checks for merge conflict markers in files
+
+      # Prevent adding large files (>500KB)
+      - id: check-added-large-files
+        description: Prevents adding large files
+        args: ['--maxkb=500']
+
+      # Trim trailing whitespace
+      - id: trailing-whitespace
+        description: Trims trailing whitespace
+        args: ['--markdown-linebreak-ext=md']
+
+      # Ensure files end with newline
+      - id: end-of-file-fixer
+        description: Ensures files end with a newline
+        types: [text]
+
+      # Validate YAML syntax
+      - id: check-yaml
+        description: Validates YAML files
+
+      # Validate JSON syntax
+      - id: check-json
+        description: Validates JSON files
+
+      # Validate TOML syntax
+      - id: check-toml
+        description: Validates TOML files
+
+  # ---------------------------------------------------------------------
+  # Go code formatting (local - no download needed)
+  # ---------------------------------------------------------------------
+  - repo: local
+    hooks:
+      # Format Go source code with gofmt
+      - id: gofmt
+        name: gofmt (format)
+        description: Format Go source code
+        entry: gofmt -l -w
+        language: system
+        types: [go]
+        pass_filenames: true
+
+      # Run go vet for static analysis
+      - id: go-vet
+        name: go vet
+        description: Static analysis for Go
+        entry: go vet
+        language: system
+        types: [go]
+        pass_filenames: false
+        args: [./...]
+
+  # ---------------------------------------------------------------------
+  # Go tests - short mode for fast pre-commit checks
+  # ---------------------------------------------------------------------
+  - repo: local
+    hooks:
+      # Fast test run for pre-commit (short mode)
+      - id: go-test-short
+        name: Go Tests (short)
+        description: Run Go tests with -short flag
+        entry: go test -short
+        language: system
+        types: [go]
+        pass_filenames: false
+        args: [./...]
+
+  # ---------------------------------------------------------------------
+  # Go module verification (catches dependency issues)
+  # ---------------------------------------------------------------------
+  - repo: local
+    hooks:
+      # Verify go.mod is tidy
+      - id: go-mod-tidy
+        name: go mod tidy
+        description: Ensure go.mod is tidy
+        entry: go mod tidy
+        language: system
+        types: [go]
+        pass_filenames: false
+
+# ---------------------------------------------------------------------
+# Files and folders to exclude from checks
+# ---------------------------------------------------------------------
+exclude: |
+  (?x)(
+      ^bin/
+    | ^deploy/helm/
+    | vendor/
+    | \.git/
+    | coverage\.out
+    | coverage\.html
+    | \.test$
+    | ^gen/
+    | \.pb\.go$
+  )
+
+# ---------------------------------------------------------------------
+# Stop on first failure (set to false to run all checks)
+# ---------------------------------------------------------------------
+fail_fast: false
+
+# ---------------------------------------------------------------------
+# OPTIONAL - Additional hooks (uncomment and run 'pre-commit autoupdate'
+# to enable these after basic setup is working)
+# ---------------------------------------------------------------------
+#
+# Additional checks you can add later:
+#
+# - Spell checking (misspell):
+#   - repo: https://github.com/client9/misspell
+#     rev: v0.4.1
+#     hooks:
+#       - id: misspell
+#
+# - Go linter (golangci-lint) - comprehensive Go linting:
+#   - repo: https://github.com/golangci/golangci-lint
+#     rev: v1.62.2
+#     hooks:
+#       - id: golangci-lint
+#         args: [./...]
+#
+# - Security scanner (gosec):
+#   - repo: https://github.com/securego/gosec
+#     rev: 2.21.4
+#     hooks:
+#       - id: gosec
+#         args: ['-no-fail', '-exclude=G104,G108,G202,G304,G501,G505']
+#
+# - Markdown linting:
+#   - repo: https://github.com/DavidAnson/markdownlint-cli2
+#     rev: v0.14.0
+#     hooks:
+#       - id: markdownlint

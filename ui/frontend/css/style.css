@@ -14,16 +14,16 @@
     --color-primary: #1e3c72;
     --color-primary-light: #2a5298;
     --color-primary-dark: #0f1d3a;
-    
+
     --color-text-primary: #1a1a1a;
     --color-text-secondary: #4a4a4a;
     --color-text-muted: #6b6b6b;
     --color-text-inverse: #ffffff;
-    
+
     --color-background: #f5f5f5;
     --color-surface: #ffffff;
     --color-border: #d1d1d1;
-    
+
     /* Status Colors - WCAG AA Compliant (4.5:1 ratio minimum) */
     --color-success: #0d6832;
     --color-success-bg: #d4edda;
@@ -33,14 +33,14 @@
     --color-danger-bg: #fee2e2;
     --color-info: #0c5460;
     --color-info-bg: #d1ecf1;
-    
+
     /* Spacing */
     --spacing-xs: 0.25rem;
     --spacing-sm: 0.5rem;
     --spacing-md: 1rem;
     --spacing-lg: 1.5rem;
     --spacing-xl: 2rem;
-    
+
     /* Typography */
     --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     --font-size-base: 16px;
@@ -48,12 +48,12 @@
     --font-size-lg: 1.125rem;
     --font-size-xl: 1.25rem;
     --line-height-base: 1.5;
-    
+
     /* Focus Ring */
     --focus-ring-width: 3px;
     --focus-ring-offset: 2px;
     --focus-ring-color: #0078d4;
-    
+
     /* Border Radius */
     --border-radius-sm: 4px;
     --border-radius-md: 8px;
@@ -654,12 +654,12 @@ tbody tr:focus-within {
         --color-text-secondary: #000000;
         --color-text-muted: #000000;
     }
-    
+
     .metric-card,
     .compliance-card {
         border-width: 2px;
     }
-    
+
     .nav-link.active {
         border-bottom-width: 4px;
     }
@@ -686,7 +686,7 @@ tbody tr:focus-within {
     body {
         background: white;
     }
-    
+
     .skip-link,
     .nav,
     .filter-bar,
@@ -695,12 +695,12 @@ tbody tr:focus-within {
     #alert-region {
         display: none;
     }
-    
+
     .main-content {
         box-shadow: none;
         margin: 0;
     }
-    
+
     [hidden] {
         display: block !important;
     }

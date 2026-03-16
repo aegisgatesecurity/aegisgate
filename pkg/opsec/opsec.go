@@ -81,7 +81,7 @@ func (m *OPSECManager) LogAudit(event string, details map[string]string) error {
 	if m.auditLog == nil {
 		return nil
 	}
-	
+
 	// Convert to AuditEntry and log
 	entry := &AuditEntry{
 		EventType: event,

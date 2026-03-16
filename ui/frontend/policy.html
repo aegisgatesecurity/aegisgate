@@ -16,14 +16,14 @@
                 <span>Policy Console</span>
             </div>
         </header>
-        
+
         <nav class="dashboard-nav">
             <button class="nav-btn" onclick="navigateTo('overview')">Overview</button>
             <button class="nav-btn" onclick="navigateTo('metrics')">Metrics</button>
             <button class="nav-btn active">Policy Console</button>
             <button class="nav-btn" onclick="navigateTo('certificates')">Certificates</button>
         </nav>
-        
+
         <main class="dashboard-content">
             <section class="policy-section">
                 <div class="section-header">
@@ -34,7 +34,7 @@
                         <button class="btn danger" onclick="resetPolicies()">Reset to Default</button>
                     </div>
                 </div>
-                
+
                 <div class="policy-filter">
                     <input type="text" id="policy-search" placeholder="Search policies..." oninput="filterPolicies()">
                     <select id="policy-filter-compliance" onchange="filterByCompliance(this.value)">
@@ -49,7 +49,7 @@
                         <option value="inactive">Inactive</option>
                     </select>
                 </div>
-                
+
                 <div class="policy-table-container">
                     <table class="policy-table">
                         <thead>
@@ -81,12 +81,12 @@
                 </div>
             </section>
         </main>
-        
+
         <footer class="dashboard-footer">
             <p>AegisGate Security Gateway v0.2.0 | Policy Console Module</p>
         </footer>
     </div>
-    
+
     <script src="policy-client.js"></script>
 </body>
 </html>

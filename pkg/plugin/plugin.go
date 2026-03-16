@@ -94,7 +94,7 @@ type PluginConfig struct {
 
 // RetryConfig defines retry behavior for plugin operations
 type RetryConfig struct {
-	MaxAttempts int           `json:"max_attempts" yaml:"max_attempts"`
+	MaxAttempts  int           `json:"max_attempts" yaml:"max_attempts"`
 	InitialDelay time.Duration `json:"initial_delay" yaml:"initial_delay"`
 	MaxDelay     time.Duration `json:"max_delay" yaml:"max_delay"`
 	Multiplier   float64       `json:"multiplier" yaml:"multiplier"`
@@ -146,7 +146,7 @@ func (s Status) String() string {
 
 // PluginState holds the runtime state of a plugin
 type PluginState struct {
-	Metadata PluginMetadata
+	Metadata  PluginMetadata
 	Config    PluginConfig
 	Status    Status
 	Plugin    Plugin

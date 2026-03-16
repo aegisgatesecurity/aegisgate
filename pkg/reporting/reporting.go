@@ -1206,8 +1206,8 @@ func generatePerformanceReport(start, end time.Time, filters ReportFilter) (inte
 			"requests":   requests,
 			"responses":  responses,
 		},
-		"trends":    trends,
-		"averages":  averages,
+		"trends":   trends,
+		"averages": averages,
 	}, nil
 }
 

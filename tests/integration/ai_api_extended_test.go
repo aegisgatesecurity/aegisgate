@@ -9,7 +9,7 @@ func TestAIAPIExtended1(t *testing.T) {
 	t.Log("AI API extended test 1")
 }
 
-// TestAIAPIExtended2 - Extended AI API test  
+// TestAIAPIExtended2 - Extended AI API test
 func TestAIAPIExtended2(t *testing.T) {
 	t.Log("AI API extended test 2")
 }

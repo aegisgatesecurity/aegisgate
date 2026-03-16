@@ -21,7 +21,7 @@ class CertificateConsole {
         const tbody = document.getElementById('certificate-table-body');
         if (!tbody) return;
 
-        tbody.innerHTML = this.certs.map(cert => 
+        tbody.innerHTML = this.certs.map(cert =>
             '<tr>' +
                 '<td>' + cert.hostname + '</td>' +
                 '<td>' + (cert.issuer || 'AegisGate CA') + '</td>' +

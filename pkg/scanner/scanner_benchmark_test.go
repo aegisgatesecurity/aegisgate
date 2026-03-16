@@ -25,11 +25,11 @@ import (
 func generatePayload(size int) string {
 	// Base content with some realistic patterns
 	base := `{"user": "john.doe@example.com", "action": "login", "timestamp": "2024-01-15T10:30:00Z"}`
-	
+
 	if size <= len(base) {
 		return base[:size]
 	}
-	
+
 	// Repeat base content to reach desired size
 	var sb strings.Builder
 	sb.Grow(size)
@@ -43,7 +43,7 @@ func generatePayload(size int) string {
 func generatePayloadWithPatterns(size int, includeSensitive bool) string {
 	var sb strings.Builder
 	sb.Grow(size)
-	
+
 	for sb.Len() < size {
 		sb.WriteString(`{"user": "john.doe@example.com", "action": "process", "data": "`)
 		if includeSensitive {
@@ -155,7 +155,7 @@ func BenchmarkPatternMatching_TimePerMatch(b *testing.B) {
 			_ = len(findings)
 		}
 	}
-	
+
 	// Report findings per iteration
 	b.ReportMetric(float64(len(sc.Scan(content)))/float64(b.N), "findings/op")
 }
@@ -181,7 +181,7 @@ func BenchmarkRequestScanning_1KB(b *testing.B) {
 		findings := sc.Scan(content)
 		_ = findings
 	}
-	
+
 	// Report throughput in MB/sec
 	b.SetBytes(int64(len(content)))
 }
@@ -203,7 +203,7 @@ func BenchmarkRequestScanning_100KB(b *testing.B) {
 		findings := sc.Scan(content)
 		_ = findings
 	}
-	
+
 	b.SetBytes(int64(len(content)))
 }
 
@@ -224,7 +224,7 @@ func BenchmarkRequestScanning_1MB(b *testing.B) {
 		findings := sc.Scan(content)
 		_ = findings
 	}
-	
+
 	b.SetBytes(int64(len(content)))
 }
 
@@ -245,7 +245,7 @@ func BenchmarkRequestScanning_10MB(b *testing.B) {
 		findings := sc.Scan(content)
 		_ = findings
 	}
-	
+
 	b.SetBytes(int64(len(content)))
 }
 
@@ -268,7 +268,7 @@ func BenchmarkRequestScanning_Concurrent(b *testing.B) {
 			_ = findings
 		}
 	})
-	
+
 	b.SetBytes(int64(len(content)))
 }
 
@@ -362,7 +362,7 @@ func BenchmarkThreatDetection_EndToEnd(b *testing.B) {
 		MaxFindings:    100,
 	}
 	sc := scanner.New(cfg)
-	
+
 	// Mix of attack payloads
 	attackTypes := []string{"sql_injection", "xss", "sensitive_data"}
 	payloads := make([]string, len(attackTypes))
@@ -427,7 +427,7 @@ func BenchmarkMultiPatternEngine_AllPatterns(b *testing.B) {
 		findings := sc.Scan(content)
 		_ = findings
 	}
-	
+
 	// Report patterns checked per operation
 	b.ReportMetric(float64(len(patterns)), "patterns/op")
 }
@@ -467,7 +467,7 @@ func BenchmarkMultiPatternEngine_CategoryPII(b *testing.B) {
 			piiPatterns = append(piiPatterns, p)
 		}
 	}
-	
+
 	cfg := &scanner.Config{
 		Patterns:       piiPatterns,
 		BlockThreshold: scanner.Critical,
@@ -495,7 +495,7 @@ func BenchmarkMultiPatternEngine_CategoryCredential(b *testing.B) {
 			credPatterns = append(credPatterns, p)
 		}
 	}
-	
+
 	cfg := &scanner.Config{
 		Patterns:       credPatterns,
 		BlockThreshold: scanner.Critical,

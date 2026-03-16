@@ -34,7 +34,7 @@ func TestVersionString(t *testing.T) {
 
 func TestVersionCompare(t *testing.T) {
 	tests := []struct {
-		v    Version
+		v     Version
 		other Version
 		want  int // -1, 0, 1
 	}{
@@ -189,7 +189,6 @@ func TestVersionManagerUnsupported(t *testing.T) {
 	t.Skip("Test not implemented")
 	// mgr.RegisterUnsupported("1")
 }
-
 
 func TestVersionManagerDefaultVersion(t *testing.T) {
 	mgr := NewVersionManager()

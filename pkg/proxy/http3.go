@@ -62,26 +62,25 @@ type HTTP3AwareProxy struct {
 
 	// Connection tracking
 	activeConnections int64
-	totalRequests    int64
-
+	totalRequests     int64
 }
 
 // HTTP3Metrics holds HTTP/3 specific metrics
 type HTTP3Metrics struct {
 	ActiveConnections int64
-	TotalRequests    int64
-	BytesReceived    int64
-	BytesSent        int64
+	TotalRequests     int64
+	BytesReceived     int64
+	BytesSent         int64
 }
 
 // DefaultHTTP3Config returns the default HTTP/3 configuration
 func DefaultHTTP3Config() *HTTP3Config {
 	return &HTTP3Config{
 		Enabled:              false, // Disabled by default for security
-		ListenAddr:          "0.0.0.0",
-		Port:                8443,
+		ListenAddr:           "0.0.0.0",
+		Port:                 8443,
 		MaxConcurrentStreams: 100,
-		MaxIdleConns:        100,
+		MaxIdleConns:         100,
 		IdleTimeout:          90 * time.Second,
 		ReadTimeout:          30 * time.Second,
 		WriteTimeout:         30 * time.Second,
@@ -440,7 +439,7 @@ func (h3 *HTTP3AwareProxy) getBackendURL(r *http.Request) *url.URL {
 func (h3 *HTTP3AwareProxy) GetHTTP3Stats() HTTP3Metrics {
 	return HTTP3Metrics{
 		ActiveConnections: atomic.LoadInt64(&h3.activeConnections),
-		TotalRequests:    atomic.LoadInt64(&h3.totalRequests),
+		TotalRequests:     atomic.LoadInt64(&h3.totalRequests),
 	}
 }
 

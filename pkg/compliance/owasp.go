@@ -839,7 +839,3 @@ func (m *OwaspManager) GetVersion() string {
 func (m *OwaspManager) GetDescription() string {
 	return "OWASP Top 10 for LLM Applications - Security risks specific to large language models"
 }
-
-
-
-

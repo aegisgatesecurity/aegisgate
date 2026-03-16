@@ -60,14 +60,14 @@ func TestHTTP3Config_Default(t *testing.T) {
 func TestHTTP3Config_Custom(t *testing.T) {
 	config := &HTTP3Config{
 		Enabled:              true,
-		Port:                9443,
+		Port:                 9443,
 		MaxConcurrentStreams: 200,
-		MaxIdleConns:        200,
+		MaxIdleConns:         200,
 		IdleTimeout:          120 * time.Second,
 		ReadTimeout:          45 * time.Second,
 		WriteTimeout:         45 * time.Second,
-		ListenAddr:          "127.0.0.1",
-		HandleGzip:          false,
+		ListenAddr:           "127.0.0.1",
+		HandleGzip:           false,
 	}
 
 	if config.Port != 9443 {
@@ -131,7 +131,7 @@ func TestNewHTTP3AwareProxy_WithConfig(t *testing.T) {
 	proxy := &Proxy{}
 	config := &HTTP3Config{
 		Enabled:              true,
-		Port:                8443,
+		Port:                 8443,
 		MaxConcurrentStreams: 150,
 	}
 
@@ -270,7 +270,7 @@ func TestHTTP3Serve_Enabled(t *testing.T) {
 	proxy := &Proxy{}
 	config := &HTTP3Config{
 		Enabled:    true,
-		Port:      0, // Use random available port
+		Port:       0, // Use random available port
 		ListenAddr: "127.0.0.1",
 	}
 
@@ -324,7 +324,7 @@ func TestHTTP3Server_Address(t *testing.T) {
 	proxy := &Proxy{}
 	config := &HTTP3Config{
 		Enabled:    true,
-		Port:      0,
+		Port:       0,
 		ListenAddr: "0.0.0.0",
 	}
 
@@ -721,7 +721,7 @@ func TestHTTP3EndToEnd_BasicRequest(t *testing.T) {
 
 	config := &HTTP3Config{
 		Enabled:    true,
-		Port:      0,
+		Port:       0,
 		ListenAddr: "127.0.0.1",
 	}
 
@@ -751,7 +751,7 @@ func TestHTTP3EndToEnd_MultipleRequests(t *testing.T) {
 	proxy := &Proxy{rateLimiter: NewRateLimiter(100), scanner: scanner.New(nil)}
 	config := &HTTP3Config{
 		Enabled:    true,
-		Port:      0,
+		Port:       0,
 		ListenAddr: "127.0.0.1",
 	}
 
@@ -786,7 +786,7 @@ func TestHTTP3ConcurrentRequests(t *testing.T) {
 	proxy := &Proxy{rateLimiter: NewRateLimiter(100), scanner: scanner.New(nil)}
 	config := &HTTP3Config{
 		Enabled:    true,
-		Port:      0,
+		Port:       0,
 		ListenAddr: "127.0.0.1",
 	}
 

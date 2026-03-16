@@ -148,10 +148,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
    ```bash
    # Backup your data
    cp -r ./data ./data.backup
-   
+
    # Update configuration
    # Review new environment variables
-   
+
    # Restart AegisGate
    docker-compose down
    docker-compose up -d

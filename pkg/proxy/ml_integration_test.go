@@ -32,9 +32,9 @@ func TestProxyWithML_ConfigLoading(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 		ML: &config.MLConfig{
-			Enabled:             true,
-			Sensitivity:        "high",
-			SampleRate:         100,
+			Enabled:                 true,
+			Sensitivity:             "high",
+			SampleRate:              100,
 			BlockOnCriticalSeverity: true,
 		},
 	}
@@ -81,11 +81,11 @@ func TestProxyWithML_AdvancedFeatures(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 		ML: &config.MLConfig{
-			Enabled:                       true,
-			Sensitivity:                  "medium",
+			Enabled:                        true,
+			Sensitivity:                    "medium",
 			EnablePromptInjectionDetection: true,
-			EnableContentAnalysis:         true,
-			EnableBehavioralAnalysis:      true,
+			EnableContentAnalysis:          true,
+			EnableBehavioralAnalysis:       true,
 		},
 	}
 
@@ -112,13 +112,13 @@ func TestProxyWithML_AdvancedFeatures(t *testing.T) {
 func TestProxyWithML_PromptInjectionDetection(t *testing.T) {
 	// Create ML middleware directly for testing
 	mlConfig := &MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:          "high",
-		BlockOnHighSeverity:  true,
+		Enabled:                 true,
+		Sensitivity:             "high",
+		BlockOnHighSeverity:     true,
 		BlockOnCriticalSeverity: true,
-		MinScoreToBlock:      2.0,
-		SampleRate:           100,
-		ExcludedPaths:        []string{},
+		MinScoreToBlock:         2.0,
+		SampleRate:              100,
+		ExcludedPaths:           []string{},
 	}
 
 	middleware, err := NewMLMiddleware(mlConfig)
@@ -224,7 +224,7 @@ func TestProxyWithML_ResetStats(t *testing.T) {
 // TestProxyWithML_UpdateConfig tests runtime config updates
 func TestProxyWithML_UpdateConfig(t *testing.T) {
 	mlConfig := &MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "low",
 	}
 
@@ -235,7 +235,7 @@ func TestProxyWithML_UpdateConfig(t *testing.T) {
 
 	// Update config to high sensitivity
 	newConfig := &MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "high",
 	}
 
@@ -253,7 +253,7 @@ func TestProxyWithML_UpdateConfig(t *testing.T) {
 // TestProxyWithML_ExcludedPaths tests path exclusions
 func TestProxyWithML_ExcludedPaths(t *testing.T) {
 	mlConfig := &MLMiddlewareConfig{
-		Enabled:        true,
+		Enabled:       true,
 		ExcludedPaths: []string{"/health", "/metrics"},
 		SampleRate:    100,
 	}
@@ -313,7 +313,7 @@ func TestProxyWithML_HealthEndpoint(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 		ML: &config.MLConfig{
-			Enabled:    true,
+			Enabled:     true,
 			Sensitivity: "medium",
 		},
 	}
@@ -549,11 +549,11 @@ func TestMLMiddlewareConfig_ToProxyOptions(t *testing.T) {
 		Upstream:    "http://localhost:8080",
 		RateLimit:   1000,
 		ML: &config.MLConfig{
-			Enabled:             true,
-			Sensitivity:        "high",
+			Enabled:                 true,
+			Sensitivity:             "high",
 			BlockOnCriticalSeverity: true,
-			MinScoreToBlock:    2.5,
-			SampleRate:         100,
+			MinScoreToBlock:         2.5,
+			SampleRate:              100,
 		},
 	}
 

@@ -8,24 +8,24 @@ import (
 // OPSECConfig contains all configuration options for the OPSEC module
 type OPSECConfig struct {
 	// Audit configuration
-	AuditEnabled     bool          `json:"audit_enabled"`
-	AuditMaxEntries  int           `json:"audit_max_entries"`
-	LogIntegrity     bool          `json:"log_integrity"`
+	AuditEnabled    bool `json:"audit_enabled"`
+	AuditMaxEntries int  `json:"audit_max_entries"`
+	LogIntegrity    bool `json:"log_integrity"`
 
 	// Secret rotation configuration
-	RotationEnabled  bool          `json:"rotation_enabled"`
-	RotationPeriod time.Duration `json:"rotation_period"`
-	SecretLength     int           `json:"secret_length"`
+	RotationEnabled bool          `json:"rotation_enabled"`
+	RotationPeriod  time.Duration `json:"rotation_period"`
+	SecretLength    int           `json:"secret_length"`
 
 	// Memory scrubbing configuration
-	MemoryScrubbing  bool          `json:"memory_scrubbing"`
+	MemoryScrubbing bool `json:"memory_scrubbing"`
 
 	// Runtime hardening configuration
-	RuntimeHardening bool          `json:"runtime_hardening"`
-	DropCapabilities bool          `json:"drop_capabilities"`
+	RuntimeHardening bool `json:"runtime_hardening"`
+	DropCapabilities bool `json:"drop_capabilities"`
 
 	// Threat modeling configuration
-	ThreatModeling   bool          `json:"threat_modeling"`
+	ThreatModeling bool `json:"threat_modeling"`
 }
 
 // DefaultOPSECConfig returns a configuration with secure defaults

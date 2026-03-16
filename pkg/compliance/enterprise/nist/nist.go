@@ -20,9 +20,9 @@ type NISTFramework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	functions     []NISTFunction
+	configObj *common.FrameworkConfig
+	tierInfo  common.TierInfo
+	functions []NISTFunction
 }
 
 // NISTFunction represents AI RMF functions
@@ -121,12 +121,12 @@ func (nf *NISTFramework) Check(ctx context.Context, input common.CheckInput) (*c
 
 	return &common.CheckResult{
 		Framework:       nf.name,
-		Passed:            len(findings) == 0,
-		Findings:          findings,
-		CheckedAt:         time.Now(),
-		Duration:          time.Since(start),
-		TotalPatterns:     len(nf.functions),
-		MatchedPatterns:   len(findings),
+		Passed:          len(findings) == 0,
+		Findings:        findings,
+		CheckedAt:       time.Now(),
+		Duration:        time.Since(start),
+		TotalPatterns:   len(nf.functions),
+		MatchedPatterns: len(findings),
 	}, nil
 }
 

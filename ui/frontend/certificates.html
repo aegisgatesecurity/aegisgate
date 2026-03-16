@@ -205,13 +205,13 @@
         </h1>
         <span class="version">MVP v1.0.0</span>
     </header>
-    
+
     <nav class="nav">
         <a href="index.html">Dashboard</a>
         <a href="certificates.html" class="active">Certificates</a>
         <a href="settings.html">Settings</a>
     </nav>
-    
+
     <div class="container">
         <div class="card">
             <h2>TLS Certificate Status</h2>
@@ -226,7 +226,7 @@
                 Certificate expires in <span id="daysRemaining">...</span> days
             </p>
         </div>
-        
+
         <div class="card">
             <h2>Certificate Details</h2>
             <div class="info-row">
@@ -258,7 +258,7 @@
                 <span class="info-value" id="certType">Loading...</span>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>Certificate Actions</h2>
             <p style="color: #666; margin-bottom: 1rem;">
@@ -277,37 +277,37 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         // Fetch certificate info
         async function fetchCertInfo() {
             try {
                 const response = await fetch('/api/certificate');
                 const data = await response.json();
-                
+
                 // Update certificate details
                 document.getElementById('subject').textContent = data.subject || 'Unknown';
                 document.getElementById('issuer').textContent = data.issuer || 'Unknown';
                 document.getElementById('serial').textContent = data.serial_number || 'Unknown';
                 document.getElementById('validFrom').textContent = data.not_before || 'Unknown';
                 document.getElementById('validUntil').textContent = data.not_after || 'Unknown';
-                document.getElementById('dnsNames').textContent = 
+                document.getElementById('dnsNames').textContent =
                     (data.dns_names || []).join(', ') || 'None';
-                document.getElementById('certType').textContent = 
+                document.getElementById('certType').textContent =
                     data.auto_generated ? 'Self-Signed (Auto-Generated)' : 'External';
-                
+
                 // Calculate expiry
                 if (data.not_after) {
                     const expiryDate = new Date(data.not_after);
                     const now = new Date();
                     const daysRemaining = Math.floor((expiryDate - now) / (1000 * 60 * 60 * 24));
-                    
+
                     document.getElementById('daysRemaining').textContent = daysRemaining;
-                    
+
                     // Update status
                     const statusEl = document.getElementById('certStatus');
                     const progressEl = document.getElementById('expiryProgress');
-                    
+
                     if (daysRemaining < 0) {
                         statusEl.className = 'cert-status cert-expired';
                         statusEl.innerHTML = '<span class="status-dot"></span><span>Expired</span>';
@@ -325,11 +325,11 @@
             } catch (err) {
                 console.error('Failed to fetch certificate info:', err);
                 document.getElementById('certStatus').className = 'cert-status cert-expired';
-                document.getElementById('certStatus').innerHTML = 
+                document.getElementById('certStatus').innerHTML =
                     '<span class="status-dot"></span><span>Error Loading</span>';
             }
         }
-        
+
         // Event listeners
         document.getElementById('regenerateBtn').addEventListener('click', async () => {
             if (confirm('Generate new self-signed certificate? This will restart the proxy.')) {
@@ -346,11 +346,11 @@
                 }
             }
         });
-        
+
         document.getElementById('viewCertBtn').addEventListener('click', () => {
             window.open('/api/certificate/download', '_blank');
         });
-        
+
         // Initial load
         fetchCertInfo();
         setInterval(fetchCertInfo, 30000); // Refresh every 30 seconds

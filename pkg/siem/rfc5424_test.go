@@ -19,28 +19,28 @@ func TestRFC5424Message_Build(t *testing.T) {
 		{
 			name: "minimal message",
 			msg: &RFC5424Message{
-				Priority:        14, // local0 + informational
-				Version:         1,
-				Timestamp:       time.Now().UTC(),
-				Hostname:        "aegisgate-host",
-				AppName:         "aegisgate",
-				ProcID:          "12345",
-				MsgID:           MSGIDAuthSuccess,
+				Priority:       14, // local0 + informational
+				Version:        1,
+				Timestamp:      time.Now().UTC(),
+				Hostname:       "aegisgate-host",
+				AppName:        "aegisgate",
+				ProcID:         "12345",
+				MsgID:          MSGIDAuthSuccess,
 				StructuredData: nil,
-				Message:         "Test message",
+				Message:        "Test message",
 			},
 			expected: "",
 		},
 		{
 			name: "message with structured data",
 			msg: &RFC5424Message{
-				Priority:        14,
-				Version:         1,
-				Timestamp:       time.Date(2024, 1, 15, 10, 30, 0, 0, time.UTC),
-				Hostname:        "test-host",
-				AppName:         "aegisgate",
-				ProcID:          "1234",
-				MsgID:           MSGIDThreatDetected,
+				Priority:  14,
+				Version:   1,
+				Timestamp: time.Date(2024, 1, 15, 10, 30, 0, 0, time.UTC),
+				Hostname:  "test-host",
+				AppName:   "aegisgate",
+				ProcID:    "1234",
+				MsgID:     MSGIDThreatDetected,
 				StructuredData: []*RFC5424StructuredData{
 					{
 						ID: SDIDAegisGate,
@@ -191,16 +191,16 @@ func TestConvertEventToRFC5424(t *testing.T) {
 	f := NewSyslogFormatter(PlatformSyslog, SyslogOptions{})
 
 	tests := []struct {
-		name     string
-		event    *Event
+		name      string
+		event     *Event
 		wantMsgID RFC5424MsgID
 	}{
 		{
 			name: "auth success",
 			event: &Event{
-				ID:      "evt-001",
-				Type:    "authentication",
-				Message: "Login successful",
+				ID:       "evt-001",
+				Type:     "authentication",
+				Message:  "Login successful",
 				Severity: SeverityInfo,
 			},
 			wantMsgID: MSGIDAuthSuccess,
@@ -208,9 +208,9 @@ func TestConvertEventToRFC5424(t *testing.T) {
 		{
 			name: "auth failure",
 			event: &Event{
-				ID:      "evt-002",
-				Type:    "authentication",
-				Message: "Login failed",
+				ID:       "evt-002",
+				Type:     "authentication",
+				Message:  "Login failed",
 				Severity: SeverityHigh,
 			},
 			wantMsgID: MSGIDAuthFailure,
@@ -218,10 +218,10 @@ func TestConvertEventToRFC5424(t *testing.T) {
 		{
 			name: "blocked request",
 			event: &Event{
-				ID:      "evt-003",
-				Type:    "request",
-				Action:  "block",
-				Message: "Request blocked",
+				ID:       "evt-003",
+				Type:     "request",
+				Action:   "block",
+				Message:  "Request blocked",
 				Severity: SeverityMedium,
 			},
 			wantMsgID: MSGIDRequestBlocked,
@@ -281,7 +281,7 @@ func TestMapEventToSeverity(t *testing.T) {
 		{name: "high", severity: SeverityHigh, wantLevel: SyslogSeverityInformational},
 		// SeverityMedium = "medium" - no SyslogSeverityMedium, defaults to info
 		{name: "medium", severity: SeverityMedium, wantLevel: SyslogSeverityInformational},
-		// SeverityLow = "low" - no SyslogSeverityLow, defaults to info  
+		// SeverityLow = "low" - no SyslogSeverityLow, defaults to info
 		{name: "low", severity: SeverityLow, wantLevel: SyslogSeverityInformational},
 		{name: "info", severity: SeverityInfo, wantLevel: SyslogSeverityInformational},
 		{name: "empty", severity: "", wantLevel: SyslogSeverityInformational},
@@ -365,15 +365,15 @@ func TestGetSupportedMSGIDs(t *testing.T) {
 func TestNilValueHandling(t *testing.T) {
 	// Test with zero timestamp (should produce NILVALUE)
 	msg := &RFC5424Message{
-		Priority:        14,
-		Version:         1,
-		Timestamp:       time.Time{}, // Zero time
-		Hostname:        "",          // Empty hostname
-		AppName:         "aegisgate",
-		ProcID:          "",          // Empty procID
-		MsgID:           MSGIDAuthSuccess,
+		Priority:       14,
+		Version:        1,
+		Timestamp:      time.Time{}, // Zero time
+		Hostname:       "",          // Empty hostname
+		AppName:        "aegisgate",
+		ProcID:         "", // Empty procID
+		MsgID:          MSGIDAuthSuccess,
 		StructuredData: nil,
-		Message:         "Test",
+		Message:        "Test",
 	}
 
 	result := msg.Build()
@@ -389,13 +389,13 @@ func TestNilValueHandling(t *testing.T) {
 
 func BenchmarkRFC5424Message_Build(b *testing.B) {
 	msg := &RFC5424Message{
-		Priority:        14,
-		Version:         1,
-		Timestamp:       time.Now().UTC(),
-		Hostname:        "aegisgate-host",
-		AppName:         "aegisgate",
-		ProcID:          "12345",
-		MsgID:           MSGIDThreatDetected,
+		Priority:  14,
+		Version:   1,
+		Timestamp: time.Now().UTC(),
+		Hostname:  "aegisgate-host",
+		AppName:   "aegisgate",
+		ProcID:    "12345",
+		MsgID:     MSGIDThreatDetected,
 		StructuredData: []*RFC5424StructuredData{
 			{
 				ID: SDIDAegisGate,
@@ -423,14 +423,14 @@ func BenchmarkConvertEventToRFC5424(b *testing.B) {
 	f := NewSyslogFormatter(PlatformSyslog, SyslogOptions{})
 
 	event := &Event{
-		ID:         "bench-001",
-		Type:       "threat",
-		Message:    "Benchmark threat event",
-		Severity:   SeverityHigh,
-		SourceIP:   "192.168.1.100",
+		ID:          "bench-001",
+		Type:        "threat",
+		Message:     "Benchmark threat event",
+		Severity:    SeverityHigh,
+		SourceIP:    "192.168.1.100",
 		Destination: "10.0.0.1",
-		User:       "bench-user",
-		ThreatType: "BENCHMARK",
+		User:        "bench-user",
+		ThreatType:  "BENCHMARK",
 	}
 
 	b.ResetTimer()

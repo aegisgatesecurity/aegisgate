@@ -162,12 +162,12 @@ func TestCheckInput(t *testing.T) {
 
 func TestCheckResult(t *testing.T) {
 	result := CheckResult{
-		Framework:      "GDPR",
-		Passed:         true,
-		Findings:       []Finding{},
-		CheckedAt:      time.Now(),
-		Duration:       100 * time.Millisecond,
-		TotalPatterns:  10,
+		Framework:       "GDPR",
+		Passed:          true,
+		Findings:        []Finding{},
+		CheckedAt:       time.Now(),
+		Duration:        100 * time.Millisecond,
+		TotalPatterns:   10,
 		MatchedPatterns: 5,
 	}
 
@@ -191,8 +191,8 @@ type MockFramework struct {
 	configVal      map[string]interface{}
 }
 
-func (m *MockFramework) GetName() string { return m.nameVal }
-func (m *MockFramework) GetVersion() string { return m.versionVal }
+func (m *MockFramework) GetName() string        { return m.nameVal }
+func (m *MockFramework) GetVersion() string     { return m.versionVal }
 func (m *MockFramework) GetDescription() string { return m.descriptionVal }
 func (m *MockFramework) Check(ctx context.Context, input CheckInput) (*CheckResult, error) {
 	return &CheckResult{Framework: m.nameVal, Passed: true}, nil
@@ -207,11 +207,11 @@ func (m *MockFramework) Configure(config map[string]interface{}) error {
 	m.configVal = config
 	return nil
 }
-func (m *MockFramework) IsEnabled() bool { return m.enabledVal }
-func (m *MockFramework) Enable() { m.enabledVal = true }
-func (m *MockFramework) Disable() { m.enabledVal = false }
+func (m *MockFramework) IsEnabled() bool        { return m.enabledVal }
+func (m *MockFramework) Enable()                { m.enabledVal = true }
+func (m *MockFramework) Disable()               { m.enabledVal = false }
 func (m *MockFramework) GetFrameworkID() string { return "mock-id" }
-func (m *MockFramework) GetPatternCount() int { return 5 }
+func (m *MockFramework) GetPatternCount() int   { return 5 }
 func (m *MockFramework) GetSeverityLevels() []Severity {
 	return []Severity{SeverityLow, SeverityMedium, SeverityHigh, SeverityCritical}
 }
@@ -219,7 +219,7 @@ func (m *MockFramework) GetSeverityLevels() []Severity {
 func TestMockFrameworkImplementsInterface(t *testing.T) {
 	// This test ensures MockFramework implements Framework interface
 	var _ Framework = (*MockFramework)(nil)
-	
+
 	f := &MockFramework{
 		nameVal:        "Test",
 		versionVal:     "1.0",
@@ -237,12 +237,12 @@ func TestMockFrameworkImplementsInterface(t *testing.T) {
 	if f.IsEnabled() != true {
 		t.Error("IsEnabled failed")
 	}
-	
+
 	f.Enable()
 	if !f.IsEnabled() {
 		t.Error("Enable failed")
 	}
-	
+
 	f.Disable()
 	if f.IsEnabled() {
 		t.Error("Disable failed")

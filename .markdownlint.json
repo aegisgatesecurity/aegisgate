@@ -1,0 +1,35 @@
+{
+  "default": true,
+  "MD003": {
+    "style": "atx"
+  },
+  "MD007": {
+    "indent": 4
+  },
+  "MD009": {
+    "br_spaces": 2
+  },
+  "MD010": {
+    "code_blocks": true,
+    "keys": ["tabs"]
+  },
+  "MD013": {
+    "line_length": 120,
+    "code_blocks": false
+  },
+  "MD026": {
+    "punctuation": ".,;:!"
+  },
+  "MD029": {
+    "style": "ordered"
+  },
+  "MD033": {
+    "allowed_elements": ["br", "strong", "em", "code", "pre", "details", "summary"]
+  },
+  "MD036": {
+    "punctuation": ".,;:!"
+  },
+  "MD046": {
+    "style": "fenced"
+  }
+}

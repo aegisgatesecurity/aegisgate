@@ -350,12 +350,12 @@ dashboard:
 security:
   rate_limit: 100          # How many requests per minute per user
   max_body_size: 10485760  # Maximum size of requests (in bytes)
-  
+
   # Enable threat detection
   owasp_ai:
     enabled: true
     action: "block"       # What to do: "block", "log", or "alert"
-  
+
   atlas:
     enabled: true
     action: "block"

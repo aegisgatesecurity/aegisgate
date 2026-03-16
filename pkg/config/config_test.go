@@ -164,24 +164,24 @@ security:
   enable_audit_logging: true
   max_memory_mb: 1024
 `
-	
+
 	tmpFile, err := os.CreateTemp("", "aegisgate-config-*.yaml")
 	if err != nil {
 		t.Fatalf("Failed to create temp file: %v", err)
 	}
 	defer os.Remove(tmpFile.Name())
-	
+
 	if _, err := tmpFile.WriteString(content); err != nil {
 		t.Fatalf("Failed to write temp file: %v", err)
 	}
 	tmpFile.Close()
-	
+
 	// Load config from file
 	cfg, err := LoadFromFile(tmpFile.Name())
 	if err != nil {
 		t.Fatalf("LoadFromFile() returned error: %v", err)
 	}
-	
+
 	// Verify values
 	if cfg.BindAddress != ":9090" {
 		t.Errorf("Expected bind_address ':9090', got '%s'", cfg.BindAddress)
@@ -195,7 +195,7 @@ security:
 	if cfg.RateLimit != 2000 {
 		t.Errorf("Expected rate_limit 2000, got %d", cfg.RateLimit)
 	}
-	
+
 	// Verify ML config
 	if cfg.ML == nil {
 		t.Fatal("ML config should not be nil")
@@ -215,7 +215,7 @@ security:
 	if !cfg.ML.BlockOnHighSeverity {
 		t.Error("ML block_on_high should be true")
 	}
-	
+
 	// Verify Security config
 	if cfg.Security == nil {
 		t.Fatal("Security config should not be nil")
@@ -243,23 +243,23 @@ func TestLoadWithEnvOverrides(t *testing.T) {
 	t.Setenv("AEGISGATE_UPSTREAM", "https://test.example.com")
 	t.Setenv("AEGISGATE_ML_ENABLED", "false")
 	t.Setenv("AEGISGATE_ML_SENSITIVITY", "paranoid")
-	
+
 	// Create base config
 	cfg := &Config{
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 		ML: &MLConfig{
-			Enabled:    true,
+			Enabled:     true,
 			Sensitivity: "medium",
 		},
 	}
-	
+
 	// Apply overrides
 	cfg, err := LoadWithEnvOverrides(cfg)
 	if err != nil {
 		t.Errorf("LoadWithEnvOverrides() returned error: %v", err)
 	}
-	
+
 	// Verify overrides
 	if cfg.BindAddress != ":9999" {
 		t.Errorf("Expected bind_address ':9999', got '%s'", cfg.BindAddress)
@@ -288,7 +288,7 @@ func TestTLSConfig(t *testing.T) {
 			SkipVerify: false,
 		},
 	}
-	
+
 	if cfg.TLS == nil {
 		t.Fatal("TLS config should not be nil")
 	}
@@ -306,12 +306,12 @@ func TestPluginConfig(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 		Plugins: &PluginConfig{
-			Enabled: true,
+			Enabled:     true,
 			Directories: []string{"./plugins", "./custom"},
-			Timeout: 60 * time.Second,
+			Timeout:     60 * time.Second,
 		},
 	}
-	
+
 	if cfg.Plugins == nil {
 		t.Fatal("Plugins config should not be nil")
 	}
@@ -336,22 +336,22 @@ func TestGetProxyOptions(t *testing.T) {
 		RateLimit:   500,
 		ML: &MLConfig{
 			Enabled:                        true,
-			Sensitivity:                   "high",
-			BlockOnCriticalSeverity:       true,
-			BlockOnHighSeverity:           true,
-			MinScoreToBlock:               2.5,
-			SampleRate:                    75,
-			ExcludedPaths:                 []string{"/health"},
-			ExcludedMethods:               []string{"OPTIONS"},
+			Sensitivity:                    "high",
+			BlockOnCriticalSeverity:        true,
+			BlockOnHighSeverity:            true,
+			MinScoreToBlock:                2.5,
+			SampleRate:                     75,
+			ExcludedPaths:                  []string{"/health"},
+			ExcludedMethods:                []string{"OPTIONS"},
 			EnablePromptInjectionDetection: true,
-			PromptInjectionSensitivity:    80,
-			EnableContentAnalysis:         true,
-			EnableBehavioralAnalysis:      true,
+			PromptInjectionSensitivity:     80,
+			EnableContentAnalysis:          true,
+			EnableBehavioralAnalysis:       true,
 		},
 	}
-	
+
 	opts := cfg.GetProxyOptions()
-	
+
 	// Check basic options
 	if opts["ListenAddr"] != ":8443" {
 		t.Errorf("Expected ListenAddr ':8443', got '%v'", opts["ListenAddr"])
@@ -359,7 +359,7 @@ func TestGetProxyOptions(t *testing.T) {
 	if opts["UpstreamURL"] != "https://api.openai.com" {
 		t.Errorf("Expected UpstreamURL, got '%v'", opts["UpstreamURL"])
 	}
-	
+
 	// Check ML options
 	if opts["EnableMLDetection"] != true {
 		t.Error("Expected EnableMLDetection true")
@@ -397,7 +397,7 @@ func TestSecurityConfigValidation(t *testing.T) {
 			wantErr: true,
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := tt.sec.Validate()

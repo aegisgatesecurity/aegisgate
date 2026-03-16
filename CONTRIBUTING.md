@@ -285,17 +285,17 @@ package core_test
 
 import (
     "testing"
-    
+
     "github.com/aegisgatesecurity/aegisgate/pkg/core"
 )
 
 func TestFeatureX(t *testing.T) {
     // Arrange
     input := "test input"
-    
+
     // Act
     result, err := core.Process(input)
-    
+
     // Assert
     if err != nil {
         t.Fatalf("unexpected error: %v", err)
@@ -366,4 +366,3 @@ Cont in:
 ## Thank You!
 
 Your contributions make AegisGate better for everyone. We appreciate your time and effort!
-

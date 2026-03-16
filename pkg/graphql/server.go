@@ -42,25 +42,25 @@ type Server struct {
 
 // ServerConfig holds GraphQL server configuration
 type ServerConfig struct {
-	Enabled       bool          `yaml:"enabled"`
-	ListenAddress string        `yaml:"listen_address"`
-	Port          int           `yaml:"port"`
-	Playground    bool          `yaml:"playground"`
-	DepthLimit    int           `yaml:"depth_limit"`
-	ComplexityLimit int         `yaml:"complexity_limit"`
-	Timeout       time.Duration `yaml:"timeout"`
+	Enabled         bool          `yaml:"enabled"`
+	ListenAddress   string        `yaml:"listen_address"`
+	Port            int           `yaml:"port"`
+	Playground      bool          `yaml:"playground"`
+	DepthLimit      int           `yaml:"depth_limit"`
+	ComplexityLimit int           `yaml:"complexity_limit"`
+	Timeout         time.Duration `yaml:"timeout"`
 }
 
 // DefaultServerConfig returns default configuration
 func DefaultServerConfig() *ServerConfig {
 	return &ServerConfig{
-		Enabled:       true,
-		ListenAddress: "127.0.0.1",
-		Port:          4000,
-		Playground:    true,
-		DepthLimit:    10,
+		Enabled:         true,
+		ListenAddress:   "127.0.0.1",
+		Port:            4000,
+		Playground:      true,
+		DepthLimit:      10,
 		ComplexityLimit: 100,
-		Timeout:       30 * time.Second,
+		Timeout:         30 * time.Second,
 	}
 }
 
@@ -196,7 +196,7 @@ func (s *Server) handleRequest() http.Handler {
 // executeQuery executes a GraphQL query
 func (s *Server) executeQuery(ctx context.Context, query string, variables map[string]interface{}, operationName string) *Response {
 	startTime := time.Now()
-	
+
 	// Check depth limit
 	if s.config.DepthLimit > 0 {
 		ctx = WithDepthLimit(ctx, s.config.DepthLimit)
@@ -222,11 +222,11 @@ func (s *Server) executeQuery(ctx context.Context, query string, variables map[s
 	// Add extensions
 	result.Extensions = map[string]interface{}{
 		"tracing": map[string]interface{}{
-			"version":         "1.0.0",
-			"duration":        time.Since(startTime).Nanoseconds(),
-			"parsing":         map[string]interface{}{"duration": 0},
-			"validation":      map[string]interface{}{"duration": 0},
-			"execution":       map[string]interface{}{"duration": time.Since(startTime).Nanoseconds()},
+			"version":    "1.0.0",
+			"duration":   time.Since(startTime).Nanoseconds(),
+			"parsing":    map[string]interface{}{"duration": 0},
+			"validation": map[string]interface{}{"duration": 0},
+			"execution":  map[string]interface{}{"duration": time.Since(startTime).Nanoseconds()},
 		},
 	}
 

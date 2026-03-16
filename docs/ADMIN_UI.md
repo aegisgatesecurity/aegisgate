@@ -552,7 +552,7 @@ export REDIS_URL=redis://localhost:6379
 
 #### Cannot Revoke Sessions
 **Cause**: Session store unavailable
-**Solution**: 
+**Solution**:
 - Check Redis connection
 - Verify session store configuration
 - Use emergency logout via config reload

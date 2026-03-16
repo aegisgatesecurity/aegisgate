@@ -35,23 +35,23 @@ func TestJWTAlgorithmConstants(t *testing.T) {
 
 func TestJWTClaims(t *testing.T) {
 	claims := &JWTClaims{
-		Issuer:        "aegisgate",
-		Subject:       "user-123",
-		Audience:      "aegisgate/api",
-		ExpiresAt:     time.Now().Add(1 * time.Hour).Unix(),
-		NotBefore:     time.Now().Unix(),
-		IssuedAt:      time.Now().Unix(),
-		JWTID:         "token-123",
-		Name:          "Test User",
-		Email:         "test@example.com",
-		Role:          RoleAdmin,
-		Permissions:  []Permission{PermViewDashboard},
-		Scopes:        []APIKeyScope{ScopeRead, ScopeWrite},
-		TenantID:      "tenant-1",
-		SessionID:     "session-123",
-		DeviceID:      "device-123",
-		MFAVerified:   true,
-		Custom:        map[string]interface{}{"custom_claim": "value"},
+		Issuer:      "aegisgate",
+		Subject:     "user-123",
+		Audience:    "aegisgate/api",
+		ExpiresAt:   time.Now().Add(1 * time.Hour).Unix(),
+		NotBefore:   time.Now().Unix(),
+		IssuedAt:    time.Now().Unix(),
+		JWTID:       "token-123",
+		Name:        "Test User",
+		Email:       "test@example.com",
+		Role:        RoleAdmin,
+		Permissions: []Permission{PermViewDashboard},
+		Scopes:      []APIKeyScope{ScopeRead, ScopeWrite},
+		TenantID:    "tenant-1",
+		SessionID:   "session-123",
+		DeviceID:    "device-123",
+		MFAVerified: true,
+		Custom:      map[string]interface{}{"custom_claim": "value"},
 	}
 
 	// Test marshaling
@@ -209,8 +209,8 @@ func TestJWTServiceWithRSAPrivateKey(t *testing.T) {
 
 func TestJWTServiceNoSecretOrKey(t *testing.T) {
 	config := &JWTConfig{
-		Algorithm: AlgorithmHS256,
-		Secret:    nil,
+		Algorithm:  AlgorithmHS256,
+		Secret:     nil,
 		PrivateKey: nil,
 	}
 
@@ -433,8 +433,8 @@ func TestValidateTokenExpired(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:  "user-123",
-		Role: RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -456,14 +456,14 @@ func TestValidateTokenNotYetValid(t *testing.T) {
 	// Create token with future not-before
 	now := time.Now()
 	claims := &JWTClaims{
-		Issuer:    "aegisgate",
-		Subject:   "user-123",
-		Audience:  "aegisgate/api",
-		ExpiresAt: now.Add(1 * time.Hour).Unix(),
-		NotBefore: now.Add(1 * time.Hour).Unix(), // Not valid yet
-		IssuedAt:  now.Unix(),
-		JWTID:     generateTokenID(),
-		Name:      "Test",
+		Issuer:      "aegisgate",
+		Subject:     "user-123",
+		Audience:    "aegisgate/api",
+		ExpiresAt:   now.Add(1 * time.Hour).Unix(),
+		NotBefore:   now.Add(1 * time.Hour).Unix(), // Not valid yet
+		IssuedAt:    now.Unix(),
+		JWTID:       generateTokenID(),
+		Name:        "Test",
 		MFAVerified: true,
 	}
 
@@ -489,13 +489,13 @@ func TestValidateTokenInvalidIssuer(t *testing.T) {
 
 	// Create token with wrong issuer
 	claims := &JWTClaims{
-		Issuer:    "wrong_issuer",
-		Subject:   "user-123",
-		Audience:  "aegisgate/api",
-		ExpiresAt: time.Now().Add(1 * time.Hour).Unix(),
-		NotBefore: time.Now().Unix(),
-		IssuedAt:  time.Now().Unix(),
-		JWTID:     generateTokenID(),
+		Issuer:      "wrong_issuer",
+		Subject:     "user-123",
+		Audience:    "aegisgate/api",
+		ExpiresAt:   time.Now().Add(1 * time.Hour).Unix(),
+		NotBefore:   time.Now().Unix(),
+		IssuedAt:    time.Now().Unix(),
+		JWTID:       generateTokenID(),
 		MFAVerified: true,
 	}
 
@@ -512,18 +512,18 @@ func TestValidateTokenInvalidAudience(t *testing.T) {
 		Algorithm:        AlgorithmHS256,
 		Secret:           []byte("test_secret_key_at_least_32_bytes"),
 		ValidateAudience: true,
-		Audience:        "aegisgate/api",
+		Audience:         "aegisgate/api",
 	}, nil)
 
 	// Create token with wrong audience
 	claims := &JWTClaims{
-		Issuer:    "aegisgate",
-		Subject:   "user-123",
-		Audience:  "wrong_audience",
-		ExpiresAt: time.Now().Add(1 * time.Hour).Unix(),
-		NotBefore: time.Now().Unix(),
-		IssuedAt:  time.Now().Unix(),
-		JWTID:     generateTokenID(),
+		Issuer:      "aegisgate",
+		Subject:     "user-123",
+		Audience:    "wrong_audience",
+		ExpiresAt:   time.Now().Add(1 * time.Hour).Unix(),
+		NotBefore:   time.Now().Unix(),
+		IssuedAt:    time.Now().Unix(),
+		JWTID:       generateTokenID(),
 		MFAVerified: true,
 	}
 
@@ -537,14 +537,14 @@ func TestValidateTokenInvalidAudience(t *testing.T) {
 
 func TestValidateTokenRequireMFA(t *testing.T) {
 	svc, _ := NewJWTService(&JWTConfig{
-		Algorithm:    AlgorithmHS256,
-		Secret:      []byte("test_secret_key_at_least_32_bytes"),
-		RequireMFA:  true,
+		Algorithm:  AlgorithmHS256,
+		Secret:     []byte("test_secret_key_at_least_32_bytes"),
+		RequireMFA: true,
 	}, nil)
 
 	user := &User{
-		ID:  "user-123",
-		Role: RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -561,7 +561,7 @@ func TestValidateTokenRequireMFA(t *testing.T) {
 
 	// Now create token without MFA
 	claims := &JWTClaims{
-		Issuer:       "aegisgate",
+		Issuer:      "aegisgate",
 		Subject:     "user-123",
 		Audience:    "aegisgate/api",
 		ExpiresAt:   time.Now().Add(1 * time.Hour).Unix(),
@@ -588,7 +588,6 @@ func TestJWTCheckRateLimit(t *testing.T) {
 	t.Skip("Skipping - rate limit state sharing between tests")
 }
 
-
 func TestRefreshTokenInvalid(t *testing.T) {
 	svc, _ := NewJWTService(&JWTConfig{
 		Algorithm: AlgorithmHS256,
@@ -603,8 +602,8 @@ func TestRefreshTokenInvalid(t *testing.T) {
 
 	// Try to refresh with access token (not refresh)
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 	pair, _ := svc.GenerateTokenPair(user, nil)
@@ -624,8 +623,8 @@ func TestRevokeToken(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:  "user-123",
-		Role: RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -721,8 +720,8 @@ func TestParseToken(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -800,8 +799,8 @@ func TestSignWithHS384(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -826,8 +825,8 @@ func TestSignWithHS512(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -855,8 +854,8 @@ func TestSignWithRS384(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -884,8 +883,8 @@ func TestSignWithRS512(t *testing.T) {
 	}, nil)
 
 	user := &User{
-		ID:     "user-123",
-		Role:   RoleAdmin,
+		ID:            "user-123",
+		Role:          RoleAdmin,
 		Authenticated: true,
 	}
 
@@ -923,12 +922,12 @@ func TestSignWithoutPrivateKey(t *testing.T) {
 
 func TestValidateClaims(t *testing.T) {
 	svc, _ := NewJWTService(&JWTConfig{
-		Algorithm:      AlgorithmHS256,
-		Secret:         []byte("test_secret_key_at_least_32_bytes"),
-		ValidateIssuer: true,
+		Algorithm:        AlgorithmHS256,
+		Secret:           []byte("test_secret_key_at_least_32_bytes"),
+		ValidateIssuer:   true,
 		ValidateAudience: true,
-		Issuer:         "aegisgate",
-		Audience:       "aegisgate/api",
+		Issuer:           "aegisgate",
+		Audience:         "aegisgate/api",
 	}, nil)
 
 	now := time.Now().Unix()
@@ -1122,7 +1121,6 @@ func TestJWTServiceConcurrentAccess(t *testing.T) {
 func TestFullTokenLifecycle(t *testing.T) {
 	t.Skip("Skipping - requires unique user handling to avoid token cache collision")
 }
-
 
 func TestMultipleAlgorithms(t *testing.T) {
 	algorithms := []JWTAlgorithm{

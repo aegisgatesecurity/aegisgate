@@ -14,9 +14,9 @@ type Provider string
 
 const (
 
-// ProviderGoogle identifies the Google OAuth provider.
-	ProviderGoogle      Provider = "google"
-// ProviderMicrosoft identifies the Microsoft OAuth provider.
+	// ProviderGoogle identifies the Google OAuth provider.
+	ProviderGoogle Provider = "google"
+	// ProviderMicrosoft identifies the Microsoft OAuth provider.
 	ProviderMicrosoft   Provider = "microsoft"
 	ProviderGitHub      Provider = "github"
 	ProviderOkta        Provider = "okta"
@@ -33,9 +33,9 @@ type Role string
 
 const (
 
-// RoleAdmin defines the administrator role level.
-	RoleAdmin    Role = "admin"
-// RoleOperator defines the operator role level.
+	// RoleAdmin defines the administrator role level.
+	RoleAdmin Role = "admin"
+	// RoleOperator defines the operator role level.
 	RoleOperator Role = "operator"
 	RoleViewer   Role = "viewer"
 	RoleService  Role = "service"
@@ -57,7 +57,7 @@ type Permission string
 
 const (
 
-// PermViewDashboard is the permission to view the dashboard.
+	// PermViewDashboard is the permission to view the dashboard.
 	PermViewDashboard  Permission = "view:dashboard"
 	PermManagePolicies Permission = "manage:policies"
 	PermManageCerts    Permission = "manage:certificates"

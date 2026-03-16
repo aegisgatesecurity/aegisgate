@@ -210,9 +210,9 @@ func (tm *TenantMiddleware) logAccess(ctx context.Context, r *http.Request) {
 		fmt.Sprintf("%s %s", r.Method, r.URL.Path),
 		nil,
 		map[string]interface{}{
-			"method":    r.Method,
-			"path":      r.URL.Path,
-			"remote":    r.RemoteAddr,
+			"method":     r.Method,
+			"path":       r.URL.Path,
+			"remote":     r.RemoteAddr,
 			"user_agent": r.UserAgent(),
 		},
 	)
@@ -247,7 +247,7 @@ type TenantAwareProxy struct {
 // NewTenantAwareProxy creates a new tenant-aware proxy
 func NewTenantAwareProxy(proxy *Proxy, manager *tenant.Manager, logger *slog.Logger) *TenantAwareProxy {
 	return &TenantAwareProxy{
-		Proxy:           proxy,
+		Proxy:            proxy,
 		tenantMiddleware: NewTenantMiddleware(manager, logger),
 	}
 }

@@ -74,12 +74,12 @@ type Finding struct {
 
 // Result represents the outcome of a compliance check.
 type Result struct {
-	Passed            bool               `json:"passed"`
-	Findings          []Finding          `json:"findings"`
-	FrameworksChecked []Framework        `json:"frameworks_checked"`
-	CheckedAt         time.Time          `json:"checked_at"`
-	Duration          time.Duration      `json:"duration"`
-	Metadata          map[string]string  `json:"metadata,omitempty"`
+	Passed            bool              `json:"passed"`
+	Findings          []Finding         `json:"findings"`
+	FrameworksChecked []Framework       `json:"frameworks_checked"`
+	CheckedAt         time.Time         `json:"checked_at"`
+	Duration          time.Duration     `json:"duration"`
+	Metadata          map[string]string `json:"metadata,omitempty"`
 }
 
 // Manager handles compliance operations.
@@ -94,17 +94,17 @@ type Manager struct {
 
 // Config holds compliance manager configuration
 type Config struct {
-	EnableAtlas     bool     `json:"enable_atlas"`
-	EnableNIST1500  bool     `json:"enable_nist_1500"`
-	EnableOWASP     bool     `json:"enable_owasp"`
-	EnableGDPR      bool     `json:"enable_gdpr"`
-	EnableHIPAA     bool     `json:"enable_hipaa"`
-	EnablePCIDSS    bool     `json:"enable_pci_dss"`
-	EnableSOC2      bool     `json:"enable_soc2"`
-	EnableISO42001  bool     `json:"enable_iso_42001"`
-	ContextLines    int      `json:"context_lines"`
-	StrictMode      bool     `json:"strict_mode"`
-	BlockOnCritical bool     `json:"block_on_critical"`
+	EnableAtlas     bool `json:"enable_atlas"`
+	EnableNIST1500  bool `json:"enable_nist_1500"`
+	EnableOWASP     bool `json:"enable_owasp"`
+	EnableGDPR      bool `json:"enable_gdpr"`
+	EnableHIPAA     bool `json:"enable_hipaa"`
+	EnablePCIDSS    bool `json:"enable_pci_dss"`
+	EnableSOC2      bool `json:"enable_soc2"`
+	EnableISO42001  bool `json:"enable_iso_42001"`
+	ContextLines    int  `json:"context_lines"`
+	StrictMode      bool `json:"strict_mode"`
+	BlockOnCritical bool `json:"block_on_critical"`
 }
 
 // Pattern represents a detection pattern
@@ -113,10 +113,10 @@ type Pattern struct {
 	Technique   string    `json:"technique"`
 	Framework   Framework `json:"framework"`
 	Regex       *regexp.Regexp
-	Severity    Severity  `json:"severity"`
-	Category    string    `json:"category"`
-	Description string    `json:"description"`
-	Block       bool      `json:"block"`
+	Severity    Severity `json:"severity"`
+	Category    string   `json:"category"`
+	Description string   `json:"description"`
+	Block       bool     `json:"block"`
 }
 
 // FrameworkChecker interface for framework-specific checking
@@ -133,9 +133,9 @@ func NewManager(config *Config) (*Manager, error) {
 	}
 
 	mgr := &Manager{
-		config:     config,
-		frameworks: make(map[Framework]FrameworkChecker),
-		patterns:   make(map[Framework][]*Pattern),
+		config:      config,
+		frameworks:  make(map[Framework]FrameworkChecker),
+		patterns:    make(map[Framework][]*Pattern),
 		tierManager: NewTierManager(),
 	}
 
@@ -297,7 +297,7 @@ func (m *Manager) GenerateReport() (string, error) {
 		"generated_at":          time.Now(),
 		"active_frameworks":     len(m.frameworks),
 		"total_findings":        0,
-		"findings_by_severity":   map[string]int{},
+		"findings_by_severity":  map[string]int{},
 		"findings_by_framework": map[string]int{},
 	}
 
@@ -341,7 +341,7 @@ func (m *Manager) GetStatus() map[string]interface{} {
 	status := map[string]interface{}{
 		"enabled_frameworks": make([]string, 0),
 		"total_patterns":     0,
-		"recent_findings":   0,
+		"recent_findings":    0,
 	}
 
 	for f := range m.frameworks {
@@ -509,11 +509,11 @@ func NewOWASPFramework() FrameworkChecker {
 
 // AtlasTestResult represents the result of an ATLAS compliance test
 type AtlasTestResult struct {
-	Blocked    bool
-	Detected   bool
-	Technique  string
-	Pattern    string
-	Score      float64
+	Blocked   bool
+	Detected  bool
+	Technique string
+	Pattern   string
+	Score     float64
 }
 
 // AtlasManager interface for ATLAS framework management

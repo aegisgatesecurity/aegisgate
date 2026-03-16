@@ -45,17 +45,17 @@ func TestDeriveKeyPBKDF2(t *testing.T) {
 func TestChaCha20Poly1305(t *testing.T) {
 	key := make([]byte, 32)
 	plaintext := []byte("Hello, World!")
-	
+
 	ciphertext, err := ChaCha20Poly1305Encrypt(key, plaintext)
 	if err != nil {
 		t.Fatalf("Encrypt failed: %v", err)
 	}
-	
+
 	decrypted, err := ChaCha20Poly1305Decrypt(key, ciphertext)
 	if err != nil {
 		t.Fatalf("Decrypt failed: %v", err)
 	}
-	
+
 	if !bytes.Equal(decrypted, plaintext) {
 		t.Error("decrypted text doesn't match original")
 	}
@@ -66,7 +66,7 @@ func TestGenerateRSAKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("GenerateRSAKey failed: %v", err)
 	}
-	
+
 	_, err = GenerateRSAKey(1024)
 	if err == nil {
 		t.Error("expected error for 1024-bit key")
@@ -94,7 +94,7 @@ func TestConstantTimeCompare(t *testing.T) {
 	a := []byte("test")
 	b := []byte("test")
 	c := []byte("other")
-	
+
 	if !ConstantTimeCompare(a, b) {
 		t.Error("should match")
 	}

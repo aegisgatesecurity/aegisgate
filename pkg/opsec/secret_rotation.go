@@ -30,7 +30,7 @@ func DefaultSecretRotationConfig() SecretRotationConfig {
 type SecretManager struct {
 	mu             sync.RWMutex
 	config         SecretRotationConfig
-	currentSecret  []byte    // Store as []byte for memory scrubbing
+	currentSecret  []byte // Store as []byte for memory scrubbing
 	lastRotation   time.Time
 	rotationCount  int
 	scrubber       *MemoryScrubber

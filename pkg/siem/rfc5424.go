@@ -15,11 +15,11 @@ import (
 
 // RFC 5424 constants
 const (
-	RFC5424Version          = 1
-	RFC5424NILVALUE         = "-"
-	RFC5424TimestampFormat  = "2006-01-02T15:04:05.000Z07:00" // RFC3339 with microseconds
-	SyslogFacilityKern      = 0
-	SyslogFacilityUser      = 1
+	RFC5424Version         = 1
+	RFC5424NILVALUE        = "-"
+	RFC5424TimestampFormat = "2006-01-02T15:04:05.000Z07:00" // RFC3339 with microseconds
+	SyslogFacilityKern     = 0
+	SyslogFacilityUser     = 1
 	SyslogFacilityMail     = 2
 	SyslogFacilityDaemon   = 3
 	SyslogFacilityAuth     = 4
@@ -62,64 +62,64 @@ type RFC5424MsgID string
 // Standard MSGID values for AegisGate events
 const (
 	// Authentication events
-	MSGIDAuthSuccess          RFC5424MsgID = "AUTH_SUCCESS"
-	MSGIDAuthFailure         RFC5424MsgID = "AUTH_FAILURE"
-	MSGIDAuthSessionStart    RFC5424MsgID = "SESSION_START"
-	MSGIDAuthSessionEnd      RFC5424MsgID = "SESSION_END"
-	MSGIDAuthTokenRefresh    RFC5424MsgID = "TOKEN_REFRESH"
-	MSGIDAuthTokenRevoke     RFC5424MsgID = "TOKEN_REVOKE"
-	MSGIDAuthLogout          RFC5424MsgID = "AUTH_LOGOUT"
+	MSGIDAuthSuccess      RFC5424MsgID = "AUTH_SUCCESS"
+	MSGIDAuthFailure      RFC5424MsgID = "AUTH_FAILURE"
+	MSGIDAuthSessionStart RFC5424MsgID = "SESSION_START"
+	MSGIDAuthSessionEnd   RFC5424MsgID = "SESSION_END"
+	MSGIDAuthTokenRefresh RFC5424MsgID = "TOKEN_REFRESH"
+	MSGIDAuthTokenRevoke  RFC5424MsgID = "TOKEN_REVOKE"
+	MSGIDAuthLogout       RFC5424MsgID = "AUTH_LOGOUT"
 
 	// Authorization events
-	MSGIDAuthzSuccess        RFC5424MsgID = "AUTHZ_SUCCESS"
-	MSGIDAuthzFailure        RFC5424MsgID = "AUTHZ_FAILURE"
-	MSGIDAuthzDenied         RFC5424MsgID = "AUTHZ_DENIED"
+	MSGIDAuthzSuccess RFC5424MsgID = "AUTHZ_SUCCESS"
+	MSGIDAuthzFailure RFC5424MsgID = "AUTHZ_FAILURE"
+	MSGIDAuthzDenied  RFC5424MsgID = "AUTHZ_DENIED"
 
 	// Request handling
-	MSGIDRequestAllowed      RFC5424MsgID = "REQUEST_ALLOWED"
-	MSGIDRequestBlocked      RFC5424MsgID = "REQUEST_BLOCKED"
-	MSGIDRequestDropped      RFC5424MsgID = "REQUEST_DROPPED"
-	MSGIDRequestThrottled    RFC5424MsgID = "REQUEST_THROTTLED"
+	MSGIDRequestAllowed   RFC5424MsgID = "REQUEST_ALLOWED"
+	MSGIDRequestBlocked   RFC5424MsgID = "REQUEST_BLOCKED"
+	MSGIDRequestDropped   RFC5424MsgID = "REQUEST_DROPPED"
+	MSGIDRequestThrottled RFC5424MsgID = "REQUEST_THROTTLED"
 
 	// Security events
-	MSGIDThreatDetected      RFC5424MsgID = "THREAT_DETECTED"
-	MSGIDIntrusionAttempt    RFC5424MsgID = "INTRUSION_ATTEMPT"
-	MSGIDMalwareDetected     RFC5424MsgID = "MALWARE_DETECTED"
-	MSGIDAnomalyDetected     RFC5424MsgID = "ANOMALY_DETECTED"
-	MSGIDPolicyViolation     RFC5424MsgID = "POLICY_VIOLATION"
-	MSGIDRateLimitExceeded   RFC5424MsgID = "RATE_LIMIT_EXCEEDED"
+	MSGIDThreatDetected    RFC5424MsgID = "THREAT_DETECTED"
+	MSGIDIntrusionAttempt  RFC5424MsgID = "INTRUSION_ATTEMPT"
+	MSGIDMalwareDetected   RFC5424MsgID = "MALWARE_DETECTED"
+	MSGIDAnomalyDetected   RFC5424MsgID = "ANOMALY_DETECTED"
+	MSGIDPolicyViolation   RFC5424MsgID = "POLICY_VIOLATION"
+	MSGIDRateLimitExceeded RFC5424MsgID = "RATE_LIMIT_EXCEEDED"
 
 	// Proxy events
-	MSGIDProxyRequest        RFC5424MsgID = "PROXY_REQUEST"
-	MSGIDProxyResponse       RFC5424MsgID = "PROXY_RESPONSE"
-	MSGIDProxyError          RFC5424MsgID = "PROXY_ERROR"
-	MSGIDMITMDetected        RFC5424MsgID = "MITM_DETECTED"
-	MSGIDTLSError            RFC5424MsgID = "TLS_ERROR"
+	MSGIDProxyRequest  RFC5424MsgID = "PROXY_REQUEST"
+	MSGIDProxyResponse RFC5424MsgID = "PROXY_RESPONSE"
+	MSGIDProxyError    RFC5424MsgID = "PROXY_ERROR"
+	MSGIDMITMDetected  RFC5424MsgID = "MITM_DETECTED"
+	MSGIDTLSError      RFC5424MsgID = "TLS_ERROR"
 
 	// Configuration events
-	MSGIDConfigChange        RFC5424MsgID = "CONFIG_CHANGE"
-	MSGIDConfigLoad          RFC5424MsgID = "CONFIG_LOAD"
-	MSGIDConfigError         RFC5424MsgID = "CONFIG_ERROR"
-	MSGIDPolicyUpdate        RFC5424MsgID = "POLICY_UPDATE"
-	MSGIDPolicyDrift         RFC5424MsgID = "POLICY_DRIFT"
+	MSGIDConfigChange RFC5424MsgID = "CONFIG_CHANGE"
+	MSGIDConfigLoad   RFC5424MsgID = "CONFIG_LOAD"
+	MSGIDConfigError  RFC5424MsgID = "CONFIG_ERROR"
+	MSGIDPolicyUpdate RFC5424MsgID = "POLICY_UPDATE"
+	MSGIDPolicyDrift  RFC5424MsgID = "POLICY_DRIFT"
 
 	// System events
-	MSGIDSystemStart         RFC5424MsgID = "SYSTEM_START"
-	MSGIDSystemStop          RFC5424MsgID = "SYSTEM_STOP"
-	MSGIDSystemError         RFC5424MsgID = "SYSTEM_ERROR"
-	MSGIDComponentFailure    RFC5424MsgID = "COMPONENT_FAILURE"
-	MSGIDHealthCheck         RFC5424MsgID = "HEALTH_CHECK"
-	MSGIDMetricsPublish      RFC5424MsgID = "METRICS_PUBLISH"
+	MSGIDSystemStart      RFC5424MsgID = "SYSTEM_START"
+	MSGIDSystemStop       RFC5424MsgID = "SYSTEM_STOP"
+	MSGIDSystemError      RFC5424MsgID = "SYSTEM_ERROR"
+	MSGIDComponentFailure RFC5424MsgID = "COMPONENT_FAILURE"
+	MSGIDHealthCheck      RFC5424MsgID = "HEALTH_CHECK"
+	MSGIDMetricsPublish   RFC5424MsgID = "METRICS_PUBLISH"
 
 	// Compliance events
 	MSGIDComplianceViolation RFC5424MsgID = "COMPLIANCE_VIOLATION"
-	MSGIDAuditLog             RFC5424MsgID = "AUDIT_LOG"
-	MSGIDDataExport           RFC5424MsgID = "DATA_EXPORT"
+	MSGIDAuditLog            RFC5424MsgID = "AUDIT_LOG"
+	MSGIDDataExport          RFC5424MsgID = "DATA_EXPORT"
 
 	// Plugin events
-	MSGIDPluginLoad          RFC5424MsgID = "PLUGIN_LOAD"
-	MSGIDPluginUnload        RFC5424MsgID = "PLUGIN_UNLOAD"
-	MSGIDPluginError         RFC5424MsgID = "PLUGIN_ERROR"
+	MSGIDPluginLoad   RFC5424MsgID = "PLUGIN_LOAD"
+	MSGIDPluginUnload RFC5424MsgID = "PLUGIN_UNLOAD"
+	MSGIDPluginError  RFC5424MsgID = "PLUGIN_ERROR"
 )
 
 // RFC5424StructuredDataID represents structured data element ID per RFC 5424 Section 6.3.1
@@ -127,12 +127,12 @@ type RFC5424StructuredDataID string
 
 // Standard SD-ID values for AegisGate
 const (
-	SDIDAegisGate            RFC5424StructuredDataID = "aegisgate@32473"
-	SDIDOrigin             RFC5424StructuredDataID = "origin@aegisgate"
-	SDIDTarget             RFC5424StructuredDataID = "target@aegisgate"
-	SDIDThreat             RFC5424StructuredDataID = "threat@aegisgate"
-	SDIDCompliance         RFC5424StructuredDataID = "compliance@aegisgate"
-	SDIDMeta               RFC5424StructuredDataID = "meta@aegisgate"
+	SDIDAegisGate  RFC5424StructuredDataID = "aegisgate@32473"
+	SDIDOrigin     RFC5424StructuredDataID = "origin@aegisgate"
+	SDIDTarget     RFC5424StructuredDataID = "target@aegisgate"
+	SDIDThreat     RFC5424StructuredDataID = "threat@aegisgate"
+	SDIDCompliance RFC5424StructuredDataID = "compliance@aegisgate"
+	SDIDMeta       RFC5424StructuredDataID = "meta@aegisgate"
 )
 
 // RFC5424StructuredDataParam represents SD-PARAM per RFC 5424 Section 6.3.2
@@ -193,15 +193,15 @@ func escapeSDParam(value string) string {
 
 // RFC5424Message represents a complete RFC 5424 syslog message
 type RFC5424Message struct {
-	Priority        int                    // PRI (facility * 8 + severity)
-	Version         int                    // VERSION (always 1)
-	Timestamp       time.Time              // TIMESTAMP (RFC3339 or NILVALUE)
-	Hostname        string                 // HOSTNAME or NILVALUE
-	AppName         string                 // APP-NAME or NILVALUE
-	ProcID          string                 // PROCID or NILVALUE
-	MsgID           RFC5424MsgID           // MSGID or NILVALUE
+	Priority       int                      // PRI (facility * 8 + severity)
+	Version        int                      // VERSION (always 1)
+	Timestamp      time.Time                // TIMESTAMP (RFC3339 or NILVALUE)
+	Hostname       string                   // HOSTNAME or NILVALUE
+	AppName        string                   // APP-NAME or NILVALUE
+	ProcID         string                   // PROCID or NILVALUE
+	MsgID          RFC5424MsgID             // MSGID or NILVALUE
 	StructuredData []*RFC5424StructuredData // STRUCTURED-DATA
-	Message         string                 // MSG
+	Message        string                   // MSG
 }
 
 // NewRFC5424Message creates a new RFC 5424 message
@@ -210,15 +210,15 @@ func NewRFC5424Message(facility, severity int, msgID RFC5424MsgID) *RFC5424Messa
 	procID := strconv.Itoa(os.Getpid())
 
 	return &RFC5424Message{
-		Priority:        facility*8 + severity,
-		Version:         RFC5424Version,
-		Timestamp:       time.Now().UTC(),
-		Hostname:        hostname,
-		AppName:         "aegisgate",
-		ProcID:          procID,
-		MsgID:           msgID,
+		Priority:       facility*8 + severity,
+		Version:        RFC5424Version,
+		Timestamp:      time.Now().UTC(),
+		Hostname:       hostname,
+		AppName:        "aegisgate",
+		ProcID:         procID,
+		MsgID:          msgID,
 		StructuredData: make([]*RFC5424StructuredData, 0),
-		Message:         "",
+		Message:        "",
 	}
 }
 

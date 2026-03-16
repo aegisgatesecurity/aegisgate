@@ -64,13 +64,13 @@ type TokenPair struct {
 
 // JWTToken represents a parsed JWT token
 type JWTToken struct {
-	Claims         *JWTClaims
-	RawHeader      string
-	RawPayload     string
-	RawSignature   string
-	Signature      []byte
-	Valid          bool
-	Errors         []error
+	Claims       *JWTClaims
+	RawHeader    string
+	RawPayload   string
+	RawSignature string
+	Signature    []byte
+	Valid        bool
+	Errors       []error
 }
 
 // JWTConfig holds JWT configuration
@@ -173,21 +173,21 @@ func (s *JWTService) GenerateTokenPair(user *User, customClaims map[string]inter
 	refreshJWTID := generateTokenID()
 
 	accessClaims := &JWTClaims{
-		Issuer:        s.config.Issuer,
-		Subject:       user.ID,
-		Audience:      s.config.Audience,
-		ExpiresAt:     now.Add(s.config.AccessTokenExpiry).Unix(),
-		NotBefore:     now.Unix(),
-		IssuedAt:      now.Unix(),
-		JWTID:         accessJWTID,
-		Name:          user.Name,
-		Email:         user.Email,
-		Role:          user.Role,
-		Permissions:   user.Permissions,
-		TenantID:      getUserTenantID(user),
-		SessionID:     user.SessionID,
-		MFAVerified:   true,
-		Custom:        customClaims,
+		Issuer:      s.config.Issuer,
+		Subject:     user.ID,
+		Audience:    s.config.Audience,
+		ExpiresAt:   now.Add(s.config.AccessTokenExpiry).Unix(),
+		NotBefore:   now.Unix(),
+		IssuedAt:    now.Unix(),
+		JWTID:       accessJWTID,
+		Name:        user.Name,
+		Email:       user.Email,
+		Role:        user.Role,
+		Permissions: user.Permissions,
+		TenantID:    getUserTenantID(user),
+		SessionID:   user.SessionID,
+		MFAVerified: true,
+		Custom:      customClaims,
 	}
 
 	accessToken, err := s.signToken(accessClaims)
@@ -239,7 +239,7 @@ func (s *JWTService) GenerateAPIToken(apiKey *APIKey) (string, error) {
 	claims := &JWTClaims{
 		Issuer:    s.config.Issuer,
 		Subject:   apiKey.UserID,
-		Audience: s.config.Audience,
+		Audience:  s.config.Audience,
 		ExpiresAt: now.Add(s.config.AccessTokenExpiry).Unix(),
 		NotBefore: now.Unix(),
 		IssuedAt:  now.Unix(),
@@ -456,9 +456,9 @@ func (s *JWTService) parseToken(tokenString string) (*JWTToken, error) {
 	}
 
 	return &JWTToken{
-		Claims:        &claims,
-		RawHeader:     parts[0],
-		RawPayload:    parts[1],
+		Claims:       &claims,
+		RawHeader:    parts[0],
+		RawPayload:   parts[1],
 		RawSignature: parts[2],
 		Signature:    signature,
 	}, nil
@@ -599,7 +599,7 @@ func JWTMiddleware(jwtService *JWTService, next http.Handler) http.Handler {
 			Email:         token.Claims.Email,
 			Role:          token.Claims.Role,
 			Permissions:   token.Claims.Permissions,
-			Authenticated:  true,
+			Authenticated: true,
 		}
 
 		ctx := context.WithValue(r.Context(), "user", user)

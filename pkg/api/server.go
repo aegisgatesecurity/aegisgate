@@ -32,8 +32,8 @@ type ServerConfig struct {
 	EnableVersioning bool
 	EnableCaching    bool
 	EnableMetrics    bool
-	EnableGraphQL   bool
-	EnableHealth    bool
+	EnableGraphQL    bool
+	EnableHealth     bool
 
 	// Versioning config
 	VersionConfig *VersionConfig
@@ -42,15 +42,20 @@ type ServerConfig struct {
 	CacheConfig *CacheConfig
 
 	// Optional interfaces (using any to avoid import issues)
-	MetricsMgr interface{ ServeHTTP(http.ResponseWriter, *http.Request) }
-	ProxySrv   interface{ Start() error; Stop() }
+	MetricsMgr interface {
+		ServeHTTP(http.ResponseWriter, *http.Request)
+	}
+	ProxySrv interface {
+		Start() error
+		Stop()
+	}
 }
 
 // VersionConfig contains versioning configuration
 type VersionConfig struct {
-	Enable       bool
-	StrictMode   bool
-	Negotiator   string // "header", "query", "path", "content-type"
+	Enable         bool
+	StrictMode     bool
+	Negotiator     string // "header", "query", "path", "content-type"
 	DefaultVersion string
 }
 
@@ -70,12 +75,12 @@ func DefaultServerConfig() *ServerConfig {
 		EnableVersioning: true,
 		EnableCaching:    true,
 		EnableMetrics:    true,
-		EnableGraphQL:   true,
+		EnableGraphQL:    true,
 		EnableHealth:     true,
 		VersionConfig: &VersionConfig{
 			Enable:         true,
 			StrictMode:     false,
-			Negotiator:    "header",
+			Negotiator:     "header",
 			DefaultVersion: "v2",
 		},
 		CacheConfig: DefaultCacheConfig(),
@@ -140,7 +145,7 @@ func (s *Server) setupHTTPServer() {
 		WriteTimeout:   s.cfg.WriteTimeout,
 		IdleTimeout:    s.cfg.IdleTimeout,
 		MaxHeaderBytes: s.cfg.MaxHeaderBytes,
-		TLSConfig:     s.getTLSConfig(),
+		TLSConfig:      s.getTLSConfig(),
 	}
 }
 
@@ -453,8 +458,8 @@ func (s *Server) handleListVersions() http.Handler {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"versions":            result,
-			"default_version":     s.versionMgr.GetDefaultVersion(),
+			"versions":           result,
+			"default_version":    s.versionMgr.GetDefaultVersion(),
 			"supported_versions": versions,
 		})
 	})

@@ -20,13 +20,13 @@ func main() {
         Upstream:    "http://localhost:3000",
         RateLimit:   100,
     })
-    
+
     go func() {
         if err := p.Start(); err != nil {
             log.Fatal(err)
         }
     }()
-    
+
     p.Stop(context.Background())
 }
 
