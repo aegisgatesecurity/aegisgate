@@ -32,6 +32,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Set version variable
+        id: version
+        run: |
+          VERSION=${{ github.ref_name }}
+          if [[ $VERSION == v* ]]; then
+            VERSION=${VERSION:1}
+          fi
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
       - name: Extract metadata for Docker
         id: meta
         uses: docker/metadata-action@v5
@@ -50,7 +59,9 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ steps.version.outputs.VERSION }}
+            ghcr.io/${{ github.repository }}:latest
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -64,8 +75,8 @@ jobs:
           build-args: |
             ML_ENABLED=true
           tags: |
-            ghcr.io/${{ github.repository }}/ml:${{ github.ref_name == 'refs/heads/main' && 'latest' || github.ref_name }}
-            ghcr.io/${{ github.repository }}/ml:${{ github.ref_name == 'refs/heads/main' && 'latest' || replace('refs/tags/v', '', github.ref_name) }}
+            ghcr.io/${{ github.repository }}/ml:${{ steps.version.outputs.VERSION }}
+            ghcr.io/${{ github.repository }}/ml:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
@@ -76,14 +87,14 @@ jobs:
           file: ./Dockerfile.ultra-minimal
           push: true
           tags: |
-            ghcr.io/${{ github.repository }}/minimal:${{ github.ref_name == 'refs/heads/main' && 'latest' || github.ref_name }}
-            ghcr.io/${{ github.repository }}/minimal:${{ github.ref_name == 'refs/heads/main' && 'latest' || replace('refs/tags/v', '', github.ref_name) }}
+            ghcr.io/${{ github.repository }}/minimal:${{ steps.version.outputs.VERSION }}
+            ghcr.io/${{ github.repository }}/minimal:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - name: Print image URLs
         run: |
           echo "Docker images pushed successfully:"
-          echo "  ghcr.io/${{ github.repository }}:${{ github.ref_name }}"
-          echo "  ghcr.io/${{ github.repository }}/ml:${{ github.ref_name }}"
-          echo "  ghcr.io/${{ github.repository }}/minimal:${{ github.ref_name }}"
+          echo "  ghcr.io/${{ github.repository }}:${{ steps.version.outputs.VERSION }}"
+          echo "  ghcr.io/${{ github.repository }}/ml:${{ steps.version.outputs.VERSION }}"
+          echo "  ghcr.io/${{ github.repository }}/minimal:${{ steps.version.outputs.VERSION }}"
