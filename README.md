@@ -280,7 +280,7 @@ graph TD
 | **Custom policies** | — | — | ✅ | ✅ |
 | **Support** | Community | Email | Priority | 24/7 SLA |
 | **SLA** | — | — | 99.9% | 99.99% |
-| **Price** | **Free** | [Contact](/contact) | [Contact](/contact) | [Contact](/contact) |
+| **Price** | **Free** | Contact | Contact | Contact |
 
 > 📧 **Contact sales@aegisgate.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
