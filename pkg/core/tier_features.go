@@ -282,9 +282,9 @@ func (t Tier) GetPriceInfo() (monthly float64, annual float64, perUser bool) {
 	case TierCommunity:
 		return 0, 0, false
 	case TierDeveloper:
-		return 0, 0, false, per user
+		return 0, 0, false
 	case TierProfessional:
-		return 0, 0, false, per user
+		return 0, 0, false
 	case TierEnterprise:
 		return 0, 0, false
 	default:
