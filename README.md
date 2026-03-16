@@ -17,7 +17,6 @@
 <!-- Badges Row 3 -->
 [![Stars](https://img.shields.io/github/stars/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/stargazers)
 [![Forks](https://img.shields.io/github/forks/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/network)
-[![Contributors](https://img.shields.io/github/contributors/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/graphs/contributors)
 [![Downloads](https://img.shields.io/github/downloads/aegisgatesecurity/aegisgate/total?logo=github)](https://github.com/aegisgatesecurity/aegisgate/releases/latest)
 
 ---
@@ -238,14 +237,14 @@ graph TD
 
 ### 🚀 Industry-Leading Performance
 
-| Metric | AegisGate | Competitors (Avg) | Improvement |
-|--------|:---------:|:-----------------:|:-----------:|
-| **Latency (p99)** | <5ms | 15-25ms | 75-80% faster |
-| **Throughput** | 50,000 req/s | 20,000 req/s | 2.5x higher |
-| **Memory Usage** | 128MB base | 256-512MB | 75% less |
-| **CPU Overhead** | <2% | 8-15% | 85% less |
-| **Cold Start** | <500ms | 2-5s | 4-10x faster |
-| **Connection Pool** | 10,000 concurrent | 1,000-2,000 | 5-10x |
+| Metric | AegisGate | Improvement |
+|--------|:---------:|:-----------:|
+| **Latency (p99)** | <5ms | 75-80% faster |
+| **Throughput** | 50,000 req/s | 2.5x higher |
+| **Memory Usage** | 128MB base | 75% less |
+| **CPU Overhead** | <2% | 85% less |
+| **Cold Start** | <500ms | 4-10x faster |
+| **Connection Pool** | 10,000 concurrent | 5-10x higher |
 
 ### 🏆 Verified Results
 
@@ -370,7 +369,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 | **Functions** | 3,900+ |
 | **Types/Structs** | 1,050+ |
 | **Test Coverage** | 75%+ |
-| **Contributors** | Growing |
+| **Contributors** | [GitHub](https://github.com/aegisgatesecurity/aegisgate/graphs/contributors) |
 
 ---
 
