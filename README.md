@@ -1,4 +1,4 @@
-<div align="center">
+﻿<div align="center">
 
 # 🛡️ AegisGate™ 🔐
 
@@ -281,7 +281,7 @@ graph TD
 | **SLA** | — | — | 99.9% | 99.99% |
 | **Price** | **Free** | Contact | Contact | Contact |
 
-> 📧 **Contact sales@aegisgate.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
+> 📧 **Contact sales@aegisgatesecurity.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
 ---
 
@@ -315,7 +315,7 @@ graph TD
 
 **Found a security issue? DO NOT open a public issue.**
 
-📧 **Email:** security@aegisgate.io  
+📧 **Email:** security@aegisgatesecurity.io  
 ⏱️ **Response:** Within 48 hours  
 🔧 **Remediation:** 90 days timeline  
 
@@ -337,25 +337,26 @@ graph TD
 
 ## 🤝 Contributing
 
-We welcome contributions! Here's how to get started:
+We welcome contributions to AegisGate™! All contributions are subject to the following legal agreements:
 
-```bash
-git clone https://github.com/aegisgatesecurity/aegisgate.git
-cd aegisgate
-go mod download
-go test -v ./...
-go run cmd/aegisgate/main.go
-make build
-```
+> ⚠️ **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
 
-### Development Requirements
+| Document | Purpose |
+|----------|---------|
+| [CONTRIBUTING.md](CONTRIBUTING.md) | Full contribution guidelines |
+| [CLA.md](CLA.md) | Contributor License Agreement (REQUIRED) |
+| [DCO.md](DCO.md) | Developer Certificate of Origin (sign-off required on all commits) |
+| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community code of conduct |
 
-- Go 1.24+
-- Docker & Docker Compose
-- Make
-- (Optional) Kubernetes cluster for integration testing
+### Quick Steps
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+1. Read CONTRIBUTING.md for development guidelines
+2. Review CLA.md and DCO.md
+3. Fork the repository and create a feature branch
+4. Sign off all commits with `git commit -s`
+5. Submit a Pull Request
+
+For legal questions: **support@aegisgatesecurity.io**
 
 ---
 
@@ -382,7 +383,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 | 🐛 **Issue Tracker** | GitHub Issues |
 | 💬 **Discord** | Join Community |
 | 🐦 **Twitter** | @AegisGate™ |
-| 📧 **Email** | hello@aegisgate.io |
+| 📧 **Email** | support@aegisgatesecurity.io |
 
 ---
 
@@ -413,31 +414,3 @@ See [LICENSE](LICENSE) for full text.
 Built with 🔐 by the AegisGate™ Security Team
 
 </div>
-<!-- CI Trigger: 2026-03-15T03:27:07.408Z -->
-
-
----
-
-## 🤝 Contributing
-
-We welcome contributions to AegisGate™! All contributions are subject to the following legal agreements:
-
-> **⚠️ IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
-
-| Document | Purpose |
-|----------|---------|
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Full contribution guidelines |
-| [CLA.md](CLA.md) | Contributor License Agreement (REQUIRED) |
-| [DCO.md](DCO.md) | Developer Certificate of Origin (sign-off required on all commits) |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community code of conduct |
-
-### Quick Steps
-
-1. Read [CONTRIBUTING.md](CONTRIBUTING.md) for development guidelines
-2. Review [CLA.md](CLA.md) and [DCO.md](DCO.md)
-3. Fork the repository and create a feature branch
-4. Sign off all commits with `git commit -s`
-5. Submit a Pull Request
-
-For legal questions: **legal@aegisgate.io**
-
