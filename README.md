@@ -270,17 +270,17 @@ graph TD
 
 | Feature | Community | Developer | Professional | Enterprise |
 |---------|:---------:|:---------:|:------------:|:----------:|
-| **Requests/min** | 200 | 5,000 | 50,000 | Unlimited |
-| **Concurrent connections** | 5 | 50 | 500 | Unlimited |
-| **AI Providers** | 2 | 5 | All | All |
-| **Compliance frameworks** | View Only | Standard | Full | Full + Custom |
-| **Threat detection** | Basic | Advanced | Advanced + Custom | Advanced + Custom |
+| **Requests/min** | Limited | Standard | High | Custom |
+| **Concurrent connections** | Limited | Standard | High | Custom |
+| **AI Providers** | OpenAI, Anthropic | + Cohere, Azure | All | All + Custom |
+| **Compliance frameworks** | View | Standard | Full | Full + Custom |
+| **Threat detection** | Basic | Advanced | Advanced | Advanced + Custom |
 | **SSO/SAML** | — | ✅ | ✅ | ✅ |
 | **SIEM integration** | — | — | ✅ | ✅ |
 | **Custom policies** | — | — | ✅ | ✅ |
 | **Support** | Community | Email | Priority | 24/7 SLA |
-| **SLA** | N/A | N/A | 99.9% | 99.99% |
-| **Price** | **Free** | Contact | Contact | Contact |
+| **SLA** | — | — | 99.9% | 99.99% |
+| **Price** | **Free** | [Contact](/contact) | [Contact](/contact) | [Contact](/contact) |
 
 > 📧 **Contact sales@aegisgate.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
