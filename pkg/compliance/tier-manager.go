@@ -113,10 +113,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierEnterprise,
 		Description: "NIST AI RMF for AI system governance",
 		Pricing: PricingInfo{
-			MonthlyPrice: 15000,
+			MonthlyPrice: 0,
 			AnnualPrice:  150000,
 			PerUser:      false,
-			Description:  "$15K/month or $150K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"4 core functions (GV, MP, ME, RG)",
@@ -132,10 +132,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierEnterprise,
 		Description: "NITRD AI Risk Management Framework Controls",
 		Pricing: PricingInfo{
-			MonthlyPrice: 12000,
+			MonthlyPrice: 0,
 			AnnualPrice:  120000,
 			PerUser:      false,
-			Description:  "$12K/month or $120K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"10 control families",
@@ -150,10 +150,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierEnterprise,
 		Description: "ISO/IEC 42001 AI Management System",
 		Pricing: PricingInfo{
-			MonthlyPrice: 10000,
+			MonthlyPrice: 0,
 			AnnualPrice:  100000,
 			PerUser:      false,
-			Description:  "$10K/month or $100K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"AI management system controls",
@@ -169,10 +169,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierPremium,
 		Description: "SOC 2 Type II controls for service organizations",
 		Pricing: PricingInfo{
-			MonthlyPrice: 25000,
+			MonthlyPrice: 0,
 			AnnualPrice:  250000,
 			PerUser:      false,
-			Description:  "$25K/month or $250K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"5 Trust Service Criteria",
@@ -188,10 +188,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierPremium,
 		Description: "Health Insurance Portability and Accountability Act",
 		Pricing: PricingInfo{
-			MonthlyPrice: 18000,
+			MonthlyPrice: 0,
 			AnnualPrice:  180000,
 			PerUser:      false,
-			Description:  "$18K/month or $180K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"PHI detection",
@@ -206,10 +206,10 @@ func (tm *TierManager) initializeDefaults() {
 		Tier:        TierPremium,
 		Description: "Payment Card Industry Data Security Standard",
 		Pricing: PricingInfo{
-			MonthlyPrice: 15000,
+			MonthlyPrice: 0,
 			AnnualPrice:  150000,
 			PerUser:      false,
-			Description:  "$15K/month or $150K/year",
+			Description:  "Contact sales",
 		},
 		Features: []string{
 			"CHD detection",

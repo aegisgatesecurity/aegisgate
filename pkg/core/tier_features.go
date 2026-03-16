@@ -282,11 +282,11 @@ func (t Tier) GetPriceInfo() (monthly float64, annual float64, perUser bool) {
 	case TierCommunity:
 		return 0, 0, false
 	case TierDeveloper:
-		return 29, 290, true // $29/mo or $290/yr, per user
+		return 0, 0, false, per user
 	case TierProfessional:
-		return 99, 990, true // $99/mo or $990/yr, per user
+		return 0, 0, false, per user
 	case TierEnterprise:
-		return 0, 0, false // Custom pricing
+		return 0, 0, false
 	default:
 		return 0, 0, false
 	}

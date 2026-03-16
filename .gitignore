@@ -34,3 +34,25 @@ dist/
 
 # Temp files
 *.txt
+
+# ========================================
+# SECURITY - Sensitive Files
+# ========================================
+PROJECT_MEMORY.md
+Archive/
+*.key
+*.pem
+*.crt
+certs/
+*.log
+
+# IDE & Editor
+*.iml
+*.iws
+.project
+.classpath
+
+# Build
+*.dylib
+*.so
+*.dll
