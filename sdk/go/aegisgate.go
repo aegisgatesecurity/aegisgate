@@ -1,5 +1,5 @@
 // Package aegisgate provides a Go SDK for the AegisGate API
-// 
+//
 // This SDK provides a clean, idiomatic Go interface to the AegisGate enterprise security platform.
 // It supports both REST and gRPC APIs with automatic retry, connection pooling, and context support.
 package aegisgate
@@ -84,9 +84,9 @@ type AuthConfig struct {
 
 // Client is the main AegisGate API client
 type Client struct {
-	config      *Config
-	httpClient  *http.Client
-	grpcConn    *grpc.ClientConn
+	config     *Config
+	httpClient *http.Client
+	grpcConn   *grpc.ClientConn
 
 	// Service clients
 	Auth       *AuthService
@@ -97,7 +97,7 @@ type Client struct {
 	Core       *CoreService
 
 	// Token for session-based auth
-	token     string
+	token string
 }
 
 // NewClient creates a new AegisGate client

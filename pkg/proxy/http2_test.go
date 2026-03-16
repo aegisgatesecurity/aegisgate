@@ -295,7 +295,8 @@ func TestStreamLimiterConcurrentAccess(t *testing.T) {
 	}
 
 	// Drain the acquired channel to ensure all streams are registered
-	for range acquired {}
+	for range acquired {
+	}
 
 	// Give a small buffer for mutex state to settle after goroutines exit
 	time.Sleep(10 * time.Millisecond)

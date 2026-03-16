@@ -26,17 +26,17 @@ import (
 
 // Config holds all application configuration
 type Config struct {
-	BindAddress      string        `json:"bind_address" yaml:"bind_address"`
-	CertDir          string        `json:"cert_dir" yaml:"cert_dir"`
-	Upstream         string        `json:"upstream" yaml:"upstream"`
-	MaxBodySize      int64         `json:"max_body_size" yaml:"max_body_size"`
-	MaxConns         int           `json:"max_conns" yaml:"max_conns"`
-	Timeout          time.Duration `json:"timeout" yaml:"timeout"`
-	ShutdownTimeout  time.Duration `json:"shutdown_timeout" yaml:"shutdown_timeout"`
-	RateLimit        int           `json:"rate_limit" yaml:"rate_limit"`
-	LogLevel         string        `json:"log_level" yaml:"log_level"`
-	TLS              *TLSConfig    `json:"tls,omitempty" yaml:"tls,omitempty"`
-	UpstreamTLS      *TLSConfig    `json:"upstream_tls,omitempty" yaml:"upstream_tls,omitempty"`
+	BindAddress     string        `json:"bind_address" yaml:"bind_address"`
+	CertDir         string        `json:"cert_dir" yaml:"cert_dir"`
+	Upstream        string        `json:"upstream" yaml:"upstream"`
+	MaxBodySize     int64         `json:"max_body_size" yaml:"max_body_size"`
+	MaxConns        int           `json:"max_conns" yaml:"max_conns"`
+	Timeout         time.Duration `json:"timeout" yaml:"timeout"`
+	ShutdownTimeout time.Duration `json:"shutdown_timeout" yaml:"shutdown_timeout"`
+	RateLimit       int           `json:"rate_limit" yaml:"rate_limit"`
+	LogLevel        string        `json:"log_level" yaml:"log_level"`
+	TLS             *TLSConfig    `json:"tls,omitempty" yaml:"tls,omitempty"`
+	UpstreamTLS     *TLSConfig    `json:"upstream_tls,omitempty" yaml:"upstream_tls,omitempty"`
 
 	// ML Anomaly Detection configuration
 	ML *MLConfig `json:"ml,omitempty" yaml:"ml,omitempty"`
@@ -52,13 +52,13 @@ type Config struct {
 
 // TLSConfig holds TLS-specific configuration
 type TLSConfig struct {
-	Enabled        bool   `json:"enabled" yaml:"enabled"`
-	CertFile       string `json:"cert_file" yaml:"cert_file"`
-	KeyFile        string `json:"key_file" yaml:"key_file"`
-	CAFile         string `json:"ca_file" yaml:"ca_file"`
-	SkipVerify     bool   `json:"skip_verify" yaml:"skip_verify"`
-	MinVersion     string `json:"min_version" yaml:"min_version"`
-	MaxVersion     string `json:"max_version" yaml:"max_version"`
+	Enabled    bool   `json:"enabled" yaml:"enabled"`
+	CertFile   string `json:"cert_file" yaml:"cert_file"`
+	KeyFile    string `json:"key_file" yaml:"key_file"`
+	CAFile     string `json:"ca_file" yaml:"ca_file"`
+	SkipVerify bool   `json:"skip_verify" yaml:"skip_verify"`
+	MinVersion string `json:"min_version" yaml:"min_version"`
+	MaxVersion string `json:"max_version" yaml:"max_version"`
 }
 
 // MLConfig holds ML anomaly detection configuration
@@ -120,22 +120,22 @@ type MLConfig struct {
 func DefaultMLConfig() *MLConfig {
 	return &MLConfig{
 		Enabled:                        true,
-		Sensitivity:                   "medium",
-		BlockOnCriticalSeverity:       true,
-		BlockOnHighSeverity:           false,
-		MinScoreToBlock:               3.0,
-		SampleRate:                    100,
-		ExcludedPaths:                 []string{"/health", "/ready", "/metrics"},
-		ExcludedMethods:               []string{"OPTIONS", "HEAD"},
-		LogAllAnomalies:               true,
+		Sensitivity:                    "medium",
+		BlockOnCriticalSeverity:        true,
+		BlockOnHighSeverity:            false,
+		MinScoreToBlock:                3.0,
+		SampleRate:                     100,
+		ExcludedPaths:                  []string{"/health", "/ready", "/metrics"},
+		ExcludedMethods:                []string{"OPTIONS", "HEAD"},
+		LogAllAnomalies:                true,
 		EnablePromptInjectionDetection: true,
-		PromptInjectionSensitivity:    75,
-		EnableContentAnalysis:         true,
-		EnableBehavioralAnalysis:      true,
-		WindowSize:                   1000,
-		ZThreshold:                   3.0,
-		MinSamples:                   10,
-		EntropyThreshold:              4.5,
+		PromptInjectionSensitivity:     75,
+		EnableContentAnalysis:          true,
+		EnableBehavioralAnalysis:       true,
+		WindowSize:                     1000,
+		ZThreshold:                     3.0,
+		MinSamples:                     10,
+		EntropyThreshold:               4.5,
 	}
 }
 
@@ -161,20 +161,20 @@ func DefaultPluginConfig() *PluginConfig {
 
 // SecurityConfig holds security-related configuration
 type SecurityConfig struct {
-	EnableFIPS             bool     `json:"enable_fips" yaml:"enable_fips"`
-	EnableAuditLogging     bool     `json:"enable_audit_logging" yaml:"enable_audit_logging"`
-	AuditLogPath           string   `json:"audit_log_path" yaml:"audit_log_path"`
-	EnableOPSEC            bool     `json:"enable_opsec" yaml:"enable_opsec"`
-	EnableImmutableConfig  bool     `json:"enable_immutable_config" yaml:"enable_immutable_config"`
-	EnableReadOnlyFS       bool     `json:"enable_readonly_fs" yaml:"enable_readonly_fs"`
-	EnableWAL              bool     `json:"enable_wal" yaml:"enable_wal"`
-	EnableSnapshot         bool     `json:"enable_snapshot" yaml:"enable_snapshot"`
-	EnableRollback         bool     `json:"enable_rollback" yaml:"enable_rollback"`
-	MaxMemoryMB            int      `json:"max_memory_mb" yaml:"max_memory_mb"`
-	EnableSecurityHeaders  bool     `json:"enable_security_headers" yaml:"enable_security_headers"`
-	AllowedMethods         []string `json:"allowed_methods" yaml:"allowed_methods"`
-	BlockedIPs             []string `json:"blocked_ips" yaml:"blocked_ips"`
-	AllowedHosts           []string `json:"allowed_hosts" yaml:"allowed_hosts"`
+	EnableFIPS            bool     `json:"enable_fips" yaml:"enable_fips"`
+	EnableAuditLogging    bool     `json:"enable_audit_logging" yaml:"enable_audit_logging"`
+	AuditLogPath          string   `json:"audit_log_path" yaml:"audit_log_path"`
+	EnableOPSEC           bool     `json:"enable_opsec" yaml:"enable_opsec"`
+	EnableImmutableConfig bool     `json:"enable_immutable_config" yaml:"enable_immutable_config"`
+	EnableReadOnlyFS      bool     `json:"enable_readonly_fs" yaml:"enable_readonly_fs"`
+	EnableWAL             bool     `json:"enable_wal" yaml:"enable_wal"`
+	EnableSnapshot        bool     `json:"enable_snapshot" yaml:"enable_snapshot"`
+	EnableRollback        bool     `json:"enable_rollback" yaml:"enable_rollback"`
+	MaxMemoryMB           int      `json:"max_memory_mb" yaml:"max_memory_mb"`
+	EnableSecurityHeaders bool     `json:"enable_security_headers" yaml:"enable_security_headers"`
+	AllowedMethods        []string `json:"allowed_methods" yaml:"allowed_methods"`
+	BlockedIPs            []string `json:"blocked_ips" yaml:"blocked_ips"`
+	AllowedHosts          []string `json:"allowed_hosts" yaml:"allowed_hosts"`
 }
 
 // DefaultSecurityConfig returns default security configuration

@@ -11,16 +11,16 @@ import (
 // CoreService implements the Core service
 type CoreService struct {
 	UnimplementedCoreServiceServer
-	metrics *metrics.Manager
-	logger  *slog.Logger
+	metrics   *metrics.Manager
+	logger    *slog.Logger
 	startTime time.Time
 }
 
 // NewCoreService creates a new core service
 func NewCoreService(metrics *metrics.Manager, logger *slog.Logger) *CoreService {
 	return &CoreService{
-		metrics: metrics,
-		logger:  logger,
+		metrics:   metrics,
+		logger:    logger,
 		startTime: time.Now(),
 	}
 }
@@ -55,7 +55,7 @@ func (s *CoreService) GetMetrics(ctx context.Context, req *GetMetricsRequest) (*
 		BlockedRequests:   stats["blocked_requests"].(int64),
 		ActiveUsers:       int32(stats["active_users"].(int64)),
 		ActiveConnections: int32(stats["active_connections"].(int64)),
-		Uptime:           stats["uptime"].(float64),
+		Uptime:            stats["uptime"].(float64),
 	}, nil
 }
 
@@ -78,7 +78,7 @@ func (s *CoreService) GetUptime(ctx context.Context, req *GetUptimeRequest) (*Ge
 // GetRegistryStatus returns registry status
 func (s *CoreService) GetRegistryStatus(ctx context.Context, req *GetRegistryStatusRequest) (*GetRegistryStatusResponse, error) {
 	return &GetRegistryStatusResponse{
-		TotalModules:      0,
+		TotalModules:     0,
 		ActiveModules:    0,
 		HealthyModules:   0,
 		UnhealthyModules: 0,

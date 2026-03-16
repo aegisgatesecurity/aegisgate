@@ -24,7 +24,7 @@ type ExampleFilterPlugin struct {
 type FilterStats struct {
 	RequestsProcessed  int64
 	ResponsesProcessed int64
-	Errors            int64
+	Errors             int64
 }
 
 // NewExampleFilterPlugin creates a new example filter plugin
@@ -39,14 +39,14 @@ func NewExampleFilterPlugin() *ExampleFilterPlugin {
 // Metadata returns the plugin metadata
 func (p *ExampleFilterPlugin) Metadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
-		ID:          "example-filter",
-		Name:        "Example Filter Plugin",
-		Version:     "1.0.0",
-		Description: "An example filter plugin that logs requests and responses",
-		Author:      "AegisGate Team",
-		Website:     "https://aegisgatesecurity.io",
-		Type:        plugin.TypeFilter,
-		Tags:        []string{"example", "logging", "filter"},
+		ID:           "example-filter",
+		Name:         "Example Filter Plugin",
+		Version:      "1.0.0",
+		Description:  "An example filter plugin that logs requests and responses",
+		Author:       "AegisGate Team",
+		Website:      "https://aegisgatesecurity.io",
+		Type:         plugin.TypeFilter,
+		Tags:         []string{"example", "logging", "filter"},
 		Capabilities: []string{"request-logging", "response-logging"},
 	}
 }
@@ -61,7 +61,7 @@ func (p *ExampleFilterPlugin) Init(ctx context.Context, config plugin.PluginConf
 // Start starts the plugin
 func (p *ExampleFilterPlugin) Start(ctx context.Context) error {
 	p.logger.Info("ExampleFilterPlugin started")
-	
+
 	// Start a background goroutine to process request logs
 	go func() {
 		for {
@@ -73,13 +73,13 @@ func (p *ExampleFilterPlugin) Start(ctx context.Context) error {
 			}
 		}
 	}()
-	
+
 	return nil
 }
 
 // Stop stops the plugin
 func (p *ExampleFilterPlugin) Stop(ctx context.Context) error {
-	p.logger.Info("ExampleFilterPlugin stopped", 
+	p.logger.Info("ExampleFilterPlugin stopped",
 		"requests", p.stats.RequestsProcessed,
 		"responses", p.stats.ResponsesProcessed,
 		"errors", p.stats.Errors)
@@ -134,8 +134,8 @@ func (p *ExampleFilterPlugin) ProcessResponse(ctx context.Context, reqCtx *plugi
 // OnError handles errors (for ErrorHandler interface)
 func (p *ExampleFilterPlugin) OnError(ctx context.Context, errCtx *plugin.ErrorContext) error {
 	p.stats.Errors++
-	p.logger.Error("ExampleFilterPlugin error", 
-		"hook", errCtx.Hook, 
+	p.logger.Error("ExampleFilterPlugin error",
+		"hook", errCtx.Hook,
 		"error", errCtx.Error,
 		"connection_id", errCtx.ConnectionID)
 	return nil
@@ -161,19 +161,19 @@ type ExampleAnalyticsPlugin struct {
 
 // AnalyticsMetrics holds analytics data
 type AnalyticsMetrics struct {
-	TotalRequests    int64
-	TotalResponses   int64
-	TotalBytesIn     int64
-	TotalBytesOut    int64
-	AvgLatency       time.Duration
-	TopPaths         map[string]int
-	StatusCodes      map[int]int
+	TotalRequests  int64
+	TotalResponses int64
+	TotalBytesIn   int64
+	TotalBytesOut  int64
+	AvgLatency     time.Duration
+	TopPaths       map[string]int
+	StatusCodes    map[int]int
 }
 
 // NewExampleAnalyticsPlugin creates a new analytics plugin
 func NewExampleAnalyticsPlugin() *ExampleAnalyticsPlugin {
 	return &ExampleAnalyticsPlugin{
-		logger:  slog.Default(),
+		logger: slog.Default(),
 		metrics: &AnalyticsMetrics{
 			TopPaths:    make(map[string]int),
 			StatusCodes: make(map[int]int),
@@ -184,13 +184,13 @@ func NewExampleAnalyticsPlugin() *ExampleAnalyticsPlugin {
 // Metadata returns the plugin metadata
 func (p *ExampleAnalyticsPlugin) Metadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
-		ID:          "example-analytics",
-		Name:        "Example Analytics Plugin",
-		Version:     "1.0.0",
-		Description: "An example analytics plugin that tracks request metrics",
-		Author:      "AegisGate Team",
-		Type:        plugin.TypeAnalytics,
-		Tags:        []string{"example", "analytics", "metrics"},
+		ID:           "example-analytics",
+		Name:         "Example Analytics Plugin",
+		Version:      "1.0.0",
+		Description:  "An example analytics plugin that tracks request metrics",
+		Author:       "AegisGate Team",
+		Type:         plugin.TypeAnalytics,
+		Tags:         []string{"example", "analytics", "metrics"},
 		Capabilities: []string{"analytics", "metrics"},
 	}
 }
@@ -229,10 +229,10 @@ func (p *ExampleAnalyticsPlugin) Hooks() []plugin.HookType {
 // ProcessRequest tracks request metrics
 func (p *ExampleAnalyticsPlugin) ProcessRequest(ctx context.Context, reqCtx *plugin.RequestContext) (*plugin.HookResult, error) {
 	p.metrics.TotalRequests++
-	
+
 	path := reqCtx.Request.URL.Path
 	p.metrics.TopPaths[path]++
-	
+
 	if reqCtx.Request.ContentLength > 0 {
 		p.metrics.TotalBytesIn += reqCtx.Request.ContentLength
 	}
@@ -244,14 +244,14 @@ func (p *ExampleAnalyticsPlugin) ProcessRequest(ctx context.Context, reqCtx *plu
 // ProcessResponse tracks response metrics
 func (p *ExampleAnalyticsPlugin) ProcessResponse(ctx context.Context, reqCtx *plugin.RequestContext, respCtx *plugin.ResponseContext) (*plugin.HookResult, error) {
 	p.metrics.TotalResponses++
-	
+
 	statusCode := respCtx.StatusCode
 	p.metrics.StatusCodes[statusCode]++
-	
+
 	if len(respCtx.Body) > 0 {
 		p.metrics.TotalBytesOut += int64(len(respCtx.Body))
 	}
-	
+
 	// Track latency
 	p.metrics.AvgLatency = (p.metrics.AvgLatency + respCtx.Latency) / 2
 
@@ -271,30 +271,30 @@ var _ plugin.ResponseProcessor = (*ExampleAnalyticsPlugin)(nil)
 
 // ExamplePeriodicPlugin demonstrates a plugin with periodic tasks
 type ExamplePeriodicPlugin struct {
-	logger       *slog.Logger
-	config       plugin.PluginConfig
-	taskCount    int
-	lastRunTime  time.Time
+	logger      *slog.Logger
+	config      plugin.PluginConfig
+	taskCount   int
+	lastRunTime time.Time
 }
 
 // NewExamplePeriodicPlugin creates a new periodic task plugin
 func NewExamplePeriodicPlugin() *ExamplePeriodicPlugin {
 	return &ExamplePeriodicPlugin{
-		logger:      slog.Default(),
-		taskCount:   0,
+		logger:    slog.Default(),
+		taskCount: 0,
 	}
 }
 
 // Metadata returns the plugin metadata
 func (p *ExamplePeriodicPlugin) Metadata() plugin.PluginMetadata {
 	return plugin.PluginMetadata{
-		ID:          "example-periodic",
-		Name:        "Example Periodic Plugin",
-		Version:     "1.0.0",
-		Description: "An example plugin that performs periodic tasks",
-		Author:      "AegisGate Team",
-		Type:        plugin.TypeProcessor,
-		Tags:        []string{"example", "periodic", "maintenance"},
+		ID:           "example-periodic",
+		Name:         "Example Periodic Plugin",
+		Version:      "1.0.0",
+		Description:  "An example plugin that performs periodic tasks",
+		Author:       "AegisGate Team",
+		Type:         plugin.TypeProcessor,
+		Tags:         []string{"example", "periodic", "maintenance"},
 		Capabilities: []string{"maintenance", "cleanup"},
 	}
 }
@@ -329,14 +329,14 @@ func (p *ExamplePeriodicPlugin) Hooks() []plugin.HookType {
 func (p *ExamplePeriodicPlugin) OnPeriodic(ctx context.Context, periodicCtx *plugin.PeriodicContext) error {
 	p.taskCount++
 	p.lastRunTime = periodicCtx.Timestamp
-	
+
 	p.logger.Info("Periodic task executed",
 		"task_number", p.taskCount,
 		"timestamp", periodicCtx.Timestamp,
 		"interval", periodicCtx.Interval)
 
 	// Example: Perform cleanup, health checks, etc.
-	
+
 	return nil
 }
 

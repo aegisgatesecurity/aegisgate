@@ -20,9 +20,9 @@ type ISO42001Framework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	clauses       []Clause
+	configObj *common.FrameworkConfig
+	tierInfo  common.TierInfo
+	clauses   []Clause
 }
 
 // Clause represents an ISO 42001 clause
@@ -95,12 +95,12 @@ func (f *ISO42001Framework) Check(ctx context.Context, input common.CheckInput) 
 
 	return &common.CheckResult{
 		Framework:       f.name,
-		Passed:            len(findings) == 0,
-		Findings:          findings,
-		CheckedAt:         time.Now(),
-		Duration:          time.Since(start),
-		TotalPatterns:     len(f.clauses),
-		MatchedPatterns:   len(findings),
+		Passed:          len(findings) == 0,
+		Findings:        findings,
+		CheckedAt:       time.Now(),
+		Duration:        time.Since(start),
+		TotalPatterns:   len(f.clauses),
+		MatchedPatterns: len(findings),
 	}, nil
 }
 

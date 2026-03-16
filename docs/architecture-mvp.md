@@ -73,4 +73,3 @@ Client → HTTPS → AegisGate Proxy → HTTP → Upstream AI Service
                               │  (3 screens)    │
                               └─────────────────┘
 `
-

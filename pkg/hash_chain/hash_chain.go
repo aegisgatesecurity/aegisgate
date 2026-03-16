@@ -27,11 +27,11 @@ func (h Hash) String() string {
 
 // HashChainEntry represents a single entry in the hash chain
 type HashChainEntry struct {
-	Hash         Hash    // Hash of the entry (computed from PayloadHash + PreviousHash + etc)
-	PayloadHash  Hash    // Hash of the original data payload
-	PreviousHash Hash    // Hash of the previous entry
-	SequenceNum  uint64  // Sequence number of this entry
-	Operation    string  // Operation performed
+	Hash         Hash      // Hash of the entry (computed from PayloadHash + PreviousHash + etc)
+	PayloadHash  Hash      // Hash of the original data payload
+	PreviousHash Hash      // Hash of the previous entry
+	SequenceNum  uint64    // Sequence number of this entry
+	Operation    string    // Operation performed
 	Timestamp    time.Time // Timestamp of the entry
 }
 

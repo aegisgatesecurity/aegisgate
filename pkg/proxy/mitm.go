@@ -16,8 +16,8 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/aegisgatesecurity/aegisgate/pkg/compliance"
 	"crypto/x509"
+	"github.com/aegisgatesecurity/aegisgate/pkg/compliance"
 	"github.com/aegisgatesecurity/aegisgate/pkg/scanner"
 	tlspkg "github.com/aegisgatesecurity/aegisgate/pkg/tls"
 )
@@ -331,8 +331,8 @@ func (m *MITMProxy) handleCONNECT(w http.ResponseWriter, r *http.Request) {
 			}
 			// Allow on error if FailClosed is false
 		} else if !allowed {
-			slog.Warn("Connection blocked by attestation", 
-				"host", targetHost, 
+			slog.Warn("Connection blocked by attestation",
+				"host", targetHost,
 				"reason", result.Reason,
 				"chain_verified", result.ChainVerified,
 				"backdoor_detected", result.BackdoorDetected)
@@ -814,18 +814,18 @@ func (m *MITMProxy) GetStats() map[string]interface{} {
 	m.connMutex.RUnlock()
 
 	return map[string]interface{}{
-		"enabled":            m.config.Enabled,
-		"bind_address":       m.config.BindAddress,
-		"connection_count":   m.connectionCount.Load(),
-		"request_count":      m.requestCount.Load(),
-		"blocked_count":      m.blockedCount.Load(),
-		"bytes_uploaded":     m.bytesUploaded.Load(),
-		"bytes_downloaded":   m.bytesDownloaded.Load(),
-		"active_connections": connCount,
-		"max_connections":    m.config.MaxConnections,
-		"timeout":            m.config.Timeout.String(),
-		"tls_13_enabled":     m.config.EnableTLS13,
-		"scanning_enabled":   m.config.EnableScanning,
+		"enabled":             m.config.Enabled,
+		"bind_address":        m.config.BindAddress,
+		"connection_count":    m.connectionCount.Load(),
+		"request_count":       m.requestCount.Load(),
+		"blocked_count":       m.blockedCount.Load(),
+		"bytes_uploaded":      m.bytesUploaded.Load(),
+		"bytes_downloaded":    m.bytesDownloaded.Load(),
+		"active_connections":  connCount,
+		"max_connections":     m.config.MaxConnections,
+		"timeout":             m.config.Timeout.String(),
+		"tls_13_enabled":      m.config.EnableTLS13,
+		"scanning_enabled":    m.config.EnableScanning,
 		"attestation_enabled": m.attestation != nil && m.config.AttestationConfig != nil && m.config.AttestationConfig.Enabled,
 	}
 }

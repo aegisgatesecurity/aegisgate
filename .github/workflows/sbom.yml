@@ -12,26 +12,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: '1.24'
-      
+
       - name: Generate SBOM with Syft
         uses: anchore/sbom-action@v0
         with:
           format: cyclonedx-json
           output-file: sbom.cyclonedx.json
           upload-release-assets: false
-      
+
       - name: Generate SPDX SBOM
         uses: anchore/sbom-action@v0
         with:
           format: spdx-json
           output-file: sbom.spdx.json
           upload-release-assets: false
-      
+
       - name: Upload SBOM artifacts
         uses: actions/upload-artifact@v4
         with:

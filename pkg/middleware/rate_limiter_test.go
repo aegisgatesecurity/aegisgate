@@ -116,7 +116,7 @@ func TestDefaultKeyFunc_UseIP(t *testing.T) {
 func TestRateLimiter_AllowsFirstRequests(t *testing.T) {
 	config := DefaultRateLimitConfig(core.TierCommunity)
 	rl := NewRateLimiter(config)
-	
+
 	allowed, remaining, _ := rl.Allow("test-key")
 	if !allowed {
 		t.Error("First request should be allowed")
@@ -129,11 +129,11 @@ func TestRateLimiter_AllowsFirstRequests(t *testing.T) {
 func TestRateLimiter_DifferentClientsHaveSeparateLimits(t *testing.T) {
 	config := DefaultRateLimitConfig(core.TierCommunity)
 	rl := NewRateLimiter(config)
-	
+
 	for i := 0; i < 55; i++ {
 		rl.Allow("client1")
 	}
-	
+
 	allowed, _, _ := rl.Allow("client2")
 	if !allowed {
 		t.Error("Different clients should have separate rate limit buckets")

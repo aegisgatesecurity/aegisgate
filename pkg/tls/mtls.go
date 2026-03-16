@@ -31,16 +31,16 @@ type mTLSConfig struct {
 	CertFile             string
 	KeyFile              string
 	VerifyClientCert     bool
-	SkipClientCertVerify bool // Only for development/testing
-	ClientCertSubjectCN    string // Expected CN for client certs (optional validation)
+	SkipClientCertVerify bool   // Only for development/testing
+	ClientCertSubjectCN  string // Expected CN for client certs (optional validation)
 }
 
 // mTLSContext holds mTLS state and configuration
 type mTLSContext struct {
-	config      *mTLSConfig
-	clientCAs   *x509.CertPool
-	certPair    tls.Certificate
-	mu          sync.RWMutex
+	config        *mTLSConfig
+	clientCAs     *x509.CertPool
+	certPair      tls.Certificate
+	mu            sync.RWMutex
 	isInitialized bool
 }
 
@@ -50,8 +50,8 @@ type mTLSClientConfig struct {
 	KeyFile            string
 	CAFile             string
 	InsecureSkipVerify bool // Only for testing/development
-	ServerName           string
-	RenewalInterval      time.Duration
+	ServerName         string
+	RenewalInterval    time.Duration
 }
 
 // mTLSClient holds client-side mTLS configuration
@@ -372,9 +372,9 @@ func VerifyCertificate(certPEM []byte, caPool *x509.CertPool) error {
 	}
 
 	opts := x509.VerifyOptions{
-		Roots:         caPool,
-		CurrentTime:   time.Now(),
-		KeyUsages:     []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
+		Roots:       caPool,
+		CurrentTime: time.Now(),
+		KeyUsages:   []x509.ExtKeyUsage{x509.ExtKeyUsageClientAuth},
 	}
 
 	if _, err := cert.Verify(opts); err != nil {

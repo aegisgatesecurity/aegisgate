@@ -55,11 +55,11 @@ func TestSignatureVerification(t *testing.T) {
 	}
 
 	template := &x509.Certificate{
-		Subject:        pkix.Name{CommonName: "ECDSA Test"},
-		SerialNumber:   big.NewInt(2),
-		KeyUsage:       x509.KeyUsageDigitalSignature,
-		NotBefore:      time.Now().Add(-1 * time.Hour),
-		NotAfter:       time.Now().Add(365 * 24 * time.Hour),
+		Subject:      pkix.Name{CommonName: "ECDSA Test"},
+		SerialNumber: big.NewInt(2),
+		KeyUsage:     x509.KeyUsageDigitalSignature,
+		NotBefore:    time.Now().Add(-1 * time.Hour),
+		NotAfter:     time.Now().Add(365 * 24 * time.Hour),
 	}
 
 	certDER, err := x509.CreateCertificate(rand.Reader, template, template, &key.PublicKey, key)
@@ -169,11 +169,11 @@ func TestECDSASignatureVerification(t *testing.T) {
 	}
 
 	template := &x509.Certificate{
-		Subject:        pkix.Name{CommonName: "ECDSA Test"},
-		SerialNumber:   big.NewInt(12),
-		KeyUsage:       x509.KeyUsageDigitalSignature,
-		NotBefore:      time.Now().Add(-1 * time.Hour),
-		NotAfter:       time.Now().Add(365 * 24 * time.Hour),
+		Subject:      pkix.Name{CommonName: "ECDSA Test"},
+		SerialNumber: big.NewInt(12),
+		KeyUsage:     x509.KeyUsageDigitalSignature,
+		NotBefore:    time.Now().Add(-1 * time.Hour),
+		NotAfter:     time.Now().Add(365 * 24 * time.Hour),
 	}
 
 	certDER, err := x509.CreateCertificate(rand.Reader, template, template, &key.PublicKey, key)

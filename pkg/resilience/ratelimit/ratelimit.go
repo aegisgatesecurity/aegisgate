@@ -11,9 +11,9 @@ import (
 
 // RateLimiter implements token bucket rate limiting
 type RateLimiter struct {
-	mu      sync.RWMutex
-	limits  map[string]*rate.Limiter
-	config  *Config
+	mu     sync.RWMutex
+	limits map[string]*rate.Limiter
+	config *Config
 }
 
 // Config holds rate limiter configuration

@@ -20,7 +20,7 @@ func TestExecutorExecute(t *testing.T) {
 	resolver := &Resolver{}
 	exec := NewExecutor(resolver)
 	ctx := context.Background()
-	
+
 	// Test simple query
 	resp := exec.Execute(ctx, `query { health }`, nil)
 	if resp == nil {
@@ -31,7 +31,7 @@ func TestExecutorExecute(t *testing.T) {
 func TestExecutorParse(t *testing.T) {
 	resolver := &Resolver{}
 	exec := NewExecutor(resolver)
-	
+
 	// Test parsing with valid GraphQL-like query
 	doc, err := exec.parse(`query { health }`)
 	if err != nil {
@@ -47,7 +47,7 @@ func TestResponse(t *testing.T) {
 		Data:   map[string]interface{}{"key": "value"},
 		Errors: []*Error{{Message: "test error"}},
 	}
-	
+
 	if resp.Data == nil {
 		t.Error("Data should not be nil")
 	}
@@ -58,11 +58,11 @@ func TestResponse(t *testing.T) {
 
 func TestError(t *testing.T) {
 	err := &Error{
-		Message: "test error",
+		Message:   "test error",
 		Locations: []Location{{Line: 1, Column: 1}},
-		Path:     []interface{}{"root", "field"},
+		Path:      []interface{}{"root", "field"},
 	}
-	
+
 	if err.Message != "test error" {
 		t.Errorf("expected message 'test error', got %s", err.Message)
 	}
@@ -80,7 +80,7 @@ func TestDocument(t *testing.T) {
 			},
 		},
 	}
-	
+
 	if doc.Operations["testOp"] == nil {
 		t.Error("operation not set")
 	}

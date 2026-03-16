@@ -21,12 +21,12 @@ const (
 
 // Version represents an API version
 type Version struct {
-	Major      int
-	Minor      int
-	Label      string     // e.g., "beta", "alpha", "rc1"
-	Deprecated bool       // Version is deprecated
-	Sunset     *time.Time // When version will be removed
-	Unsupported bool     // Version is no longer supported
+	Major       int
+	Minor       int
+	Label       string     // e.g., "beta", "alpha", "rc1"
+	Deprecated  bool       // Version is deprecated
+	Sunset      *time.Time // When version will be removed
+	Unsupported bool       // Version is no longer supported
 }
 
 // String returns version string (e.g., "v1", "v2beta", "v1.2")
@@ -120,7 +120,7 @@ type VersionManager struct {
 	mu         sync.RWMutex
 	versions   map[string]*Version
 	deprecated map[string]string // deprecated -> replacement
-	supported  []string         // sorted list of supported versions
+	supported  []string          // sorted list of supported versions
 	defaultVer string
 }
 
@@ -274,9 +274,9 @@ func (v VersionList) Sort() []string {
 // VersionNegotiator handles API version negotiation
 type VersionNegotiator struct {
 	manager     *VersionManager
-	headerName  string    // Default: "Accept-Version"
-	queryParam  string    // Default: "version"
-	pathPattern string    // URL pattern for version in path
+	headerName  string // Default: "Accept-Version"
+	queryParam  string // Default: "version"
+	pathPattern string // URL pattern for version in path
 }
 
 // NewVersionNegotiator creates a new version negotiator
@@ -421,7 +421,7 @@ func (n *VersionNegotiator) parseContentType(accept string) string {
 	pattern := regexp.MustCompile(`application/vnd\.aegisgate\.v(\d+(?:\.\d+)?(?:-[\w]+)?)`)
 	matches := pattern.FindStringSubmatch(accept)
 	if matches != nil {
-		return "v" + matches[1]  // Return with "v" prefix
+		return "v" + matches[1] // Return with "v" prefix
 	}
 	return ""
 }

@@ -13,19 +13,19 @@ import (
 
 func TestNewKeyManager(t *testing.T) {
 	tests := []struct {
-		name        string
+		name         string
 		keyStorePath string
 	}{
 		{
-			name:        "empty path",
+			name:         "empty path",
 			keyStorePath: "",
 		},
 		{
-			name:        "valid path",
+			name:         "valid path",
 			keyStorePath: "/tmp/keyStore",
 		},
 		{
-			name:        "nested path",
+			name:         "nested path",
 			keyStorePath: "/tmp/keys/subfolder",
 		},
 	}
@@ -54,12 +54,12 @@ func TestNewSignatureVerifier(t *testing.T) {
 	if sv == nil {
 		t.Fatal("NewSignatureVerifier() returned nil")
 	}
-	
+
 	// Check default state
 	if !sv.IsEnabled() {
 		t.Log("SignatureVerifier starts disabled")
 	}
-	
+
 	if !sv.IsStrictModeEnabled() {
 		t.Log("SignatureVerifier starts in strict mode")
 	}
@@ -139,7 +139,7 @@ func TestNewSignatureValidationService(t *testing.T) {
 	if stats == nil {
 		t.Error("GetVerificationStats() returned nil")
 	}
-	t.Logf("Verification stats: Total=%d, Success=%d, Failed=%d", 
+	t.Logf("Verification stats: Total=%d, Success=%d, Failed=%d",
 		stats.TotalVerifications, stats.Successful, stats.Failed)
 }
 

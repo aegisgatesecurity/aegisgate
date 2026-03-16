@@ -9,7 +9,7 @@ import (
 func TestNewLicenseManager(t *testing.T) {
 	features := []string{"feature1", "feature2"}
 	lm := NewLicenseManager("enterprise", features)
-	
+
 	if lm == nil {
 		t.Fatal("NewLicenseManager returned nil")
 	}
@@ -24,7 +24,7 @@ func TestNewLicenseManager(t *testing.T) {
 func TestGetTier(t *testing.T) {
 	ctx := context.Background()
 	lm := NewLicenseManager("pro", []string{"feature1"})
-	
+
 	tier := lm.GetTier(ctx)
 	if tier != "pro" {
 		t.Errorf("expected tier pro, got %s", tier)
@@ -34,7 +34,7 @@ func TestGetTier(t *testing.T) {
 func TestIsFeatureLicensed(t *testing.T) {
 	ctx := context.Background()
 	lm := NewLicenseManager("enterprise", []string{"feature1", "feature2"})
-	
+
 	if !lm.IsFeatureLicensed(ctx, "feature1") {
 		t.Error("expected feature1 to be licensed")
 	}
@@ -49,7 +49,7 @@ func TestIsFeatureLicensed(t *testing.T) {
 func TestValidate(t *testing.T) {
 	ctx := context.Background()
 	lm := NewLicenseManager("standard", []string{})
-	
+
 	err := lm.Validate(ctx)
 	if err != nil {
 		t.Errorf("unexpected error: %v", err)
@@ -60,12 +60,12 @@ func TestGetFeatures(t *testing.T) {
 	ctx := context.Background()
 	features := []string{"a", "b", "c"}
 	lm := NewLicenseManager("trial", features)
-	
+
 	result := lm.GetFeatures(ctx)
 	if len(result) != 3 {
 		t.Errorf("expected 3 features, got %d", len(result))
 	}
-	
+
 	// Test empty features
 	lm2 := NewLicenseManager("free", []string{})
 	result2 := lm2.GetFeatures(ctx)

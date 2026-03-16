@@ -118,14 +118,16 @@ func (hf *HIPAAFramework) CheckResponse(ctx context.Context, resp *common.HTTPRe
 	return []common.Finding{}, nil
 }
 
-func (hf *HIPAAFramework) GetName() string        { return FrameworkName }
-func (hf *HIPAAFramework) GetVersion() string     { return FrameworkVersion }
-func (hf *HIPAAFramework) GetDescription() string { return "HIPAA compliance for healthcare AI systems" }
-func (hf *HIPAAFramework) GetFrameworkID() string   { return "hipaa-2023" }
-func (hf *HIPAAFramework) GetPatternCount() int    { return len(hf.safeguards) }
-func (hf *HIPAAFramework) IsEnabled() bool       { return hf.enabled }
-func (hf *HIPAAFramework) Enable()                 { hf.enabled = true }
-func (hf *HIPAAFramework) Disable()                { hf.enabled = false }
+func (hf *HIPAAFramework) GetName() string    { return FrameworkName }
+func (hf *HIPAAFramework) GetVersion() string { return FrameworkVersion }
+func (hf *HIPAAFramework) GetDescription() string {
+	return "HIPAA compliance for healthcare AI systems"
+}
+func (hf *HIPAAFramework) GetFrameworkID() string { return "hipaa-2023" }
+func (hf *HIPAAFramework) GetPatternCount() int   { return len(hf.safeguards) }
+func (hf *HIPAAFramework) IsEnabled() bool        { return hf.enabled }
+func (hf *HIPAAFramework) Enable()                { hf.enabled = true }
+func (hf *HIPAAFramework) Disable()               { hf.enabled = false }
 
 func (hf *HIPAAFramework) Configure(config map[string]interface{}) error {
 	return nil
@@ -141,4 +143,3 @@ func (hf *HIPAAFramework) GetSeverityLevels() []common.Severity {
 }
 
 var _ common.Framework = (*HIPAAFramework)(nil)
-

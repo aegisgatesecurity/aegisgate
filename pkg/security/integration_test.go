@@ -112,49 +112,49 @@ func TestFullSecurityChain(t *testing.T) {
 			csrfConfig := DefaultCSRFConfig()
 			csrfMiddleware := NewCSRFMiddleware(csrfConfig)
 			defer csrfMiddleware.Stop()
-			
+
 			headersChain := SecurityHeadersMiddleware(DefaultSecurityHeadersConfig())
-			
+
 			appHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.Header().Set("Content-Type", "application/json")
 				w.WriteHeader(http.StatusOK)
 				w.Write([]byte(tt.expectBody))
 			})
-			
+
 			// Build chain
 			chain := recovery.Handler(
 				headersChain(
 					csrfMiddleware.Handler(appHandler),
 				),
 			)
-			
+
 			var bodyReader io.Reader
 			if tt.body != "" {
 				bodyReader = strings.NewReader(tt.body)
 			}
-			
+
 			req := httptest.NewRequest(tt.method, tt.path, bodyReader)
 			if tt.body != "" {
 				req.Header.Set("Content-Type", "application/json")
 			}
-			
+
 			if tt.setupRequest != nil {
 				tt.setupRequest(req)
 			}
-			
+
 			rr := httptest.NewRecorder()
 			chain.ServeHTTP(rr, req)
-			
+
 			if rr.Code != tt.expectedStatus {
 				t.Fatalf("expected status %d, got %d", tt.expectedStatus, rr.Code)
 			}
-			
+
 			for header, expectedValue := range tt.expectHeaders {
 				if value := rr.Header().Get(header); value != expectedValue {
 					t.Errorf("expected header %s=%s, got %s", header, expectedValue, value)
 				}
 			}
-			
+
 			if tt.expectBody != "" {
 				if !strings.Contains(rr.Body.String(), tt.expectBody) {
 					t.Errorf("expected body to contain %q, got %q", tt.expectBody, rr.Body.String())
@@ -173,26 +173,26 @@ func TestPanicRecoveryWithSecurityChain(t *testing.T) {
 	csrfConfig := DefaultCSRFConfig()
 	csrfMiddleware := NewCSRFMiddleware(csrfConfig)
 	defer csrfMiddleware.Stop()
-	
+
 	panicHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		panic("simulated panic")
 	})
-	
+
 	headersChain := SecurityHeadersMiddleware(DefaultSecurityHeadersConfig())
 	chain := recovery.Handler(
 		headersChain(
 			csrfMiddleware.Handler(panicHandler),
 		),
 	)
-	
+
 	req := httptest.NewRequest(http.MethodGet, "/panic", nil)
 	rr := httptest.NewRecorder()
 	chain.ServeHTTP(rr, req)
-	
+
 	if rr.Code != http.StatusInternalServerError {
 		t.Errorf("expected status %d, got %d", http.StatusInternalServerError, rr.Code)
 	}
-	
+
 	if rr.Header().Get("X-Content-Type-Options") != "nosniff" {
 		t.Error("expected X-Content-Type-Options header to be set")
 	}
@@ -207,33 +207,33 @@ func TestConcurrentSecurityChain(t *testing.T) {
 	csrfConfig := DefaultCSRFConfig()
 	csrfMiddleware := NewCSRFMiddleware(csrfConfig)
 	defer csrfMiddleware.Stop()
-	
+
 	headersChain := SecurityHeadersMiddleware(DefaultSecurityHeadersConfig())
-	
+
 	var successCount int32
 	var csrfBlocked int32
-	
+
 	appHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		atomic.AddInt32(&successCount, 1)
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
-	
+
 	chain := recovery.Handler(
 		headersChain(
 			csrfMiddleware.Handler(appHandler),
 		),
 	)
-	
+
 	numRequests := 50
 	var wg sync.WaitGroup
 	errors := make(chan error, numRequests)
-	
+
 	for i := 0; i < numRequests; i++ {
 		wg.Add(1)
 		go func(index int) {
 			defer wg.Done()
-			
+
 			if index%2 == 0 {
 				req := httptest.NewRequest(http.MethodGet, "/test", nil)
 				rr := httptest.NewRecorder()
@@ -254,16 +254,16 @@ func TestConcurrentSecurityChain(t *testing.T) {
 			}
 		}(i)
 	}
-	
+
 	wg.Wait()
 	close(errors)
-	
+
 	for err := range errors {
 		t.Error(err)
 	}
-	
+
 	t.Logf("Successful: %d, Blocked: %d", successCount, csrfBlocked)
-	
+
 	if successCount != int32(numRequests/2) {
 		t.Errorf("expected %d successful, got %d", numRequests/2, successCount)
 	}
@@ -280,18 +280,18 @@ func TestCSRFTokenFlow(t *testing.T) {
 	csrfConfig := DefaultCSRFConfig()
 	csrfMiddleware := NewCSRFMiddleware(csrfConfig)
 	defer csrfMiddleware.Stop()
-	
+
 	// First request to get token
 	appHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte("ok"))
 	})
-	
+
 	// GET request should set CSRF cookie
 	req := httptest.NewRequest(http.MethodGet, "/", nil)
 	rr := httptest.NewRecorder()
 	csrfMiddleware.Handler(appHandler).ServeHTTP(rr, req)
-	
+
 	// Extract cookie
 	cookies := rr.Result().Cookies()
 	var csrfCookie *http.Cookie
@@ -301,15 +301,15 @@ func TestCSRFTokenFlow(t *testing.T) {
 			break
 		}
 	}
-	
+
 	if csrfCookie == nil {
 		t.Fatal("expected CSRF cookie to be set")
 	}
-	
+
 	if csrfCookie.HttpOnly != true {
 		t.Error("expected CSRF cookie to be HttpOnly")
 	}
-	
+
 	if csrfCookie.Secure != true {
 		t.Error("expected CSRF cookie to be Secure")
 	}
@@ -349,15 +349,15 @@ func TestSecurityHeadersApplied(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			headersChain := SecurityHeadersMiddleware(tt.config)
-			
+
 			handler := headersChain(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				w.WriteHeader(http.StatusOK)
 			}))
-			
+
 			req := httptest.NewRequest(http.MethodGet, "/", nil)
 			rr := httptest.NewRecorder()
 			handler.ServeHTTP(rr, req)
-			
+
 			if got := rr.Header().Get(tt.header); got != tt.value {
 				t.Errorf("expected %s=%q, got %q", tt.header, tt.value, got)
 			}

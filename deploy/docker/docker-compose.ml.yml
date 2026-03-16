@@ -25,37 +25,37 @@ services:
       - AEGISGATE_BIND_ADDRESS=:8443
       - AEGISGATE_UPSTREAM=${AEGISGATE_UPSTREAM:-http://llm-backend:8080}
       - AEGISGATE_LOG_LEVEL=info
-      
+
       # ML Configuration
       - AEGISGATE_ML_ENABLED=true
       - AEGISGATE_ML_SENSITIVITY=${ML_SENSITIVITY:-medium}
       - AEGISGATE_ML_SAMPLE_RATE=${ML_SAMPLE_RATE:-100}
-      
+
       # TLS (using self-signed for development)
       - AEGISGATE_TLS_MODE=${TLS_MODE:-self-signed}
       - AEGISGATE_CERT_DIR=/certs
-      
+
       # Compliance
       - AEGISGATE_ATLAS_ENABLED=true
-      
+
       # SIEM
       - AEGISGATE_SIEM_ENABLED=${SIEM_ENABLED:-false}
       # - SPLUNK_ENDPOINT=${SPLUNK_ENDPOINT}
       # - SPLUNK_KEY=${SPLUNK_KEY}
-      
+
       # Security
       - AEGISGATE_FIPS_ENABLED=${FIPS_ENABLED:-false}
       - AEGISGATE_AUDIT_LOG=true
     volumes:
       # Certificates
       - ./certs:/certs:ro
-      
+
       # Configuration
       - ./config:/config:ro
-      
+
       # Logs
       - aegisgate-logs:/var/log/aegisgate
-      
+
       # Audit logs (persistent)
       - aegisgate-audit:/var/log/aegisgate/audit
     networks:

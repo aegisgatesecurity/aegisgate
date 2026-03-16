@@ -47,9 +47,9 @@ func (l *TestLogger) GetLogs() string {
 type TestFixture struct {
 	Name        string                 `json:"name"`
 	Category    string                 `json:"category"`
-	Input       map[string]string     `json:"input"`
+	Input       map[string]string      `json:"input"`
 	Expected    map[string]interface{} `json:"expected"`
-	ATLASParams ATLASParams           `json:"atlas_params"`
+	ATLASParams ATLASParams            `json:"atlas_params"`
 }
 
 // ATLASParams holds ATLAS-specific test parameters
@@ -200,9 +200,9 @@ type TestConfig struct {
 	ExcludedParams []string `json:"excluded_params"`
 
 	// Server Configuration
-	UpstreamURL      string        `json:"upstream_url"`
-	Timeout          time.Duration `json:"timeout"`
-	MaxRetries       int           `json:"max_retries"`
+	UpstreamURL string        `json:"upstream_url"`
+	Timeout     time.Duration `json:"timeout"`
+	MaxRetries  int           `json:"max_retries"`
 
 	// Test Configuration
 	Parallel  bool          `json:"parallel"`
@@ -214,16 +214,16 @@ type TestConfig struct {
 // DefaultTestConfig returns default test configuration
 func DefaultTestConfig() TestConfig {
 	return TestConfig{
-		ATLASEnabled:    true,
-		ATLASBlockMode:  true,
-		ATLASThreshold:  0.75,
-		ExcludedParams:  []string{"api_key", "token"},
-		Timeout:         30 * time.Second,
-		MaxRetries:      3,
-		Parallel:        false,
-		Verbose:         true,
-		Seed:            time.Now().UnixNano(),
-		TimeoutDS:       5 * time.Minute,
+		ATLASEnabled:   true,
+		ATLASBlockMode: true,
+		ATLASThreshold: 0.75,
+		ExcludedParams: []string{"api_key", "token"},
+		Timeout:        30 * time.Second,
+		MaxRetries:     3,
+		Parallel:       false,
+		Verbose:        true,
+		Seed:           time.Now().UnixNano(),
+		TimeoutDS:      5 * time.Minute,
 	}
 }
 

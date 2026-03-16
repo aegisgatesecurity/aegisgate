@@ -15,16 +15,16 @@ global:
 filter:
   # Minimum severity to forward (critical, high, medium, low, info)
   min_severity: "info"
-  
+
   # Include only these categories (empty = all)
   include_categories: []
-  
+
   # Exclude these categories
   exclude_categories: []
-  
+
   # Include only these event types (empty = all)
   include_types: []
-  
+
   # Exclude these event types
   exclude_types:
     - "health_check"

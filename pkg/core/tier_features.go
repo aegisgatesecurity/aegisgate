@@ -13,45 +13,45 @@ var FeatureTierMapping = map[string]Tier{
 	// ============================================================================
 
 	// Basic Connectivity
-	"ai_proxy":                  TierCommunity,
-	"openai":                    TierCommunity,
-	"anthropic":                 TierCommunity,
-	"cohere":                    TierDeveloper,
-	"azure_openai":              TierDeveloper,
-	"aws_bedrock":               TierProfessional,
-	"google_vertex":             TierEnterprise,
-	"custom_provider_adapter":   TierProfessional,
-	"internal_ai_tool":          TierEnterprise,
-	"request_caching":          TierDeveloper,
-	"request_dedup":             TierDeveloper,
-	"batch_processing":          TierProfessional,
-	"connection_pooling":        TierProfessional,
-	"streaming":                 TierCommunity,
+	"ai_proxy":                TierCommunity,
+	"openai":                  TierCommunity,
+	"anthropic":               TierCommunity,
+	"cohere":                  TierDeveloper,
+	"azure_openai":            TierDeveloper,
+	"aws_bedrock":             TierProfessional,
+	"google_vertex":           TierEnterprise,
+	"custom_provider_adapter": TierProfessional,
+	"internal_ai_tool":        TierEnterprise,
+	"request_caching":         TierDeveloper,
+	"request_dedup":           TierDeveloper,
+	"batch_processing":        TierProfessional,
+	"connection_pooling":      TierProfessional,
+	"streaming":               TierCommunity,
 
 	// ============================================================================
 	// SECURITY
 	// ============================================================================
 
-	"tls_termination":           TierCommunity,
-	"mtls":                      TierDeveloper,
-	"pki_attestation":           TierProfessional,
-	"secret_rotation":           TierProfessional,
-	"oauth_sso":                 TierDeveloper,
-	"saml":                      TierProfessional,
-	"oidc":                      TierProfessional,
-	"ldap_integration":          TierEnterprise,
-	"hardware_token":            TierEnterprise,
-	"hsm_integration":           TierEnterprise,
-	"audit_encryption":          TierProfessional,
-	"fips_compliance":          TierEnterprise,
-	"runtime_hardening":         TierDeveloper,
+	"tls_termination":   TierCommunity,
+	"mtls":              TierDeveloper,
+	"pki_attestation":   TierProfessional,
+	"secret_rotation":   TierProfessional,
+	"oauth_sso":         TierDeveloper,
+	"saml":              TierProfessional,
+	"oidc":              TierProfessional,
+	"ldap_integration":  TierEnterprise,
+	"hardware_token":    TierEnterprise,
+	"hsm_integration":   TierEnterprise,
+	"audit_encryption":  TierProfessional,
+	"fips_compliance":   TierEnterprise,
+	"runtime_hardening": TierDeveloper,
 
 	// ============================================================================
 	// COMPLIANCE FRAMEWORKS - Community
 	// ============================================================================
-	"compliance_owasp":           TierCommunity,
-	"compliance_soc2_view":      TierCommunity,
-	"compliance_gdpr_view":      TierCommunity,
+	"compliance_owasp":     TierCommunity,
+	"compliance_soc2_view": TierCommunity,
+	"compliance_gdpr_view": TierCommunity,
 
 	// ============================================================================
 	// COMPLIANCE FRAMEWORKS - Developer
@@ -62,134 +62,134 @@ var FeatureTierMapping = map[string]Tier{
 	// ============================================================================
 	// COMPLIANCE FRAMEWORKS - Professional
 	// ============================================================================
-	"compliance_hipaa":           TierProfessional,
-	"compliance_pci":            TierProfessional,
-	"compliance_soc2":           TierProfessional,
-	"compliance_gdpr":           TierProfessional,
-	"compliance_nist":           TierProfessional,
-	"compliance_iso27001":       TierProfessional,
+	"compliance_hipaa":            TierProfessional,
+	"compliance_pci":              TierProfessional,
+	"compliance_soc2":             TierProfessional,
+	"compliance_gdpr":             TierProfessional,
+	"compliance_nist":             TierProfessional,
+	"compliance_iso27001":         TierProfessional,
 	"compliance_custom_framework": TierProfessional,
 
 	// ============================================================================
 	// COMPLIANCE FRAMEWORKS - Enterprise
 	// ============================================================================
-	"compliance_iso42001":       TierEnterprise,
-	"compliance_nist_ai_rmf":   TierEnterprise,
-	"compliance_hitrust":       TierEnterprise,
-	"compliance_fedramp":       TierEnterprise,
-	"compliance_atlas":          TierEnterprise,
-	"compliance_cobit":          TierEnterprise,
-	"compliance_nist_csf":       TierEnterprise,
-	"compliance_glba":           TierEnterprise,
-	"compliance_sox":            TierEnterprise,
+	"compliance_iso42001":    TierEnterprise,
+	"compliance_nist_ai_rmf": TierEnterprise,
+	"compliance_hitrust":     TierEnterprise,
+	"compliance_fedramp":     TierEnterprise,
+	"compliance_atlas":       TierEnterprise,
+	"compliance_cobit":       TierEnterprise,
+	"compliance_nist_csf":    TierEnterprise,
+	"compliance_glba":        TierEnterprise,
+	"compliance_sox":         TierEnterprise,
 
 	// ============================================================================
 	// ML & ANOMALY DETECTION
 	// ============================================================================
-	"ml_basic_anomaly":          TierCommunity,
-	"ml_traffic_pattern":        TierCommunity,
-	"ml_cost_anomaly":           TierDeveloper,
-	"ml_usage_anomaly":          TierDeveloper,
-	"ml_behavioral":             TierProfessional,
-	"ml_predictive":             TierProfessional,
-	"ml_threat_detection":       TierProfessional,
-	"ml_custom_models":          TierEnterprise,
-	"ml_realtime_response":      TierEnterprise,
-	"ml_zeroday":                TierEnterprise,
+	"ml_basic_anomaly":     TierCommunity,
+	"ml_traffic_pattern":   TierCommunity,
+	"ml_cost_anomaly":      TierDeveloper,
+	"ml_usage_anomaly":     TierDeveloper,
+	"ml_behavioral":        TierProfessional,
+	"ml_predictive":        TierProfessional,
+	"ml_threat_detection":  TierProfessional,
+	"ml_custom_models":     TierEnterprise,
+	"ml_realtime_response": TierEnterprise,
+	"ml_zeroday":           TierEnterprise,
 
 	// ============================================================================
 	// MULTI-TENANCY
 	// ============================================================================
-	"multi_tenant":              TierProfessional,
-	"granular_permissions":      TierDeveloper,
-	"department_separation":     TierProfessional,
-	"custom_roles":              TierDeveloper,
-	"policy_engine":             TierProfessional,
-	"cross_tenant_analytics":    TierEnterprise,
-	"whitelabel":                TierEnterprise,
-	"custom_domain":            TierEnterprise,
+	"multi_tenant":           TierProfessional,
+	"granular_permissions":   TierDeveloper,
+	"department_separation":  TierProfessional,
+	"custom_roles":           TierDeveloper,
+	"policy_engine":          TierProfessional,
+	"cross_tenant_analytics": TierEnterprise,
+	"whitelabel":             TierEnterprise,
+	"custom_domain":          TierEnterprise,
 
 	// ============================================================================
 	// OBSERVABILITY
 	// ============================================================================
-	"metrics":                   TierCommunity,
-	"request_logging":           TierCommunity,
-	"error_tracking":            TierCommunity,
-	"grafana":                   TierDeveloper,
-	"datadog":                   TierProfessional,
-	"newrelic":                  TierProfessional,
-	"custom_metrics":            TierProfessional,
-	"siem_integration":          TierProfessional,
-	"splunk":                    TierProfessional,
-	"elastic":                   TierProfessional,
-	"qradar":                    TierEnterprise,
-	"azure_sentinel":            TierEnterprise,
-	"aws_cloudwatch":            TierDeveloper,
+	"metrics":          TierCommunity,
+	"request_logging":  TierCommunity,
+	"error_tracking":   TierCommunity,
+	"grafana":          TierDeveloper,
+	"datadog":          TierProfessional,
+	"newrelic":         TierProfessional,
+	"custom_metrics":   TierProfessional,
+	"siem_integration": TierProfessional,
+	"splunk":           TierProfessional,
+	"elastic":          TierProfessional,
+	"qradar":           TierEnterprise,
+	"azure_sentinel":   TierEnterprise,
+	"aws_cloudwatch":   TierDeveloper,
 
 	// ============================================================================
 	// API & INTEGRATIONS
 	// ============================================================================
-	"rest_api":                  TierCommunity,
-	"grpc_api":                  TierDeveloper,
-	"graphql":                   TierEnterprise,
-	"webhooks":                  TierDeveloper,
-	"serverless":                TierEnterprise,
-	"terraform":                 TierDeveloper,
-	"kubernetes":                TierProfessional,
-	"helm":                      TierProfessional,
-	"ansible":                   TierProfessional,
-	"sdk":                       TierProfessional,
-	"browser_extension":        TierEnterprise,
+	"rest_api":          TierCommunity,
+	"grpc_api":          TierDeveloper,
+	"graphql":           TierEnterprise,
+	"webhooks":          TierDeveloper,
+	"serverless":        TierEnterprise,
+	"terraform":         TierDeveloper,
+	"kubernetes":        TierProfessional,
+	"helm":              TierProfessional,
+	"ansible":           TierProfessional,
+	"sdk":               TierProfessional,
+	"browser_extension": TierEnterprise,
 
 	// ============================================================================
 	// STORAGE
 	// ============================================================================
-	"storage_inmemory":           TierCommunity,
-	"storage_file":               TierCommunity,
-	"storage_postgres":           TierDeveloper,
-	"storage_mysql":             TierDeveloper,
-	"storage_redis":             TierDeveloper,
-	"storage_mongo":             TierEnterprise,
-	"storage_s3":                TierProfessional,
-	"data_encryption":           TierDeveloper,
-	"retention_policies":        TierProfessional,
+	"storage_inmemory":   TierCommunity,
+	"storage_file":       TierCommunity,
+	"storage_postgres":   TierDeveloper,
+	"storage_mysql":      TierDeveloper,
+	"storage_redis":      TierDeveloper,
+	"storage_mongo":      TierEnterprise,
+	"storage_s3":         TierProfessional,
+	"data_encryption":    TierDeveloper,
+	"retention_policies": TierProfessional,
 
 	// ============================================================================
 	// DEPLOYMENT
 	// ============================================================================
-	"deploy_docker":              TierCommunity,
-	"deploy_compose":             TierCommunity,
-	"deploy_kubernetes":          TierProfessional,
-	"deploy_terraform":          TierDeveloper,
-	"deploy_helm":                TierProfessional,
-	"deploy_service_mesh":        TierEnterprise,
-	"deploy_autoscale":          TierEnterprise,
-	"deploy_ha":                  TierEnterprise,
-	"deploy_multiregion":        TierEnterprise,
-	"deploy_onprem":             TierEnterprise,
-	"deploy_airgapped":          TierEnterprise,
+	"deploy_docker":       TierCommunity,
+	"deploy_compose":      TierCommunity,
+	"deploy_kubernetes":   TierProfessional,
+	"deploy_terraform":    TierDeveloper,
+	"deploy_helm":         TierProfessional,
+	"deploy_service_mesh": TierEnterprise,
+	"deploy_autoscale":    TierEnterprise,
+	"deploy_ha":           TierEnterprise,
+	"deploy_multiregion":  TierEnterprise,
+	"deploy_onprem":       TierEnterprise,
+	"deploy_airgapped":    TierEnterprise,
 
 	// ============================================================================
 	// SUPPORT
 	// ============================================================================
-	"support_docs":               TierCommunity,
-	"support_forum":              TierCommunity,
-	"support_kb":                 TierDeveloper,
-	"support_email":             TierDeveloper,
-	"support_priority":          TierProfessional,
-	"support_dedicated":         TierEnterprise,
-	"support_phone":             TierEnterprise,
-	"support_247":               TierEnterprise,
+	"support_docs":      TierCommunity,
+	"support_forum":     TierCommunity,
+	"support_kb":        TierDeveloper,
+	"support_email":     TierDeveloper,
+	"support_priority":  TierProfessional,
+	"support_dedicated": TierEnterprise,
+	"support_phone":     TierEnterprise,
+	"support_247":       TierEnterprise,
 
 	// ============================================================================
 	// ADMIN & BILLING
 	// ============================================================================
-	"admin_dashboard":             TierCommunity,
-	"admin_advanced":              TierDeveloper,
-	"admin_enterprise":           TierEnterprise,
-	"license_server":             TierProfessional,
-	"usage_billing":             TierEnterprise,
-	"multi_org":                  TierEnterprise,
+	"admin_dashboard":  TierCommunity,
+	"admin_advanced":   TierDeveloper,
+	"admin_enterprise": TierEnterprise,
+	"license_server":   TierProfessional,
+	"usage_billing":    TierEnterprise,
+	"multi_org":        TierEnterprise,
 }
 
 // GetRequiredTier returns the tier required for a feature
@@ -305,12 +305,12 @@ type TierLimits struct {
 	MaxTenants int
 
 	// Storage Limits
-	LogRetentionDays    int
-	MaxLogSizeMB       int
-	DataRetentionDays  int
+	LogRetentionDays  int
+	MaxLogSizeMB      int
+	DataRetentionDays int
 
 	// Feature Limits
-	MaxCustomRules    int
+	MaxCustomRules   int
 	MaxWebhooks      int
 	MaxCustomDomains int
 
@@ -326,7 +326,7 @@ func (t Tier) GetTierLimits() TierLimits {
 			// Rate Limits - Generous for growth
 			MaxRequestsPerMinute:     200,
 			MaxConcurrentConnections: 5,
-			MaxBurstRequests:        50,
+			MaxBurstRequests:         50,
 
 			// Resource Limits
 			MaxUsers:   3,
@@ -334,14 +334,14 @@ func (t Tier) GetTierLimits() TierLimits {
 			MaxTenants: 1,
 
 			// Storage Limits
-			LogRetentionDays:   1,
+			LogRetentionDays:  1,
 			MaxLogSizeMB:      100,
 			DataRetentionDays: 7,
 
 			// Feature Limits
-			MaxCustomRules:    0,
-			MaxWebhooks:       3,
-			MaxCustomDomains:  0,
+			MaxCustomRules:   0,
+			MaxWebhooks:      3,
+			MaxCustomDomains: 0,
 
 			// Support
 			SupportLevel: "community",
@@ -359,14 +359,14 @@ func (t Tier) GetTierLimits() TierLimits {
 			MaxTenants: 1,
 
 			// Storage Limits
-			LogRetentionDays:   7,
-			MaxLogSizeMB:       1024,
-			DataRetentionDays:  30,
+			LogRetentionDays:  7,
+			MaxLogSizeMB:      1024,
+			DataRetentionDays: 30,
 
 			// Feature Limits
-			MaxCustomRules:    5,
-			MaxWebhooks:       10,
-			MaxCustomDomains:  0,
+			MaxCustomRules:   5,
+			MaxWebhooks:      10,
+			MaxCustomDomains: 0,
 
 			// Support
 			SupportLevel: "email",
@@ -384,14 +384,14 @@ func (t Tier) GetTierLimits() TierLimits {
 			MaxTenants: 25,
 
 			// Storage Limits
-			LogRetentionDays:   30,
-			MaxLogSizeMB:        10240,
-			DataRetentionDays:  90,
+			LogRetentionDays:  30,
+			MaxLogSizeMB:      10240,
+			DataRetentionDays: 90,
 
 			// Feature Limits
-			MaxCustomRules:    -1, // Unlimited
-			MaxWebhooks:       25,
-			MaxCustomDomains:  0,
+			MaxCustomRules:   -1, // Unlimited
+			MaxWebhooks:      25,
+			MaxCustomDomains: 0,
 
 			// Support
 			SupportLevel: "priority",
@@ -409,14 +409,14 @@ func (t Tier) GetTierLimits() TierLimits {
 			MaxTenants: -1,
 
 			// Storage Limits
-			LogRetentionDays:   -1, // Unlimited
-			MaxLogSizeMB:       -1,
-			DataRetentionDays:  -1,
+			LogRetentionDays:  -1, // Unlimited
+			MaxLogSizeMB:      -1,
+			DataRetentionDays: -1,
 
 			// Feature Limits
-			MaxCustomRules:    -1,
-			MaxWebhooks:       -1,
-			MaxCustomDomains:  -1,
+			MaxCustomRules:   -1,
+			MaxWebhooks:      -1,
+			MaxCustomDomains: -1,
 
 			// Support
 			SupportLevel: "24x7",

@@ -38,10 +38,10 @@ func (m *MetricsDataSource) GetMetricsData() (map[string]interface{}, error) {
 			"severity_counts": realtime.SeverityCounts.Get(),
 		},
 		"averages": map[string]interface{}{
-			"scan_duration":  m.collector.GetAverageScanDuration(),
+			"scan_duration": m.collector.GetAverageScanDuration(),
 			"proxy_latency": m.collector.GetAverageProxyLatency(),
 		},
-		"patterns":       stats.TopPatterns,
+		"patterns":        stats.TopPatterns,
 		"category_counts": realtime.CategoryCounts,
 	}, nil
 }

@@ -176,7 +176,7 @@ func (s *AuthService) GetAuthConfig(ctx context.Context, req *GetAuthConfigReque
 	return &GetAuthConfigResponse{
 		SessionTimeout:     int32(cfg.SessionDuration.Seconds()),
 		MaxSessionsPerUser: int32(cfg.MaxSessions),
-		RequireMfa:        cfg.EnableMFA,
+		RequireMfa:         cfg.EnableMFA,
 		LoginAttempts:      5,
 		LockoutDuration:    300,
 		PasswordMinLength:  8,

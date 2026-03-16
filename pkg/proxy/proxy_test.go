@@ -32,34 +32,34 @@ func TestNewProxy(t *testing.T) {
 		{
 			name: "with ML enabled",
 			opts: &Options{
-				BindAddress: ":8443",
-				Upstream:    "http://localhost:8080",
+				BindAddress:       ":8443",
+				Upstream:          "http://localhost:8080",
 				EnableMLDetection: true,
-				MLSensitivity: "medium",
-				MLSampleRate: 100,
+				MLSensitivity:     "medium",
+				MLSampleRate:      100,
 			},
 		},
 		{
 			name: "with ML high sensitivity",
 			opts: &Options{
-				BindAddress: ":8443",
-				Upstream:    "http://localhost:8080",
-				EnableMLDetection: true,
-				MLSensitivity: "high",
+				BindAddress:               ":8443",
+				Upstream:                  "http://localhost:8080",
+				EnableMLDetection:         true,
+				MLSensitivity:             "high",
 				MLBlockOnCriticalSeverity: true,
-				MLBlockOnHighSeverity: true,
-				MLMinScoreToBlock: 2.0,
+				MLBlockOnHighSeverity:     true,
+				MLMinScoreToBlock:         2.0,
 			},
 		},
 	}
-	
+
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := New(tt.opts)
 			if p == nil {
 				t.Fatal("New() returned nil")
 			}
-			
+
 			// Verify defaults applied
 			if p.options.MaxBodySize == 0 {
 				t.Error("MaxBodySize should have a default")
@@ -77,32 +77,32 @@ func TestNewProxy(t *testing.T) {
 // TestProxyOptionsWithML tests ML-specific options
 func TestProxyOptionsWithML(t *testing.T) {
 	opts := &Options{
-		BindAddress: ":8443",
-		Upstream:    "http://localhost:8080",
-		EnableMLDetection: true,
-		MLSensitivity: "paranoid",
-		MLBlockOnCriticalSeverity: true,
-		MLBlockOnHighSeverity: true,
-		MLMinScoreToBlock: 1.5,
-		MLSampleRate: 100,
-		MLExcludedPaths: []string{"/health", "/ready"},
-		MLExcludedMethods: []string{"OPTIONS", "HEAD"},
+		BindAddress:                    ":8443",
+		Upstream:                       "http://localhost:8080",
+		EnableMLDetection:              true,
+		MLSensitivity:                  "paranoid",
+		MLBlockOnCriticalSeverity:      true,
+		MLBlockOnHighSeverity:          true,
+		MLMinScoreToBlock:              1.5,
+		MLSampleRate:                   100,
+		MLExcludedPaths:                []string{"/health", "/ready"},
+		MLExcludedMethods:              []string{"OPTIONS", "HEAD"},
 		EnablePromptInjectionDetection: true,
-		PromptInjectionSensitivity: 90,
-		EnableContentAnalysis: true,
-		EnableBehavioralAnalysis: true,
+		PromptInjectionSensitivity:     90,
+		EnableContentAnalysis:          true,
+		EnableBehavioralAnalysis:       true,
 	}
-	
+
 	p := New(opts)
 	if p == nil {
 		t.Fatal("New() returned nil")
 	}
-	
+
 	// Check ML middleware was created
 	if p.mlMiddleware == nil {
 		t.Error("ML middleware should be created when EnableMLDetection is true")
 	}
-	
+
 	// Verify ML config
 	if p.mlMiddleware != nil {
 		cfg := p.mlMiddleware.Config()
@@ -128,13 +128,13 @@ func TestProxyGetStats(t *testing.T) {
 		Upstream:    "http://localhost:8080",
 		RateLimit:   100,
 	})
-	
+
 	// Get stats before any requests
 	stats := p.GetStats()
 	if stats == nil {
 		t.Fatal("GetStats() returned nil")
 	}
-	
+
 	enabled, ok := stats["enabled"].(bool)
 	if !ok {
 		t.Error("enabled should be a boolean")
@@ -142,7 +142,7 @@ func TestProxyGetStats(t *testing.T) {
 	if enabled {
 		t.Error("proxy should not be enabled before Start()")
 	}
-	
+
 	// Check ML stats when ML is disabled
 	_, hasML := stats["ml"]
 	if hasML {
@@ -153,24 +153,24 @@ func TestProxyGetStats(t *testing.T) {
 // TestProxyGetStatsWithML tests statistics with ML enabled
 func TestProxyGetStatsWithML(t *testing.T) {
 	p := New(&Options{
-		BindAddress: ":8443",
-		Upstream:    "http://localhost:8080",
-		RateLimit:   100,
+		BindAddress:       ":8443",
+		Upstream:          "http://localhost:8080",
+		RateLimit:         100,
 		EnableMLDetection: true,
-		MLSensitivity: "medium",
+		MLSensitivity:     "medium",
 	})
-	
+
 	stats := p.GetStats()
 	if stats == nil {
 		t.Fatal("GetStats() returned nil")
 	}
-	
+
 	// Check ML stats are present
 	mlStats, ok := stats["ml"].(map[string]interface{})
 	if !ok {
 		t.Fatal("ml stats should be present when ML is enabled")
 	}
-	
+
 	if mlStats["total_requests"] == nil {
 		t.Error("ml total_requests should be present")
 	}
@@ -188,12 +188,12 @@ func TestProxyGetHealth(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 	})
-	
+
 	health := p.GetHealth()
 	if health == nil {
 		t.Fatal("GetHealth() returned nil")
 	}
-	
+
 	// Check basic health fields
 	if health["status"] != "healthy" {
 		t.Errorf("Expected status 'healthy', got '%v'", health["status"])
@@ -209,36 +209,36 @@ func TestProxyGetHealth(t *testing.T) {
 // TestRateLimiter tests rate limiting functionality
 func TestRateLimiter(t *testing.T) {
 	rl := NewRateLimiter(10) // 10 requests per minute
-	
+
 	// Should allow initial burst
 	for i := 0; i < 10; i++ {
 		if !rl.Allow() {
 			t.Errorf("Request %d should be allowed", i+1)
 		}
 	}
-	
+
 	// 11th request should be blocked
 	if rl.Allow() {
 		t.Error("11th request should be blocked")
 	}
-	
+
 	rl.Stop()
 }
 
 // TestRateLimiterEmptyBucket tests rate limiter with empty bucket
 func TestRateLimiterEmptyBucket(t *testing.T) {
 	rl := NewRateLimiter(1)
-	
+
 	// Consume the one token
 	if !rl.Allow() {
 		t.Error("First request should be allowed")
 	}
-	
+
 	// Next request should be blocked
 	if rl.Allow() {
 		t.Error("Second request should be blocked")
 	}
-	
+
 	rl.Stop()
 }
 
@@ -248,7 +248,7 @@ func TestProxyIsEnabled(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 	})
-	
+
 	// Before Start(), proxy is not enabled
 	if p.IsEnabled() {
 		t.Error("Proxy should not be enabled before Start()")
@@ -261,7 +261,7 @@ func TestProxyGetScanner(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 	})
-	
+
 	scanner := p.GetScanner()
 	if scanner == nil {
 		t.Error("GetScanner() should not return nil")
@@ -274,10 +274,10 @@ func TestProxySetScanner(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 	})
-	
+
 	// Should not panic with nil
 	p.SetScanner(nil)
-	
+
 	// Set a new scanner
 	// p.SetScanner(scanner.New(nil)) // This would require importing scanner
 }
@@ -289,20 +289,20 @@ func TestProxyGetMLMiddleware(t *testing.T) {
 		BindAddress: ":8443",
 		Upstream:    "http://localhost:8080",
 	})
-	
+
 	ml := p.GetMLMiddleware()
 	if ml != nil {
 		t.Error("ML middleware should be nil when disabled")
 	}
-	
+
 	// Test with ML
 	p2 := New(&Options{
-		BindAddress: ":8443",
-		Upstream:    "http://localhost:8080",
+		BindAddress:       ":8443",
+		Upstream:          "http://localhost:8080",
 		EnableMLDetection: true,
-		MLSensitivity: "medium",
+		MLSensitivity:     "medium",
 	})
-	
+
 	ml2 := p2.GetMLMiddleware()
 	if ml2 == nil {
 		t.Error("ML middleware should not be nil when enabled")
@@ -316,12 +316,12 @@ func TestProxyGetStatsStruct(t *testing.T) {
 		Upstream:    "http://localhost:8080",
 		RateLimit:   100,
 	})
-	
+
 	stats := p.GetStatsStruct()
 	if stats == nil {
 		t.Fatal("GetStatsStruct() returned nil")
 	}
-	
+
 	if stats.RequestsTotal != 0 {
 		t.Errorf("Expected 0 initial requests, got %d", stats.RequestsTotal)
 	}

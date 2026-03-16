@@ -717,4 +717,3 @@ func (m *PCIModule) detectCardData(input string) []string {
 func (m *PCIModule) Dependencies() []string {
 	return []string{"scanner"}
 }
-

@@ -24,18 +24,18 @@ import (
 // MLOptions extends proxy.Options with ML-specific configuration
 type MLOptions struct {
 	// ML Detection settings
-	EnableMLDetection               bool
-	MLSensitivity                  string
-	MLBlockOnCriticalSeverity       bool
-	MLBlockOnHighSeverity           bool
-	MLMinScoreToBlock              float64
-	MLSampleRate                   int
-	MLExcludedPaths                []string
-	MLExcludedMethods               []string
+	EnableMLDetection         bool
+	MLSensitivity             string
+	MLBlockOnCriticalSeverity bool
+	MLBlockOnHighSeverity     bool
+	MLMinScoreToBlock         float64
+	MLSampleRate              int
+	MLExcludedPaths           []string
+	MLExcludedMethods         []string
 
 	// Advanced ML features
-	EnablePromptInjectionDetection  bool
-	PromptInjectionSensitivity      int
+	EnablePromptInjectionDetection bool
+	PromptInjectionSensitivity     int
 	EnableContentAnalysis          bool
 	EnableBehavioralAnalysis       bool
 }
@@ -44,10 +44,10 @@ type MLOptions struct {
 // This is the recommended way to create a proxy with ML detection enabled
 type ProxyWithML struct {
 	*Proxy
-	MLMiddleware        *MLMiddleware
+	MLMiddleware            *MLMiddleware
 	PromptInjectionDetector *ml.PromptInjectionDetector
-	ContentAnalyzer     *ml.ContentAnalyzer
-	BehavioralAnalyzer  *ml.BehavioralAnalyzer
+	ContentAnalyzer         *ml.ContentAnalyzer
+	BehavioralAnalyzer      *ml.BehavioralAnalyzer
 }
 
 // NewProxyWithConfig creates a new proxy from config.Config with ML enabled
@@ -76,8 +76,8 @@ func NewProxyWithConfig(cfg *config.Config) (*ProxyWithML, error) {
 	// Add ML middleware if enabled in config
 	if cfg.ML != nil && cfg.ML.Enabled {
 		mlConfig := &MLMiddlewareConfig{
-			Enabled:                  cfg.ML.Enabled,
-			Sensitivity:              cfg.ML.Sensitivity,
+			Enabled:                 cfg.ML.Enabled,
+			Sensitivity:             cfg.ML.Sensitivity,
 			BlockOnCriticalSeverity: cfg.ML.BlockOnCriticalSeverity,
 			BlockOnHighSeverity:     cfg.ML.BlockOnHighSeverity,
 			MinScoreToBlock:         cfg.ML.MinScoreToBlock,
@@ -123,7 +123,7 @@ func NewProxyWithMLOptions(opts *Options, mlOpts *MLOptions) (*ProxyWithML, erro
 	// Add ML middleware if enabled
 	if mlOpts != nil && mlOpts.EnableMLDetection {
 		mlConfig := &MLMiddlewareConfig{
-			Enabled:                  mlOpts.EnableMLDetection,
+			Enabled:                 mlOpts.EnableMLDetection,
 			Sensitivity:             mlOpts.MLSensitivity,
 			BlockOnCriticalSeverity: mlOpts.MLBlockOnCriticalSeverity,
 			BlockOnHighSeverity:     mlOpts.MLBlockOnHighSeverity,
@@ -183,7 +183,7 @@ func (p *ProxyWithML) GetMLStats() map[string]interface{} {
 	if p.MLMiddleware != nil {
 		mlStats := p.MLMiddleware.GetStats()
 		stats["middleware"] = map[string]interface{}{
-			"total_requests":     mlStats.TotalRequests,
+			"total_requests":    mlStats.TotalRequests,
 			"analyzed_requests": mlStats.AnalyzedRequests,
 			"blocked_requests":  mlStats.BlockedRequests,
 			"anomaly_counts":    mlStats.AnomalyCounts,
@@ -247,14 +247,14 @@ func ConvertConfigToMLOptions(cfg *config.Config) *MLOptions {
 	}
 
 	return &MLOptions{
-		EnableMLDetection:               cfg.ML.Enabled,
+		EnableMLDetection:              cfg.ML.Enabled,
 		MLSensitivity:                  cfg.ML.Sensitivity,
-		MLBlockOnCriticalSeverity:       cfg.ML.BlockOnCriticalSeverity,
+		MLBlockOnCriticalSeverity:      cfg.ML.BlockOnCriticalSeverity,
 		MLBlockOnHighSeverity:          cfg.ML.BlockOnHighSeverity,
 		MLMinScoreToBlock:              cfg.ML.MinScoreToBlock,
 		MLSampleRate:                   cfg.ML.SampleRate,
-		MLExcludedPaths:                 cfg.ML.ExcludedPaths,
-		MLExcludedMethods:               cfg.ML.ExcludedMethods,
+		MLExcludedPaths:                cfg.ML.ExcludedPaths,
+		MLExcludedMethods:              cfg.ML.ExcludedMethods,
 		EnablePromptInjectionDetection: cfg.ML.EnablePromptInjectionDetection,
 		PromptInjectionSensitivity:     cfg.ML.PromptInjectionSensitivity,
 		EnableContentAnalysis:          cfg.ML.EnableContentAnalysis,

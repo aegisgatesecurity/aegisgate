@@ -28,14 +28,14 @@ func (s *ProxyService) GetStats(ctx context.Context, req *GetProxyStatsRequest) 
 
 	return &GetProxyStatsResponse{
 		RequestsTotal:     stats.RequestsTotal,
-		RequestsBlocked:  stats.RequestsBlocked,
-		RequestsAllowed:  stats.RequestsAllowed,
-		BytesIn:          stats.BytesIn,
-		BytesOut:         stats.BytesOut,
+		RequestsBlocked:   stats.RequestsBlocked,
+		RequestsAllowed:   stats.RequestsAllowed,
+		BytesIn:           stats.BytesIn,
+		BytesOut:          stats.BytesOut,
 		ActiveConnections: int32(stats.ActiveConnections),
-		AvgLatencyMs:     stats.AvgLatencyMs,
-		P99LatencyMs:     stats.P99LatencyMs,
-		Errors:           stats.Errors,
+		AvgLatencyMs:      stats.AvgLatencyMs,
+		P99LatencyMs:      stats.P99LatencyMs,
+		Errors:            stats.Errors,
 	}, nil
 }
 
@@ -52,14 +52,14 @@ func (s *ProxyService) GetHealth(ctx context.Context, req *GetProxyHealthRequest
 // GetConfig returns proxy configuration
 func (s *ProxyService) GetConfig(ctx context.Context, req *GetProxyConfigRequest) (*GetProxyConfigResponse, error) {
 	return &GetProxyConfigResponse{
-		Enabled:      true,
-		Host:        "0.0.0.0",
-		Port:        8080,
-		TlsEnabled:  false,
-		RateLimit:   100,
+		Enabled:        true,
+		Host:           "0.0.0.0",
+		Port:           8080,
+		TlsEnabled:     false,
+		RateLimit:      100,
 		RateLimitBurst: 100,
-		CorsEnabled: false,
-		CorsOrigins: []string{},
+		CorsEnabled:    false,
+		CorsOrigins:    []string{},
 	}, nil
 }
 

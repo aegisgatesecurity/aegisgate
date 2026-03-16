@@ -375,8 +375,8 @@ func TestManager_DependencyCheck(t *testing.T) {
 	// Register plugin with dependency
 	mgr.Register(&TestPlugin{
 		metadata: plugin.PluginMetadata{
-			ID:          "dependent",
-			Name:        "Dependent Plugin",
+			ID:           "dependent",
+			Name:         "Dependent Plugin",
 			Dependencies: []string{"dependency"},
 		},
 	})
@@ -469,9 +469,9 @@ func TestManager_GetStatus(t *testing.T) {
 func TestPluginConfig_GetSetting(t *testing.T) {
 	config := &plugin.PluginConfig{
 		Settings: map[string]interface{}{
-			"string_key":  "value",
-			"int_key":     42,
-			"bool_key":    true,
+			"string_key":   "value",
+			"int_key":      42,
+			"bool_key":     true,
 			"duration_key": 30 * time.Second,
 		},
 	}

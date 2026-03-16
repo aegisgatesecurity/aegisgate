@@ -98,15 +98,15 @@ type MLMiddlewareConfig struct {
 // DefaultMLMiddlewareConfig returns sensible defaults for ML middleware
 func DefaultMLMiddlewareConfig() *MLMiddlewareConfig {
 	return &MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:           "medium",
-		BlockOnHighSeverity:   false,
+		Enabled:                 true,
+		Sensitivity:             "medium",
+		BlockOnHighSeverity:     false,
 		BlockOnCriticalSeverity: true,
-		MinScoreToBlock:       3.0,
-		LogAllAnomalies:       true,
-		SampleRate:            100,
-		ExcludedPaths:         []string{"/health", "/ready", "/metrics"},
-		ExcludedMethods:       []string{"OPTIONS", "HEAD"},
+		MinScoreToBlock:         3.0,
+		LogAllAnomalies:         true,
+		SampleRate:              100,
+		ExcludedPaths:           []string{"/health", "/ready", "/metrics"},
+		ExcludedMethods:         []string{"OPTIONS", "HEAD"},
 	}
 }
 
@@ -124,9 +124,9 @@ type MLAnomalyResult struct {
 
 // MLMiddleware provides ML-based anomaly detection for HTTP traffic
 type MLMiddleware struct {
-	config  *MLMiddlewareConfig
-	mu      sync.RWMutex
-	stats   *MLStats
+	config *MLMiddlewareConfig
+	mu     sync.RWMutex
+	stats  *MLStats
 }
 
 // MLStats holds statistics about ML detection
@@ -163,9 +163,9 @@ func NewMLMiddleware(config *MLMiddlewareConfig) (*MLMiddleware, error) {
 
 	detectorConfig := ml.Config{
 		Sensitivity:      mlSensitivity,
-		WindowSize:      1000,
-		ZThreshold:      3.0,
-		MinSamples:      10,
+		WindowSize:       1000,
+		ZThreshold:       3.0,
+		MinSamples:       10,
 		EntropyThreshold: 4.5,
 	}
 	detector := ml.New(detectorConfig)
@@ -295,9 +295,9 @@ func (m *MLMiddleware) analyzeRequest(r *http.Request) *MLAnomalyResult {
 
 	// Create traffic sample
 	sample := ml.TrafficSample{
-		Timestamp: time.Now(),
-		Volume:    1,
-		Size:      contentLength,
+		Timestamp:  time.Now(),
+		Volume:     1,
+		Size:       contentLength,
 		Violations: 0,
 	}
 
@@ -421,12 +421,12 @@ func (m *MLMiddleware) blockRequest(w http.ResponseWriter, r *http.Request, resu
 
 	// Write response body
 	blockResponse := map[string]interface{}{
-		"status":         "blocked",
-		"reason":         result.BlockingReason,
-		"anomaly_count":  len(result.Anomalies),
-		"anomalies":      result.Anomalies,
-		"severity":       result.SeverityCounts,
-		"analysis_time":  result.AnalysisDuration.Milliseconds(),
+		"status":        "blocked",
+		"reason":        result.BlockingReason,
+		"anomaly_count": len(result.Anomalies),
+		"anomalies":     result.Anomalies,
+		"severity":      result.SeverityCounts,
+		"analysis_time": result.AnalysisDuration.Milliseconds(),
 	}
 
 	if m.config.Sensitivity == "paranoid" {
@@ -452,9 +452,9 @@ func (m *MLMiddleware) UpdateConfig(config *MLMiddlewareConfig) error {
 
 		detectorConfig := ml.Config{
 			Sensitivity:      mlSensitivity,
-			WindowSize:      1000,
-			ZThreshold:      3.0,
-			MinSamples:      10,
+			WindowSize:       1000,
+			ZThreshold:       3.0,
+			MinSamples:       10,
 			EntropyThreshold: 4.5,
 		}
 		detector := ml.New(detectorConfig)
@@ -506,13 +506,13 @@ func MLMiddlewareFromPolicy(policyData map[string]interface{}) (*MLMiddleware, e
 
 	// Extract ML configuration from policy map
 	mlConfig := &MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:          "medium",
-		BlockOnHighSeverity:  false,
+		Enabled:                 true,
+		Sensitivity:             "medium",
+		BlockOnHighSeverity:     false,
 		BlockOnCriticalSeverity: true,
-		MinScoreToBlock:      3.0,
-		LogAllAnomalies:      true,
-		SampleRate:           100,
+		MinScoreToBlock:         3.0,
+		LogAllAnomalies:         true,
+		SampleRate:              100,
 	}
 
 	// Parse policy data if provided

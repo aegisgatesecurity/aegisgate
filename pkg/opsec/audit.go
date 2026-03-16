@@ -18,10 +18,10 @@ type AuditLevel int
 
 const (
 	AuditLevelInfo     AuditLevel = iota // Informational events
-	AuditLevelWarning                     // Warning events
-	AuditLevelError                       // Error events
-	AuditLevelCritical                    // Critical events
-	AuditLevelAlert                       // Alert events
+	AuditLevelWarning                    // Warning events
+	AuditLevelError                      // Error events
+	AuditLevelCritical                   // Critical events
+	AuditLevelAlert                      // Alert events
 )
 
 // String returns the string representation of the audit level
@@ -72,23 +72,23 @@ const (
 
 // SecureAuditLog provides an in-memory audit log with hash chain integrity
 type SecureAuditLog struct {
-	mu            sync.RWMutex
-	Entries       []*AuditEntry
-	LastHash      string
-	Count         int
-	enabled       bool
-	logIntegrity  bool
-	callback      func(*AuditEntry)
+	mu           sync.RWMutex
+	Entries      []*AuditEntry
+	LastHash     string
+	Count        int
+	enabled      bool
+	logIntegrity bool
+	callback     func(*AuditEntry)
 	maxEntries   int
 }
 
 // NewSecureAuditLog creates a new secure audit log
 func NewSecureAuditLog() *SecureAuditLog {
 	return &SecureAuditLog{
-		Entries:     make([]*AuditEntry, 0),
-		enabled:     true,
+		Entries:      make([]*AuditEntry, 0),
+		enabled:      true,
 		logIntegrity: true,
-		maxEntries: 100000,
+		maxEntries:   100000,
 	}
 }
 
@@ -300,9 +300,9 @@ func (a *SecureAuditLog) ExportToJSON() ([]byte, error) {
 
 	export := struct {
 		Entries    []*AuditEntry `json:"entries"`
-		LastHash   string       `json:"last_hash"`
-		Count      int          `json:"count"`
-		ExportedAt time.Time   `json:"exported_at"`
+		LastHash   string        `json:"last_hash"`
+		Count      int           `json:"count"`
+		ExportedAt time.Time     `json:"exported_at"`
 	}{
 		Entries:    a.Entries,
 		LastHash:   a.LastHash,
@@ -317,8 +317,8 @@ func (a *SecureAuditLog) ExportToJSON() ([]byte, error) {
 func (a *SecureAuditLog) ImportFromJSON(data []byte) error {
 	export := struct {
 		Entries  []*AuditEntry `json:"entries"`
-		LastHash string       `json:"last_hash"`
-		Count    int          `json:"count"`
+		LastHash string        `json:"last_hash"`
+		Count    int           `json:"count"`
 	}{}
 
 	if err := json.Unmarshal(data, &export); err != nil {
@@ -345,16 +345,16 @@ type StorageBackend interface {
 
 // AuditFilter defines criteria for querying audit logs
 type AuditFilter struct {
-	StartTime   time.Time
-	EndTime     time.Time
-	Levels      []AuditLevel
-	EventTypes  []string
-	Compliance  []string // HIPAA, PCI-DSS, SOC2
-	TenantID    string
-	Source      string
-	SearchText  string
-	Limit       int
-	Offset      int
+	StartTime  time.Time
+	EndTime    time.Time
+	Levels     []AuditLevel
+	EventTypes []string
+	Compliance []string // HIPAA, PCI-DSS, SOC2
+	TenantID   string
+	Source     string
+	SearchText string
+	Limit      int
+	Offset     int
 }
 
 // FileStorageBackend provides filesystem-based persistent storage
@@ -605,13 +605,13 @@ type AlertCallback func(ctx context.Context, entry *AuditEntry) error
 // ComplianceAuditLog extends SecureAuditLog with compliance-specific features
 type ComplianceAuditLog struct {
 	*SecureAuditLog
-	storage            StorageBackend
-	retentionPeriod    RetentionPeriod
-	retentionUntil     time.Time
-	alertCallbacks     map[AuditLevel][]AlertCallback
-	complianceMapping  map[string][]string
-	tenantID           string
-	mu                 sync.RWMutex
+	storage           StorageBackend
+	retentionPeriod   RetentionPeriod
+	retentionUntil    time.Time
+	alertCallbacks    map[AuditLevel][]AlertCallback
+	complianceMapping map[string][]string
+	tenantID          string
+	mu                sync.RWMutex
 }
 
 // NewComplianceAuditLog creates a new compliance-aware audit log
@@ -622,7 +622,7 @@ func NewComplianceAuditLog(retention RetentionPeriod, storage StorageBackend, te
 		retentionPeriod:   retention,
 		alertCallbacks:    make(map[AuditLevel][]AlertCallback),
 		complianceMapping: make(map[string][]string),
-		tenantID:         tenantID,
+		tenantID:          tenantID,
 	}
 
 	cal.initComplianceMappings()
@@ -796,8 +796,8 @@ func (cal *ComplianceAuditLog) ExportForCompliance(ctx context.Context, format s
 		return json.MarshalIndent(struct {
 			Entries       []*AuditEntry   `json:"entries"`
 			Retention     RetentionPeriod `json:"retention_period_days"`
-			ExportedAt    time.Time      `json:"exported_at"`
-			IntegrityHash string         `json:"integrity_hash"`
+			ExportedAt    time.Time       `json:"exported_at"`
+			IntegrityHash string          `json:"integrity_hash"`
 		}{
 			Entries:       entries,
 			Retention:     cal.retentionPeriod,

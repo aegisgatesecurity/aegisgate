@@ -53,22 +53,22 @@ func HasScope(scopes []APIKeyScope, target APIKeyScope) bool {
 
 // APIKey represents an API key for programmatic access
 type APIKey struct {
-	ID             string        `json:"id"`
-	Name           string        `json:"name"`
-	KeyPrefix      string        `json:"key_prefix"` // First 8 chars for identification
-	KeyHash        string        `json:"-"`           // Never exposed
-	UserID         string        `json:"user_id"`
-	Scopes         []APIKeyScope `json:"scopes"`
-	ExpiresAt      *time.Time    `json:"expires_at,omitempty"`
-	LastUsedAt     *time.Time    `json:"last_used_at,omitempty"`
-	RateLimit      int           `json:"rate_limit"` // Requests per minute
-	RateLimitCurr  int           `json:"-"`
-	RateLimitReset time.Time     `json:"-"`
-	Active         bool          `json:"active"`
-	Revoked        bool          `json:"revoked"`
-	RevokedAt      *time.Time    `json:"revoked_at,omitempty"`
-	CreatedAt      time.Time     `json:"created_at"`
-	UpdatedAt      time.Time     `json:"updated_at"`
+	ID             string                 `json:"id"`
+	Name           string                 `json:"name"`
+	KeyPrefix      string                 `json:"key_prefix"` // First 8 chars for identification
+	KeyHash        string                 `json:"-"`          // Never exposed
+	UserID         string                 `json:"user_id"`
+	Scopes         []APIKeyScope          `json:"scopes"`
+	ExpiresAt      *time.Time             `json:"expires_at,omitempty"`
+	LastUsedAt     *time.Time             `json:"last_used_at,omitempty"`
+	RateLimit      int                    `json:"rate_limit"` // Requests per minute
+	RateLimitCurr  int                    `json:"-"`
+	RateLimitReset time.Time              `json:"-"`
+	Active         bool                   `json:"active"`
+	Revoked        bool                   `json:"revoked"`
+	RevokedAt      *time.Time             `json:"revoked_at,omitempty"`
+	CreatedAt      time.Time              `json:"created_at"`
+	UpdatedAt      time.Time              `json:"updated_at"`
 	Metadata       map[string]interface{} `json:"metadata,omitempty"`
 }
 
@@ -90,36 +90,36 @@ func (k *APIKey) CanAccess(scope APIKeyScope) bool {
 	if !k.IsValid() {
 		return false
 	}
-	
+
 	// Admin has access to everything
 	if HasScope(k.Scopes, ScopeAdmin) {
 		return true
 	}
-	
+
 	return HasScope(k.Scopes, scope)
 }
 
 // APIKeyRequest represents a request to create an API key
 type APIKeyRequest struct {
-	Name      string        `json:"name"`
-	Scopes    []APIKeyScope `json:"scopes"`
-	ExpiresIn time.Duration `json:"expires_in,omitempty"` // 0 = no expiration
-	RateLimit int           `json:"rate_limit,omitempty"` // 0 = use default
+	Name      string                 `json:"name"`
+	Scopes    []APIKeyScope          `json:"scopes"`
+	ExpiresIn time.Duration          `json:"expires_in,omitempty"` // 0 = no expiration
+	RateLimit int                    `json:"rate_limit,omitempty"` // 0 = use default
 	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // APIKeyResponse represents the response when creating an API key
 // The actual key is only shown once at creation time
 type APIKeyResponse struct {
-	ID          string        `json:"id"`
-	Name        string        `json:"name"`
-	Key         string        `json:"key,omitempty"` // Only present on creation
-	KeyPrefix   string        `json:"key_prefix"`
-	Scopes      []APIKeyScope `json:"scopes"`
-	ExpiresAt   *time.Time    `json:"expires_at,omitempty"`
-	RateLimit   int           `json:"rate_limit"`
-	CreatedAt   time.Time     `json:"created_at"`
-	Metadata    map[string]interface{} `json:"metadata,omitempty"`
+	ID        string                 `json:"id"`
+	Name      string                 `json:"name"`
+	Key       string                 `json:"key,omitempty"` // Only present on creation
+	KeyPrefix string                 `json:"key_prefix"`
+	Scopes    []APIKeyScope          `json:"scopes"`
+	ExpiresAt *time.Time             `json:"expires_at,omitempty"`
+	RateLimit int                    `json:"rate_limit"`
+	CreatedAt time.Time              `json:"created_at"`
+	Metadata  map[string]interface{} `json:"metadata,omitempty"`
 }
 
 // MarshalJSON implements custom JSON marshaling to hide sensitive data
@@ -135,24 +135,24 @@ func (k *APIKey) MarshalJSON() ([]byte, error) {
 
 // APIKeyService handles API key management
 type APIKeyService struct {
-	db            *sql.DB
-	auditLogger   *opsec.SecureAuditLog
-	keyPrefix     string
-	maxKeysPerUser int
+	db               *sql.DB
+	auditLogger      *opsec.SecureAuditLog
+	keyPrefix        string
+	maxKeysPerUser   int
 	defaultRateLimit int
-	keys          map[string]*APIKey // In-memory cache for validation
-	keysMu        sync.RWMutex
+	keys             map[string]*APIKey // In-memory cache for validation
+	keysMu           sync.RWMutex
 }
 
 // NewAPIKeyService creates a new API key service
 func NewAPIKeyService(db *sql.DB, auditLogger *opsec.SecureAuditLog, opts ...APIKeyOption) (*APIKeyService, error) {
 	svc := &APIKeyService{
-		db:              db,
-		auditLogger:     auditLogger,
-		keyPrefix:       "sk_live_",
-		maxKeysPerUser:  10,
+		db:               db,
+		auditLogger:      auditLogger,
+		keyPrefix:        "sk_live_",
+		maxKeysPerUser:   10,
 		defaultRateLimit: 60,
-		keys:            make(map[string]*APIKey),
+		keys:             make(map[string]*APIKey),
 	}
 
 	for _, opt := range opts {
@@ -236,9 +236,9 @@ func (s *APIKeyService) loadKeys() error {
 	}
 
 	rows, err := s.db.Query(`
-		SELECT id, name, key_hash, user_id, scopes, expires_at, last_used_at, 
+		SELECT id, name, key_hash, user_id, scopes, expires_at, last_used_at,
 		       rate_limit, active, revoked, revoked_at, created_at, updated_at, metadata
-		FROM api_keys 
+		FROM api_keys
 		WHERE active = true AND revoked = false
 	`)
 	if err != nil {
@@ -340,19 +340,19 @@ func (s *APIKeyService) GenerateKey(req *APIKeyRequest) (*APIKeyResponse, error)
 
 	// Create API key
 	apiKey := &APIKey{
-		ID:          id,
-		Name:        req.Name,
-		KeyPrefix:   fullKey[:len(s.keyPrefix)+8],
-		KeyHash:     keyHash,
-		UserID:      getUserIDFromMetadata(req.Metadata),
-		Scopes:      req.Scopes,
-		ExpiresAt:   expiresAt,
-		RateLimit:   rateLimit,
-		Active:      true,
-		Revoked:     false,
-		CreatedAt:   time.Now(),
-		UpdatedAt:   time.Now(),
-		Metadata:    req.Metadata,
+		ID:        id,
+		Name:      req.Name,
+		KeyPrefix: fullKey[:len(s.keyPrefix)+8],
+		KeyHash:   keyHash,
+		UserID:    getUserIDFromMetadata(req.Metadata),
+		Scopes:    req.Scopes,
+		ExpiresAt: expiresAt,
+		RateLimit: rateLimit,
+		Active:    true,
+		Revoked:   false,
+		CreatedAt: time.Now(),
+		UpdatedAt: time.Now(),
+		Metadata:  req.Metadata,
 	}
 
 	// Store in database
@@ -553,7 +553,7 @@ func (s *APIKeyService) storeKey(key *APIKey) error {
 	metadataJSON, _ := json.Marshal(key.Metadata)
 
 	_, err := s.db.Exec(`
-		INSERT INTO api_keys (id, name, key_hash, user_id, scopes, expires_at, 
+		INSERT INTO api_keys (id, name, key_hash, user_id, scopes, expires_at,
 		                     rate_limit, active, revoked, created_at, updated_at, metadata)
 		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
 	`, key.ID, key.Name, key.KeyHash, key.UserID, scopesJSON, key.ExpiresAt,
@@ -736,7 +736,7 @@ func (s *APIKeyService) markRevoked(id string) error {
 	}
 
 	_, err := s.db.Exec(`
-		UPDATE api_keys SET revoked = true, revoked_at = $1, active = false, updated_at = $1 
+		UPDATE api_keys SET revoked = true, revoked_at = $1, active = false, updated_at = $1
 		WHERE id = $2
 	`, time.Now(), id)
 	return err

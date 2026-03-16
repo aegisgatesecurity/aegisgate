@@ -144,7 +144,7 @@ func TestLocalAuthentication_FullFlow(t *testing.T) {
 // TestCreateLocalUser tests local user creation
 func TestCreateLocalUser(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"existing": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -204,19 +204,19 @@ func TestCreateLocalUser(t *testing.T) {
 // TestListLocalUsers tests listing local users
 func TestListLocalUsers(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"admin": {
 				PasswordHash: "hash1",
-				Salt:        "salt1",
-				Role:        RoleAdmin,
-				Enabled:     true,
+				Salt:         "salt1",
+				Role:         RoleAdmin,
+				Enabled:      true,
 			},
 			"viewer": {
 				PasswordHash: "hash2",
-				Salt:        "salt2",
-				Role:        RoleViewer,
-				Enabled:     true,
+				Salt:         "salt2",
+				Role:         RoleViewer,
+				Enabled:      true,
 			},
 		},
 	}
@@ -243,7 +243,7 @@ func TestListLocalUsers(t *testing.T) {
 	config2 := &Config{
 		Provider:     ProviderGoogle,
 		ClientID:     "test",
-		ClientSecret:  "test",
+		ClientSecret: "test",
 		RedirectURL:  "http://localhost/callback",
 	}
 	manager2, _ := NewManager(config2)
@@ -286,10 +286,10 @@ func TestOAuthProviderEndpoints(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(string(tt.provider), func(t *testing.T) {
 			config := &Config{
-				Provider:      tt.provider,
-				ClientID:      "test-id",
-				ClientSecret:  "test-secret",
-				RedirectURL:   "http://localhost/callback",
+				Provider:     tt.provider,
+				ClientID:     "test-id",
+				ClientSecret: "test-secret",
+				RedirectURL:  "http://localhost/callback",
 			}
 			manager, _ := NewManager(config)
 			defer manager.Close()
@@ -336,11 +336,11 @@ func TestOAuthProviderWithCustomEndpoints(t *testing.T) {
 // TestOAuthInitFlow tests OAuth flow initialization
 func TestOAuthInitFlow(t *testing.T) {
 	config := &Config{
-		Provider:      ProviderGoogle,
-		ClientID:      "test-client-id",
-		ClientSecret:  "test-secret",
-		RedirectURL:    "http://localhost/callback",
-		Scopes:        []string{"openid", "profile", "email"},
+		Provider:     ProviderGoogle,
+		ClientID:     "test-client-id",
+		ClientSecret: "test-secret",
+		RedirectURL:  "http://localhost/callback",
+		Scopes:       []string{"openid", "profile", "email"},
 	}
 
 	manager, _ := NewManager(config)
@@ -385,10 +385,10 @@ func TestOAuthInitFlow(t *testing.T) {
 // TestOAuthStateValidation tests OAuth state validation
 func TestOAuthStateValidation(t *testing.T) {
 	config := &Config{
-		Provider:      ProviderGoogle,
-		ClientID:      "test-id",
-		ClientSecret:  "test-secret",
-		RedirectURL:   "http://localhost/callback",
+		Provider:     ProviderGoogle,
+		ClientID:     "test-id",
+		ClientSecret: "test-secret",
+		RedirectURL:  "http://localhost/callback",
 	}
 
 	manager, _ := NewManager(config)
@@ -425,10 +425,10 @@ func TestOAuthStateValidation(t *testing.T) {
 // TestOAuthCallbackMissingCode tests OAuth callback with missing code
 func TestOAuthCallbackMissingCode(t *testing.T) {
 	config := &Config{
-		Provider:      ProviderGoogle,
-		ClientID:      "test-id",
-		ClientSecret:  "test-secret",
-		RedirectURL:   "http://localhost/callback",
+		Provider:     ProviderGoogle,
+		ClientID:     "test-id",
+		ClientSecret: "test-secret",
+		RedirectURL:  "http://localhost/callback",
 	}
 
 	manager, _ := NewManager(config)
@@ -528,10 +528,10 @@ func TestParseUserInfo(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			config := &Config{
-				Provider:      tt.provider,
-				ClientID:      "test",
-				ClientSecret:  "test",
-				RedirectURL:   "http://localhost/callback",
+				Provider:     tt.provider,
+				ClientID:     "test",
+				ClientSecret: "test",
+				RedirectURL:  "http://localhost/callback",
 			}
 			manager, _ := NewManager(config)
 			defer manager.Close()
@@ -701,7 +701,7 @@ func TestRequirePermissionMiddleware(t *testing.T) {
 		{
 			name:           "Admin has all permissions",
 			role:           RoleAdmin,
-			permission:      PermManageUsers,
+			permission:     PermManageUsers,
 			expectedStatus: http.StatusOK,
 		},
 		{
@@ -928,7 +928,7 @@ func TestOptionalAuthMiddleware(t *testing.T) {
 // TestGetUserFromContext tests user retrieval from context
 func TestGetUserFromContext(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -954,7 +954,7 @@ func TestGetUserFromContext(t *testing.T) {
 // TestGetSessionFromContext tests session retrieval from context
 func TestGetSessionFromContext(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -1031,9 +1031,9 @@ func TestHandler(t *testing.T) {
 // TestHandleLoginRedirect tests login routing
 func TestHandleLoginRedirect(t *testing.T) {
 	tests := []struct {
-		name          string
-		provider      Provider
-		expectedPath  string
+		name         string
+		provider     Provider
+		expectedPath string
 	}{
 		{
 			name:         "Local provider redirect",
@@ -1967,10 +1967,10 @@ func TestEmailValidationComprehensive(t *testing.T) {
 
 	for _, email := range invalidEmails {
 		if validateEmail(email) {
-		// Double-dot emails may be accepted by some validators
-		if email != "user@example..com" {
-			t.Errorf("Expected %s to be invalid", email)
-		}
+			// Double-dot emails may be accepted by some validators
+			if email != "user@example..com" {
+				t.Errorf("Expected %s to be invalid", email)
+			}
 		}
 	}
 }
@@ -2011,8 +2011,8 @@ func TestConfigValidation_Comprehensive(t *testing.T) {
 		expectError bool
 	}{
 		{
-			name: "Empty provider",
-			config: &Config{},
+			name:        "Empty provider",
+			config:      &Config{},
 			expectError: true,
 		},
 		{
@@ -2044,9 +2044,9 @@ func TestConfigValidation_Comprehensive(t *testing.T) {
 		{
 			name: "OAuth without client secret",
 			config: &Config{
-				Provider:     ProviderGoogle,
-				ClientID:     "id",
-				RedirectURL:  "http://localhost/callback",
+				Provider:    ProviderGoogle,
+				ClientID:    "id",
+				RedirectURL: "http://localhost/callback",
 			},
 			expectError: true,
 		},
@@ -2102,8 +2102,8 @@ func TestConfigValidation_Comprehensive(t *testing.T) {
 		{
 			name: "SAML with issuer",
 			config: &Config{
-				Provider:     ProviderSAMLGeneric,
-				SAMLIssuer:  "https://saml.example.com",
+				Provider:   ProviderSAMLGeneric,
+				SAMLIssuer: "https://saml.example.com",
 			},
 			expectError: false,
 		},
@@ -2412,7 +2412,7 @@ func TestCleanup(t *testing.T) {
 // TestGetConfig tests getting configuration
 func TestGetConfig(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -2433,7 +2433,7 @@ func TestGetConfig(t *testing.T) {
 // TestClose tests manager cleanup
 func TestClose(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -2494,7 +2494,7 @@ func TestHelperFunctions(t *testing.T) {
 // TestIsAPIRequest tests API request detection
 func TestIsAPIRequest(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -2559,7 +2559,7 @@ func TestIsAPIRequest(t *testing.T) {
 // TestIsPublicPath tests public path detection
 func TestIsPublicPath(t *testing.T) {
 	config := &Config{
-		Provider:    ProviderLocal,
+		Provider: ProviderLocal,
 		LocalUsers: map[string]LocalUserConfig{
 			"test": {PasswordHash: "hash", Salt: "salt", Role: RoleViewer, Enabled: true},
 		},
@@ -2755,7 +2755,7 @@ func BenchmarkSessionCreation(b *testing.B) {
 	defer manager.Close()
 
 	user := &User{
-		ID:          "bench-user-12345",  // At least 8 chars for session slicing
+		ID:          "bench-user-12345", // At least 8 chars for session slicing
 		Email:       "bench@example.com",
 		Role:        RoleViewer,
 		Permissions: RolePermissions[RoleViewer],

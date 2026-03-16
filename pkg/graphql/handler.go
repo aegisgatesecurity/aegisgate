@@ -56,7 +56,7 @@ func (h *Handler) handleRequest(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Query     string                 `json:"query"`
 		Variables map[string]interface{} `json:"variables"`
-		Operation  string                 `json:"operationName"`
+		Operation string                 `json:"operationName"`
 	}
 
 	if r.Method == http.MethodPost {

@@ -65,7 +65,7 @@ func UnaryInterceptor(logger *slog.Logger) grpc.UnaryServerInterceptor {
 	return func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 		start := time.Now()
 		logger.Info("gRPC request", "method", info.FullMethod)
-		
+
 		md, ok := metadata.FromIncomingContext(ctx)
 		if ok {
 			logger.Debug("Metadata", "md", md)

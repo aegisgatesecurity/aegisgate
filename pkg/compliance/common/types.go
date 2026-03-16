@@ -34,11 +34,11 @@ type TechniqueFinding struct {
 
 // Findings is a collection of Finding
 type Findings struct {
-	Framework   string
-	Version     string
-	Timestamp   interface{} // time.Time
-	Status      string
-	Techniques  []TechniqueFinding
+	Framework       string
+	Version         string
+	Timestamp       interface{} // time.Time
+	Status          string
+	Techniques      []TechniqueFinding
 	Recommendations []string
 }
 

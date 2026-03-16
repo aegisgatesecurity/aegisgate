@@ -12,8 +12,8 @@ import (
 
 // TenantAPIHandler handles tenant management API requests
 type TenantAPIHandler struct {
-	manager      *tenant.Manager
-	storagePath  string
+	manager     *tenant.Manager
+	storagePath string
 }
 
 // NewTenantAPIHandler creates a new tenant API handler

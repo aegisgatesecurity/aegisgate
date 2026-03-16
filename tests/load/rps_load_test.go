@@ -125,26 +125,26 @@ type RPSLoadTester struct {
 // RPSStats holds running statistics during the test
 type RPSStats struct {
 	// Counters
-	totalRequests   int64
-	successCount    int64
-	errorCount      int64
-	timeoutCount    int64
-	connErrorCount  int64
+	totalRequests  int64
+	successCount   int64
+	errorCount     int64
+	timeoutCount   int64
+	connErrorCount int64
 
 	// Latency tracking
-	latencies       []time.Duration
-	latenciesMu     sync.Mutex
+	latencies   []time.Duration
+	latenciesMu sync.Mutex
 
 	// Error tracking
-	errorsMu        sync.Mutex
-	errorCounts     map[string]int64
+	errorsMu    sync.Mutex
+	errorCounts map[string]int64
 
 	// Time series
-	samplesMu       sync.Mutex
-	samples         []RPSTimeSeriesSample
+	samplesMu sync.Mutex
+	samples   []RPSTimeSeriesSample
 
 	// Active connections
-	activeConns     int32
+	activeConns int32
 }
 
 // NewRPSLoadTester creates a new RPS load tester
@@ -168,7 +168,7 @@ func NewRPSLoadTester(config RPSConfig) *RPSLoadTester {
 		config: config,
 		client: client,
 		stats: &RPSStats{
-			latencies:  make([]time.Duration, 0, 1000000),
+			latencies:   make([]time.Duration, 0, 1000000),
 			errorCounts: make(map[string]int64),
 		},
 	}
@@ -177,8 +177,8 @@ func NewRPSLoadTester(config RPSConfig) *RPSLoadTester {
 // Run executes the RPS load test
 func (t *RPSLoadTester) Run(ctx context.Context) (*RPSResult, error) {
 	result := &RPSResult{
-		Config:        t.config,
-		StartTime:     time.Now(),
+		Config:         t.config,
+		StartTime:      time.Now(),
 		LatencyBuckets: make(map[string]int64),
 		ErrorBreakdown: make(map[string]int64),
 	}
@@ -369,7 +369,7 @@ func (t *RPSLoadTester) monitorResources(ctx context.Context, stopChan <-chan st
 			samples++
 
 			sample := RPSTimeSeriesSample{
-				Timestamp:    time.Now(),
+				Timestamp:   time.Now(),
 				MemoryMB:    memMB,
 				ActiveConns: int(atomic.LoadInt32(&t.stats.activeConns)),
 			}
@@ -665,10 +665,10 @@ func AnalyzeScalingResults(results []*RPSResult) string {
 
 // MockRPSTarget creates a simple HTTP server for testing
 type MockRPSTarget struct {
-	Server        *http.Server
-	RequestCount  int64
-	LatencySum    time.Duration
-	mu            sync.Mutex
+	Server       *http.Server
+	RequestCount int64
+	LatencySum   time.Duration
+	mu           sync.Mutex
 }
 
 func NewMockRPSTarget(port int) *MockRPSTarget {

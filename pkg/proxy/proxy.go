@@ -23,25 +23,25 @@ import (
 
 // Options contains proxy configuration
 type Options struct {
-	BindAddress string
-	Upstream    string
-	TLS         *TLSConfig
-	MaxBodySize int64         // Default: 10MB
-	Timeout     time.Duration // Default: 30s
-	RateLimit   int           // Requests per minute, default: 100
-	HTTP2       *HTTP2Config  // HTTP/2 configuration
-	HTTP3       *HTTP3Config   // HTTP/3 configuration
+	BindAddress    string
+	Upstream       string
+	TLS            *TLSConfig
+	MaxBodySize    int64         // Default: 10MB
+	Timeout        time.Duration // Default: 30s
+	RateLimit      int           // Requests per minute, default: 100
+	HTTP2          *HTTP2Config  // HTTP/2 configuration
+	HTTP3          *HTTP3Config  // HTTP/3 configuration
 	CircuitBreaker *resilience.CircuitBreakerConfig
-	
+
 	// ML Configuration - Integrated in v0.41.0
-	EnableMLDetection bool
-	MLSensitivity     string
-	MLBlockOnCriticalSeverity bool
-	MLBlockOnHighSeverity     bool
-	MLMinScoreToBlock  float64
-	MLSampleRate       int
-	MLExcludedPaths    []string
-	MLExcludedMethods  []string
+	EnableMLDetection              bool
+	MLSensitivity                  string
+	MLBlockOnCriticalSeverity      bool
+	MLBlockOnHighSeverity          bool
+	MLMinScoreToBlock              float64
+	MLSampleRate                   int
+	MLExcludedPaths                []string
+	MLExcludedMethods              []string
 	EnablePromptInjectionDetection bool
 	PromptInjectionSensitivity     int
 	EnableContentAnalysis          bool
@@ -75,7 +75,7 @@ type Proxy struct {
 
 	// Circuit breaker
 	circuitBreaker *resilience.CircuitBreaker
-	
+
 	// ML Anomaly Detection - v0.41.0
 	mlMiddleware *MLMiddleware
 }
@@ -127,17 +127,17 @@ func New(opts *Options) *Proxy {
 	// Initialize ML Middleware if enabled
 	if opts.EnableMLDetection {
 		mlConfig := &MLMiddlewareConfig{
-			Enabled:               opts.EnableMLDetection,
-			Sensitivity:           opts.MLSensitivity,
+			Enabled:                 opts.EnableMLDetection,
+			Sensitivity:             opts.MLSensitivity,
 			BlockOnCriticalSeverity: opts.MLBlockOnCriticalSeverity,
-			BlockOnHighSeverity:   opts.MLBlockOnHighSeverity,
-			MinScoreToBlock:       opts.MLMinScoreToBlock,
-			SampleRate:            opts.MLSampleRate,
-			ExcludedPaths:         opts.MLExcludedPaths,
-			ExcludedMethods:       opts.MLExcludedMethods,
-			LogAllAnomalies:       true,
+			BlockOnHighSeverity:     opts.MLBlockOnHighSeverity,
+			MinScoreToBlock:         opts.MLMinScoreToBlock,
+			SampleRate:              opts.MLSampleRate,
+			ExcludedPaths:           opts.MLExcludedPaths,
+			ExcludedMethods:         opts.MLExcludedMethods,
+			LogAllAnomalies:         true,
 		}
-		
+
 		mlMiddleware, err := NewMLMiddleware(mlConfig)
 		if err != nil {
 			slog.Error("Failed to create ML middleware", "error", err)
@@ -259,10 +259,10 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	// ML Anomaly Detection - v0.41.0
 	if p.mlMiddleware != nil {
 		result := p.mlMiddleware.analyzeRequest(req)
-		
+
 		if result.ShouldBlock {
-			slog.Warn("ML blocked request", 
-				"client", req.RemoteAddr, 
+			slog.Warn("ML blocked request",
+				"client", req.RemoteAddr,
 				"path", req.URL.Path,
 				"reason", result.BlockingReason,
 				"anomalies", len(result.Anomalies),
@@ -323,7 +323,7 @@ func (p *Proxy) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 			w.Write([]byte(fmt.Sprintf("Content blocked: %s", strings.Join(violationNames, ", "))))
 			return
 		}
-		
+
 		// ML Pattern Analysis - Prompt Injection Detection
 		if p.mlMiddleware != nil && p.options.EnablePromptInjectionDetection {
 			content := string(bodyBytes)
@@ -448,7 +448,7 @@ func (p *Proxy) modifyResponse(resp *http.Response) error {
 			p.logAtlasFindings("response", resp.Request.URL.Path, atlasFindings)
 		}
 	}
-	
+
 	// ML Content Analysis for LLM Responses
 	if p.mlMiddleware != nil && p.options.EnableContentAnalysis {
 		content := string(bodyBytes)
@@ -615,25 +615,25 @@ func (p *Proxy) GetHealth() map[string]interface{} {
 	health := map[string]interface{}{
 		"status":        "healthy",
 		"enabled":       p.IsEnabled(),
-		"bind_address": p.options.BindAddress,
-		"upstream":     p.options.Upstream,
+		"bind_address":  p.options.BindAddress,
+		"upstream":      p.options.Upstream,
 		"request_count": p.requestCount.Load(),
 		"max_body_size": p.options.MaxBodySize,
-		"timeout":      p.options.Timeout.String(),
-		"rate_limit":   p.options.RateLimit,
-		"ml_enabled":   p.mlMiddleware != nil,
+		"timeout":       p.options.Timeout.String(),
+		"rate_limit":    p.options.RateLimit,
+		"ml_enabled":    p.mlMiddleware != nil,
 	}
 
 	if p.circuitBreaker != nil {
 		health["circuit_breaker"] = map[string]interface{}{
-			"enabled":            true,
+			"enabled":           true,
 			"state":             p.circuitBreaker.GetState(),
 			"total_requests":    p.circuitBreaker.TotalRequests(),
 			"failed_requests":   p.circuitBreaker.FailedRequests(),
 			"rejected_requests": p.circuitBreaker.RejectedRequests(),
 		}
 	}
-	
+
 	// Add ML stats if enabled
 	if p.mlMiddleware != nil {
 		mlStats := p.mlMiddleware.GetStats()
@@ -668,28 +668,28 @@ func (p *Proxy) GetStats() map[string]interface{} {
 			"ml_enabled":    p.mlMiddleware != nil,
 		},
 	}
-	
+
 	if p.mlMiddleware != nil {
 		mlStats := p.mlMiddleware.GetStats()
 		stats["ml"] = map[string]interface{}{
-			"total_requests":     mlStats.TotalRequests,
-			"analyzed_requests":  mlStats.AnalyzedRequests,
-			"blocked_requests":   mlStats.BlockedRequests,
+			"total_requests":    mlStats.TotalRequests,
+			"analyzed_requests": mlStats.AnalyzedRequests,
+			"blocked_requests":  mlStats.BlockedRequests,
 			"anomaly_counts":    mlStats.AnomalyCounts,
 		}
 	}
-	
+
 	return stats
 }
 
 // StatsStruct represents proxy statistics in a structured format
 type StatsStruct struct {
-	RequestsTotal      int64
+	RequestsTotal     int64
 	RequestsBlocked   int64
 	RequestsAllowed   int64
 	BytesIn           int64
 	BytesOut          int64
-	ActiveConnections  int64
+	ActiveConnections int64
 	AvgLatencyMs      float64
 	P99LatencyMs      float64
 	Errors            int64
@@ -698,22 +698,22 @@ type StatsStruct struct {
 // GetStatsStruct returns proxy statistics as a struct
 func (p *Proxy) GetStatsStruct() *StatsStruct {
 	stats := &StatsStruct{
-		RequestsTotal:    p.requestCount.Load(),
-		RequestsBlocked: 0,
-		RequestsAllowed: 0,
-		BytesIn:         0,
-		BytesOut:        0,
+		RequestsTotal:     p.requestCount.Load(),
+		RequestsBlocked:   0,
+		RequestsAllowed:   0,
+		BytesIn:           0,
+		BytesOut:          0,
 		ActiveConnections: 0,
-		AvgLatencyMs:    0,
-		P99LatencyMs:    0,
-		Errors:          0,
+		AvgLatencyMs:      0,
+		P99LatencyMs:      0,
+		Errors:            0,
 	}
-	
+
 	if p.mlMiddleware != nil {
 		mlStats := p.mlMiddleware.GetStats()
 		stats.RequestsBlocked = mlStats.BlockedRequests
 	}
-	
+
 	return stats
 }
 

@@ -74,10 +74,10 @@ func PutStringBuilder(b *strings.Builder) {
 
 // Common status text to avoid runtime lookups
 var (
-	StatusBadGateway   = http.StatusText(http.StatusBadGateway)
-	StatusForbidden    = http.StatusText(http.StatusForbidden)
+	StatusBadGateway     = http.StatusText(http.StatusBadGateway)
+	StatusForbidden      = http.StatusText(http.StatusForbidden)
 	StatusTextBadGateway = "502 Bad Gateway"
-	StatusTextForbidden = "403 Forbidden"
+	StatusTextForbidden  = "403 Forbidden"
 )
 
 // ============================================================================
@@ -89,23 +89,23 @@ var (
 func CreateOptimizedErrorResponse(err error) *http.Response {
 	header := GetHeaderPool()
 	defer PutHeaderPool(header)
-	
+
 	// Use strings.Builder for efficient concatenation
 	builder := GetStringBuilder()
 	defer PutStringBuilder(builder)
-	
+
 	builder.WriteString("Proxy Error: ")
 	builder.WriteString(err.Error())
 	body := builder.String()
-	
+
 	return &http.Response{
-		StatusCode: http.StatusBadGateway,
-		Status:     StatusTextBadGateway,
-		ProtoMajor: 1,
-		ProtoMinor: 1,
-		Body:       io.NopCloser(strings.NewReader(body)),
+		StatusCode:    http.StatusBadGateway,
+		Status:        StatusTextBadGateway,
+		ProtoMajor:    1,
+		ProtoMinor:    1,
+		Body:          io.NopCloser(strings.NewReader(body)),
 		ContentLength: int64(len(body)),
-		Header:     header,
+		Header:        header,
 	}
 }
 
@@ -114,12 +114,12 @@ func CreateOptimizedErrorResponse(err error) *http.Response {
 func CreateOptimizedBlockedResponse(patterns []string) *http.Response {
 	header := GetHeaderPool()
 	defer PutHeaderPool(header)
-	
+
 	builder := GetStringBuilder()
 	defer PutStringBuilder(builder)
-	
+
 	builder.WriteString("Request blocked: prohibited content detected (")
-	
+
 	// Join patterns efficiently
 	for i, p := range patterns {
 		if i > 0 {
@@ -128,17 +128,17 @@ func CreateOptimizedBlockedResponse(patterns []string) *http.Response {
 		builder.WriteString(p)
 	}
 	builder.WriteString(")")
-	
+
 	body := builder.String()
-	
+
 	return &http.Response{
-		StatusCode: http.StatusForbidden,
-		Status:     StatusTextForbidden,
-		ProtoMajor: 1,
-		ProtoMinor: 1,
-		Body:       io.NopCloser(strings.NewReader(body)),
+		StatusCode:    http.StatusForbidden,
+		Status:        StatusTextForbidden,
+		ProtoMajor:    1,
+		ProtoMinor:    1,
+		Body:          io.NopCloser(strings.NewReader(body)),
 		ContentLength: int64(len(body)),
-		Header:     header,
+		Header:        header,
 	}
 }
 
@@ -177,7 +177,7 @@ func PutBuffer(b *[]byte) {
 func ReadBodyOptimized(body io.Reader) ([]byte, error) {
 	buf := GetBuffer()
 	defer PutBuffer(buf)
-	
+
 	// Read with buffer
 	n, err := body.Read(*buf)
 	if err != nil && err != io.EOF {
@@ -219,7 +219,7 @@ func SplitHostPort(host string) (string, string) {
 
 // BenchmarkResult holds benchmark results
 type BenchmarkResult struct {
-	OpsPerSec    float64
+	OpsPerSec   float64
 	NsPerOp     int64
 	BytesPerOp  int64
 	AllocsPerOp int64

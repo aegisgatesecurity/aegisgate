@@ -31,24 +31,24 @@ type MetricsExporter struct {
 	// Middleware metrics
 	totalRequests     prometheus.Counter
 	analyzedRequests  prometheus.Counter
-	blockedRequests  prometheus.Counter
+	blockedRequests   prometheus.Counter
 	anomalyDetections *prometheus.CounterVec
 
 	// Prompt injection metrics
-	piScanned       prometheus.Counter
-	piDetections    prometheus.Counter
-	piBlocks        prometheus.Counter
-	piByPattern     *prometheus.CounterVec
+	piScanned    prometheus.Counter
+	piDetections prometheus.Counter
+	piBlocks     prometheus.Counter
+	piByPattern  *prometheus.CounterVec
 
 	// Content analysis metrics
 	contentAnalyzed   prometheus.Counter
 	contentViolations prometheus.Counter
-	contentByType    *prometheus.CounterVec
+	contentByType     *prometheus.CounterVec
 
 	// Behavioral metrics
-	behaviorClients      prometheus.Gauge
-	behaviorAnomalies   prometheus.Counter
-	behaviorByType      *prometheus.CounterVec
+	behaviorClients   prometheus.Gauge
+	behaviorAnomalies prometheus.Counter
+	behaviorByType    *prometheus.CounterVec
 
 	// Latency metrics
 	analysisDuration *prometheus.HistogramVec

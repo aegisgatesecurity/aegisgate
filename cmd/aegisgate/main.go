@@ -21,7 +21,8 @@ import (
 
 // Build info - set during build
 const version = "v1.0.9"
-const commit  = "dev"
+const commit = "dev"
+
 var date = time.Now().Format(time.RFC3339)
 
 // Management endpoints that should NOT be proxied
@@ -53,28 +54,28 @@ func main() {
 	metricsMgr := metrics.NewManager(nil)
 
 	proxyOpts := &proxy.Options{
-		BindAddress:         *bindAddress,
-		Upstream:            *targetURL,
-		MaxBodySize:         10 * 1024 * 1024,
-		Timeout:             30 * time.Second,
-		RateLimit:           limits.MaxRequestsPerMinute,
-		EnableMLDetection:   tier != core.TierCommunity,
-		MLSensitivity:       "medium",
+		BindAddress:                    *bindAddress,
+		Upstream:                       *targetURL,
+		MaxBodySize:                    10 * 1024 * 1024,
+		Timeout:                        30 * time.Second,
+		RateLimit:                      limits.MaxRequestsPerMinute,
+		EnableMLDetection:              tier != core.TierCommunity,
+		MLSensitivity:                  "medium",
 		EnablePromptInjectionDetection: tier != core.TierCommunity,
-		EnableContentAnalysis:         tier == core.TierProfessional || tier == core.TierEnterprise,
-		EnableBehavioralAnalysis:     tier == core.TierEnterprise,
+		EnableContentAnalysis:          tier == core.TierProfessional || tier == core.TierEnterprise,
+		EnableBehavioralAnalysis:       tier == core.TierEnterprise,
 	}
 
 	proxyServer := proxy.New(proxyOpts)
 
 	// Create single mux that handles both management and proxy routes
 	mux := http.NewServeMux()
-	
+
 	// Management endpoints - handle locally
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		health := proxyServer.GetHealth()
 		w.Header().Set("Content-Type", "application/json")
-		
+
 		enabled, ok := health["enabled"].(bool)
 		if !ok || !enabled {
 			w.WriteHeader(http.StatusServiceUnavailable)
@@ -139,10 +140,10 @@ func main() {
 
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	
+
 	// Stop proxy (cleanup rate limiters, etc)
 	proxyServer.Stop(ctx)
-	
+
 	if err := httpServer.Shutdown(ctx); err != nil {
 		log.Printf("Server shutdown error: %v", err)
 	}

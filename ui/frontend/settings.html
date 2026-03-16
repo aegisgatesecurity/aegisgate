@@ -187,100 +187,100 @@
         </h1>
         <span class="version">MVP v1.0.0</span>
     </header>
-    
+
     <nav class="nav">
         <a href="index.html">Dashboard</a>
         <a href="certificates.html">Certificates</a>
         <a href="settings.html" class="active">Settings</a>
     </nav>
-    
+
     <div class="container">
         <div class="alert alert-info">
-            <strong>Note:</strong> Settings are configured via environment variables. 
+            <strong>Note:</strong> Settings are configured via environment variables.
             Changes require a proxy restart to take effect.
         </div>
-        
+
         <div class="card">
             <h2>Proxy Configuration</h2>
             <div class="form-group">
                 <label for="bindAddress">Bind Address</label>
-                <input type="text" id="bindAddress" class="read-only" readonly 
+                <input type="text" id="bindAddress" class="read-only" readonly
                        value="Loading...">
-                <small>The address and port where AegisGate listens for connections. 
+                <small>The address and port where AegisGate listens for connections.
                        Set via AEGISGATE_BIND_ADDRESS environment variable.</small>
             </div>
-            
+
             <div class="form-group">
                 <label for="upstream">Upstream Server</label>
-                <input type="text" id="upstream" class="read-only" readonly 
+                <input type="text" id="upstream" class="read-only" readonly
                        value="Loading...">
-                <small>The backend server URL that AegisGate proxies to. 
+                <small>The backend server URL that AegisGate proxies to.
                        Set via AEGISGATE_UPSTREAM environment variable.</small>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>Security Settings</h2>
             <div class="form-group">
                 <label for="rateLimit">Rate Limit (requests per minute)</label>
-                <input type="text" id="rateLimit" class="read-only" readonly 
+                <input type="text" id="rateLimit" class="read-only" readonly
                        value="Loading...">
-                <small>Maximum number of requests allowed per minute from a single client. 
+                <small>Maximum number of requests allowed per minute from a single client.
                        Set via AEGISGATE_RATE_LIMIT environment variable. Default: 100</small>
             </div>
-            
+
             <div class="form-group">
                 <label for="maxBodySize">Max Request Body Size</label>
-                <input type="text" id="maxBodySize" class="read-only" readonly 
+                <input type="text" id="maxBodySize" class="read-only" readonly
                        value="Loading...">
-                <small>Maximum allowed size for request bodies (e.g., 10MB, 1GB). 
+                <small>Maximum allowed size for request bodies (e.g., 10MB, 1GB).
                        Set via AEGISGATE_MAX_BODY_SIZE environment variable. Default: 10MB</small>
             </div>
-            
+
             <div class="form-group">
                 <label for="timeout">Request Timeout</label>
-                <input type="text" id="timeout" class="read-only" readonly 
+                <input type="text" id="timeout" class="read-only" readonly
                        value="Loading...">
-                <small>Maximum time allowed for processing a request. 
+                <small>Maximum time allowed for processing a request.
                        Set via AEGISGATE_TIMEOUT environment variable. Default: 30s</small>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>TLS & Certificates</h2>
             <div class="form-group">
                 <label for="certDir">Certificate Directory</label>
-                <input type="text" id="certDir" class="read-only" readonly 
+                <input type="text" id="certDir" class="read-only" readonly
                        value="Loading...">
-                <small>Directory where TLS certificates are stored. 
+                <small>Directory where TLS certificates are stored.
                        Set via AEGISGATE_CERT_DIR environment variable. Default: ./certs</small>
             </div>
         </div>
-        
+
         <div class="card">
             <h2>Logging</h2>
             <div class="form-group">
                 <label for="logLevel">Log Level</label>
-                <input type="text" id="logLevel" class="read-only" readonly 
+                <input type="text" id="logLevel" class="read-only" readonly
                        value="Loading...">
-                <small>Logging verbosity level (debug, info, warn, error). 
+                <small>Logging verbosity level (debug, info, warn, error).
                        Set via AEGISGATE_LOG_LEVEL environment variable. Default: info</small>
             </div>
         </div>
-        
+
         <div class="alert alert-warning">
-            <strong>Restart Required:</strong> To apply any configuration changes, 
+            <strong>Restart Required:</strong> To apply any configuration changes,
             you must restart the AegisGate proxy. Use the Dashboard to stop and restart the proxy.
         </div>
     </div>
-    
+
     <script>
         // Fetch current settings
         async function fetchSettings() {
             try {
                 const response = await fetch('/api/config');
                 const data = await response.json();
-                
+
                 document.getElementById('bindAddress').value = data.bind_address || ':8080';
                 document.getElementById('upstream').value = data.upstream || 'http://127.0.0.1:3000';
                 document.getElementById('rateLimit').value = data.rate_limit || '100';
@@ -300,7 +300,7 @@
                 document.getElementById('logLevel').value = 'info';
             }
         }
-        
+
         // Format bytes to human readable
         function formatBytes(bytes) {
             if (!bytes || bytes === 0) return '0 B';
@@ -309,7 +309,7 @@
             const i = Math.floor(Math.log(bytes) / Math.log(k));
             return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
         }
-        
+
         // Initial load
         fetchSettings();
     </script>

@@ -33,14 +33,14 @@ import (
 func TestMLPipeline_EndToEnd(t *testing.T) {
 	cfg := &config.Config{
 		ML: &config.MLConfig{
-			Enabled:               true,
-			Sensitivity:          "medium",
+			Enabled:                 true,
+			Sensitivity:             "medium",
 			BlockOnCriticalSeverity: true,
-			BlockOnHighSeverity: false,
-			MinScoreToBlock:     3.0,
-			SampleRate:          100,
-			ExcludedPaths:       []string{"/health"},
-			ExcludedMethods:     []string{"OPTIONS"},
+			BlockOnHighSeverity:     false,
+			MinScoreToBlock:         3.0,
+			SampleRate:              100,
+			ExcludedPaths:           []string{"/health"},
+			ExcludedMethods:         []string{"OPTIONS"},
 		},
 	}
 
@@ -125,8 +125,8 @@ func TestMLPipeline_ContentAnalysis(t *testing.T) {
 	analyzer := ml.NewContentAnalyzer()
 
 	testCases := []struct {
-		name       string
-		content    string
+		name      string
+		content   string
 		expectPII bool
 	}{
 		{name: "SSN in response", content: "Your SSN is 123-45-6789", expectPII: true},
@@ -171,7 +171,7 @@ func TestMLPipeline_BehavioralAnalysis(t *testing.T) {
 // TestMLPipeline_ConcurrentRequests tests ML under concurrent load
 func TestMLPipeline_ConcurrentRequests(t *testing.T) {
 	mlCfg := &proxy.MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "medium",
 		SampleRate:  100,
 	}
@@ -213,7 +213,7 @@ func TestMLPipeline_ConcurrentRequests(t *testing.T) {
 func TestMLPipeline_APIStats(t *testing.T) {
 	cfg := &config.Config{
 		ML: &config.MLConfig{
-			Enabled:    true,
+			Enabled:     true,
 			Sensitivity: "medium",
 		},
 	}
@@ -246,7 +246,7 @@ func TestMLPipeline_APIStats(t *testing.T) {
 // TestMLPipeline_ConfigUpdate tests runtime config updates
 func TestMLPipeline_ConfigUpdate(t *testing.T) {
 	mlCfg := &proxy.MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "low",
 	}
 
@@ -256,7 +256,7 @@ func TestMLPipeline_ConfigUpdate(t *testing.T) {
 	}
 
 	newCfg := &proxy.MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "high",
 	}
 
@@ -273,7 +273,7 @@ func TestMLPipeline_ConfigUpdate(t *testing.T) {
 // TestMLPipeline_StatsReset tests stats reset
 func TestMLPipeline_StatsReset(t *testing.T) {
 	mlCfg := &proxy.MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "medium",
 	}
 
@@ -310,12 +310,12 @@ func TestMLPipeline_StatsReset(t *testing.T) {
 // TestMLPipeline_BlockedResponse tests blocked request response format
 func TestMLPipeline_BlockedResponse(t *testing.T) {
 	mlCfg := &proxy.MLMiddlewareConfig{
-		Enabled:               true,
-		Sensitivity:          "paranoid",
+		Enabled:                 true,
+		Sensitivity:             "paranoid",
 		BlockOnCriticalSeverity: true,
-		BlockOnHighSeverity: true,
-		MinScoreToBlock:     1.0,
-		SampleRate:          100,
+		BlockOnHighSeverity:     true,
+		MinScoreToBlock:         1.0,
+		SampleRate:              100,
 	}
 
 	mlMiddleware, err := proxy.NewMLMiddleware(mlCfg)
@@ -351,7 +351,7 @@ func TestMLPipeline_BlockedResponse(t *testing.T) {
 // BenchmarkMLPipeline_Throughput measures ML pipeline throughput
 func BenchmarkMLPipeline_Throughput(b *testing.B) {
 	mlCfg := &proxy.MLMiddlewareConfig{
-		Enabled:      true,
+		Enabled:     true,
 		Sensitivity: "medium",
 		SampleRate:  100,
 	}

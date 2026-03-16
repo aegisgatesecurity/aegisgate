@@ -20,9 +20,9 @@ type AtlasFramework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	techniques     []string
+	configObj  *common.FrameworkConfig
+	tierInfo   common.TierInfo
+	techniques []string
 }
 
 // NewAtlasFramework creates a new ATLAS framework checker

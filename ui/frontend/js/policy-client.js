@@ -21,7 +21,7 @@ class PolicyConsole {
         const tbody = document.getElementById('policy-table-body');
         if (!tbody) return;
 
-        tbody.innerHTML = this.policies.map(policy => 
+        tbody.innerHTML = this.policies.map(policy =>
             '<tr>' +
                 '<td>' + policy.name + '</td>' +
                 '<td><span class="compliance-badge ' + policy.framework + '">' + policy.framework + '</span></td>' +

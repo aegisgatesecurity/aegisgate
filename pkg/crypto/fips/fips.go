@@ -121,11 +121,11 @@ func GetLevel() Level {
 // ApprovedHashAlgorithms returns FIPS-approved hash algorithms
 func ApprovedHashAlgorithms() map[string]string {
 	return map[string]string{
-		"SHA-1":   "SHA-1 (legacy only)",
-		"SHA-224": "SHA-224",
-		"SHA-256": "SHA-256",
-		"SHA-384": "SHA-384",
-		"SHA-512": "SHA-512",
+		"SHA-1":    "SHA-1 (legacy only)",
+		"SHA-224":  "SHA-224",
+		"SHA-256":  "SHA-256",
+		"SHA-384":  "SHA-384",
+		"SHA-512":  "SHA-512",
 		"SHA3-224": "SHA3-224",
 		"SHA3-256": "SHA3-256",
 		"SHA3-384": "SHA3-384",
@@ -157,10 +157,10 @@ func ApprovedKeyExchanges() map[string]bool {
 // MinimumKeySizes returns minimum approved key sizes (bits)
 func MinimumKeySizes() map[string]int {
 	return map[string]int{
-		"RSA":    2048,
-		"ECDSA":  256, // P-256 or stronger
-		"AES":    128,
-		"SHA":    224, // SHA-224 minimum for security
+		"RSA":   2048,
+		"ECDSA": 256, // P-256 or stronger
+		"AES":   128,
+		"SHA":   224, // SHA-224 minimum for security
 	}
 }
 
@@ -365,8 +365,8 @@ func GetTLSConfig(minVersion uint16) *tls.Config {
 
 var (
 	auditEnabled bool
-	auditLog []string
-	auditMu  sync.RWMutex
+	auditLog     []string
+	auditMu      sync.RWMutex
 )
 
 // Option is a functional option for configuring FIPS mode

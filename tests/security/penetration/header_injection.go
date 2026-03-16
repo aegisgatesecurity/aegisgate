@@ -75,7 +75,7 @@ func (h *HeaderInjectionTest) RunHeaderInjectionTests(ctx context.Context) (*Hea
 func (h *HeaderInjectionTest) testHeaderInjection(ctx context.Context, name, value string) HeaderResult {
 	ctx, cancel := context.WithTimeout(ctx, h.Timeout)
 	defer cancel()
-	_ = cancel  // ignore cancel error in this context
+	_ = cancel // ignore cancel error in this context
 	defer cancel()
 
 	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", h.TargetHost, h.TargetPort), 10*time.Second)

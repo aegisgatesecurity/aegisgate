@@ -190,7 +190,7 @@ class AegisGateDashboard {
         const headers = {
             "Content-Type": "application/json"
         };
-        
+
         if (csrfToken) {
             headers["X-CSRF-Token"] = csrfToken;
         }

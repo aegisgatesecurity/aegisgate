@@ -3,7 +3,7 @@ package grpc
 
 import (
 	"context"
-	
+
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -20,11 +20,11 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Success   bool    `json:"success"`
-	Token     string  `json:"token"`
-	ExpiresAt int64   `json:"expires_at"`
-	User      *User   `json:"user"`
-	Error     string  `json:"error"`
+	Success   bool   `json:"success"`
+	Token     string `json:"token"`
+	ExpiresAt int64  `json:"expires_at"`
+	User      *User  `json:"user"`
+	Error     string `json:"error"`
 }
 
 type LogoutRequest struct {
@@ -41,9 +41,9 @@ type ValidateTokenRequest struct {
 }
 
 type ValidateTokenResponse struct {
-	Valid    bool  `json:"valid"`
-	UserId   string `json:"user_id"`
-	ExpiresAt int64 `json:"expires_at"`
+	Valid     bool   `json:"valid"`
+	UserId    string `json:"user_id"`
+	ExpiresAt int64  `json:"expires_at"`
 }
 
 type GetUserRequest struct {
@@ -102,10 +102,10 @@ type GetAuthConfigRequest struct{}
 type GetAuthConfigResponse struct {
 	SessionTimeout     int32 `json:"session_timeout"`
 	MaxSessionsPerUser int32 `json:"max_sessions_per_user"`
-	RequireMfa        bool  `json:"require_mfa"`
-	LoginAttempts     int32 `json:"login_attempts"`
-	LockoutDuration   int32 `json:"lockout_duration"`
-	PasswordMinLength int32 `json:"password_min_length"`
+	RequireMfa         bool  `json:"require_mfa"`
+	LoginAttempts      int32 `json:"login_attempts"`
+	LockoutDuration    int32 `json:"lockout_duration"`
+	PasswordMinLength  int32 `json:"password_min_length"`
 }
 
 type User struct {
@@ -132,14 +132,14 @@ type GetProxyStatsRequest struct{}
 
 type GetProxyStatsResponse struct {
 	RequestsTotal     int64   `json:"requests_total"`
-	RequestsBlocked  int64   `json:"requests_blocked"`
-	RequestsAllowed  int64   `json:"requests_allowed"`
-	BytesIn          int64   `json:"bytes_in"`
-	BytesOut         int64   `json:"bytes_out"`
+	RequestsBlocked   int64   `json:"requests_blocked"`
+	RequestsAllowed   int64   `json:"requests_allowed"`
+	BytesIn           int64   `json:"bytes_in"`
+	BytesOut          int64   `json:"bytes_out"`
 	ActiveConnections int32   `json:"active_connections"`
-	AvgLatencyMs     float64 `json:"avg_latency_ms"`
-	P99LatencyMs     float64 `json:"p99_latency_ms"`
-	Errors           int64   `json:"errors"`
+	AvgLatencyMs      float64 `json:"avg_latency_ms"`
+	P99LatencyMs      float64 `json:"p99_latency_ms"`
+	Errors            int64   `json:"errors"`
 }
 
 type GetProxyHealthRequest struct{}
@@ -154,14 +154,14 @@ type GetProxyHealthResponse struct {
 type GetProxyConfigRequest struct{}
 
 type GetProxyConfigResponse struct {
-	Enabled         bool     `json:"enabled"`
-	Host            string   `json:"host"`
-	Port            int32    `json:"port"`
-	TlsEnabled      bool     `json:"tls_enabled"`
-	RateLimit       int32    `json:"rate_limit"`
-	RateLimitBurst  int32    `json:"rate_limit_burst"`
-	CorsEnabled     bool     `json:"cors_enabled"`
-	CorsOrigins     []string `json:"cors_origins"`
+	Enabled        bool     `json:"enabled"`
+	Host           string   `json:"host"`
+	Port           int32    `json:"port"`
+	TlsEnabled     bool     `json:"tls_enabled"`
+	RateLimit      int32    `json:"rate_limit"`
+	RateLimitBurst int32    `json:"rate_limit_burst"`
+	CorsEnabled    bool     `json:"cors_enabled"`
+	CorsOrigins    []string `json:"cors_origins"`
 }
 
 type IsProxyEnabledRequest struct{}
@@ -185,7 +185,7 @@ type DisableProxyResponse struct {
 
 type GetViolationsRequest struct {
 	Severities []ViolationSeverity `json:"severities"`
-	Limit      int32              `json:"limit"`
+	Limit      int32               `json:"limit"`
 }
 
 type GetViolationsResponse struct {
@@ -207,7 +207,7 @@ type Violation struct {
 	Method    string            `json:"method"`
 	Path      string            `json:"path"`
 	Blocked   bool              `json:"blocked"`
-	Timestamp int64            `json:"timestamp"`
+	Timestamp int64             `json:"timestamp"`
 }
 
 type ViolationType int32
@@ -243,7 +243,7 @@ type GetFrameworksResponse struct {
 type GetComplianceStatusRequest struct{}
 
 type GetComplianceStatusResponse struct {
-	Overall    ComplianceStatus    `json:"overall"`
+	Overall    ComplianceStatus   `json:"overall"`
 	Frameworks []*FrameworkStatus `json:"frameworks"`
 }
 
@@ -252,9 +252,9 @@ type RunComplianceCheckRequest struct {
 }
 
 type RunComplianceCheckResponse struct {
-	Id        string          `json:"id"`
-	Framework string          `json:"framework"`
-	Status    ComplianceStatus `json:"status"`
+	Id        string             `json:"id"`
+	Framework string             `json:"framework"`
+	Status    ComplianceStatus   `json:"status"`
 	Summary   *ComplianceSummary `json:"summary"`
 }
 
@@ -269,33 +269,34 @@ type GenerateReportRequest struct {
 }
 
 type GenerateReportResponse struct {
-	Id         string            `json:"id"`
-	Framework  string            `json:"framework"`
-	Timestamp  int64            `json:"timestamp"`
-	Status     ComplianceStatus  `json:"status"`
-	Summary    *ComplianceSummary `json:"summary"`
+	Id        string             `json:"id"`
+	Framework string             `json:"framework"`
+	Timestamp int64              `json:"timestamp"`
+	Status    ComplianceStatus   `json:"status"`
+	Summary   *ComplianceSummary `json:"summary"`
 }
 
 type ComplianceStatus int32
 
 // ComplianceStatus values
 const (
-	ComplianceStatus_UNKNOWN ComplianceStatus = 0
-	ComplianceStatus_PASS ComplianceStatus = 1
-	ComplianceStatus_FAIL ComplianceStatus = 2
-	ComplianceStatus_WARNING ComplianceStatus = 3
-	ComplianceStatus_PENDING ComplianceStatus = 4
+	ComplianceStatus_UNKNOWN        ComplianceStatus = 0
+	ComplianceStatus_PASS           ComplianceStatus = 1
+	ComplianceStatus_FAIL           ComplianceStatus = 2
+	ComplianceStatus_WARNING        ComplianceStatus = 3
+	ComplianceStatus_PENDING        ComplianceStatus = 4
 	ComplianceStatus_NOT_APPLICABLE ComplianceStatus = 5
 )
+
 type FindingSeverity int32
 
 // FindingSeverity values
 const (
-	FindingSeverity_UNKNOWN FindingSeverity = 0
-	FindingSeverity_INFO FindingSeverity = 1
-	FindingSeverity_LOW FindingSeverity = 2
-	FindingSeverity_MEDIUM FindingSeverity = 3
-	FindingSeverity_HIGH FindingSeverity = 4
+	FindingSeverity_UNKNOWN  FindingSeverity = 0
+	FindingSeverity_INFO     FindingSeverity = 1
+	FindingSeverity_LOW      FindingSeverity = 2
+	FindingSeverity_MEDIUM   FindingSeverity = 3
+	FindingSeverity_HIGH     FindingSeverity = 4
 	FindingSeverity_CRITICAL FindingSeverity = 5
 )
 
@@ -325,11 +326,11 @@ type Framework struct {
 type FrameworkStatus struct {
 	Framework ComplianceStatus `json:"framework"`
 	Status    ComplianceStatus `json:"status"`
-	Score     float64         `json:"score"`
+	Score     float64          `json:"score"`
 }
 
 type ComplianceSummary struct {
-	TotalChecks    int32   `json:"total_checks"`
+	TotalChecks   int32   `json:"total_checks"`
 	Passed        int32   `json:"passed"`
 	Failed        int32   `json:"failed"`
 	Warnings      int32   `json:"warnings"`
@@ -338,13 +339,13 @@ type ComplianceSummary struct {
 }
 
 type ComplianceFinding struct {
-	Id          string        `json:"id"`
-	Title       string        `json:"title"`
-	Description string        `json:"description"`
+	Id          string          `json:"id"`
+	Title       string          `json:"title"`
+	Description string          `json:"description"`
 	Severity    FindingSeverity `json:"severity"`
-	Category    string        `json:"category"`
-	Framework   string        `json:"framework"`
-	Timestamp   int64        `json:"timestamp"`
+	Category    string          `json:"category"`
+	Framework   string          `json:"framework"`
+	Timestamp   int64           `json:"timestamp"`
 }
 
 // SIEM Types
@@ -352,7 +353,7 @@ type GetSIEMConfigRequest struct{}
 
 type GetSIEMConfigResponse struct {
 	Enabled       bool  `json:"enabled"`
-	BatchSize    int32 `json:"batch_size"`
+	BatchSize     int32 `json:"batch_size"`
 	BatchInterval int32 `json:"batch_interval"`
 	RetryAttempts int32 `json:"retry_attempts"`
 	RetryInterval int32 `json:"retry_interval"`
@@ -364,7 +365,7 @@ type GetSIEMStatsResponse struct {
 	EventsSent    int64  `json:"events_sent"`
 	EventsDropped int64  `json:"events_dropped"`
 	EventsQueued  int64  `json:"events_queued"`
-	LastSendTime int64  `json:"last_send_time"`
+	LastSendTime  int64  `json:"last_send_time"`
 	LastError     string `json:"last_error"`
 }
 
@@ -377,12 +378,12 @@ type GetSIEMEventsResponse struct {
 }
 
 type SendSIEMEventRequest struct {
-	Source    string       `json:"source"`
-	Category  string       `json:"category"`
-	Type      string       `json:"type"`
-	Severity  EventSeverity `json:"severity"`
-	Message   string       `json:"message"`
-	Entity    string       `json:"entity"`
+	Source   string        `json:"source"`
+	Category string        `json:"category"`
+	Type     string        `json:"type"`
+	Severity EventSeverity `json:"severity"`
+	Message  string        `json:"message"`
+	Entity   string        `json:"entity"`
 }
 
 type SendSIEMEventResponse struct {
@@ -410,14 +411,14 @@ const (
 )
 
 type SIEMEvent struct {
-	Id        string       `json:"id"`
-	Timestamp int64        `json:"timestamp"`
-	Source    string       `json:"source"`
-	Category  string       `json:"category"`
-	Type      string       `json:"type"`
+	Id        string        `json:"id"`
+	Timestamp int64         `json:"timestamp"`
+	Source    string        `json:"source"`
+	Category  string        `json:"category"`
+	Type      string        `json:"type"`
 	Severity  EventSeverity `json:"severity"`
-	Message   string       `json:"message"`
-	Entity    string       `json:"entity"`
+	Message   string        `json:"message"`
+	Entity    string        `json:"entity"`
 }
 
 // Webhook Types
@@ -494,7 +495,7 @@ type TestWebhookResponse struct {
 type GetWebhookStatsRequest struct{}
 
 type GetWebhookStatsResponse struct {
-	TotalWebhooks      int64 `json:"total_webhooks"`
+	TotalWebhooks     int64 `json:"total_webhooks"`
 	ActiveWebhooks    int64 `json:"active_webhooks"`
 	DeliveriesTotal   int64 `json:"deliveries_total"`
 	DeliveriesSuccess int64 `json:"deliveries_success"`
@@ -527,18 +528,18 @@ type GetModuleResponse struct {
 type GetHealthRequest struct{}
 
 type GetHealthResponse struct {
-	Status string        `json:"status"`
+	Status string         `json:"status"`
 	Checks []*HealthCheck `json:"checks"`
 }
 
 type GetMetricsRequest struct{}
 
 type GetMetricsResponse struct {
-	TotalRequests      int64   `json:"total_requests"`
-	BlockedRequests    int64   `json:"blocked_requests"`
-	ActiveUsers        int32   `json:"active_users"`
-	ActiveConnections  int32   `json:"active_connections"`
-	Uptime             float64 `json:"uptime"`
+	TotalRequests     int64   `json:"total_requests"`
+	BlockedRequests   int64   `json:"blocked_requests"`
+	ActiveUsers       int32   `json:"active_users"`
+	ActiveConnections int32   `json:"active_connections"`
+	Uptime            float64 `json:"uptime"`
 }
 
 type GetVersionRequest struct{}
@@ -582,11 +583,11 @@ type DisableModuleResponse struct {
 
 type ModuleStatus int32
 type ModuleInfo struct {
-	Id          string      `json:"id"`
-	Name        string      `json:"name"`
-	Version     string      `json:"version"`
-	Description string      `json:"description"`
-	Category    string      `json:"category"`
+	Id          string       `json:"id"`
+	Name        string       `json:"name"`
+	Version     string       `json:"version"`
+	Description string       `json:"description"`
+	Category    string       `json:"category"`
 	Status      ModuleStatus `json:"status"`
 }
 
@@ -603,7 +604,6 @@ type HealthCheck struct {
 	Status  string `json:"status"`
 	Message string `json:"message"`
 }
-
 
 // TLS Types
 type GetTLSConfigRequest struct{}
@@ -637,9 +637,9 @@ type GenerateCertificateRequest struct {
 }
 
 type GenerateCertificateResponse struct {
-	Success      bool             `json:"success"`
-	Certificate  *CertificateInfo `json:"certificate"`
-	Error        string           `json:"error"`
+	Success     bool             `json:"success"`
+	Certificate *CertificateInfo `json:"certificate"`
+	Error       string           `json:"error"`
 }
 
 type GetMTLSConfigRequest struct{}
@@ -738,68 +738,175 @@ type CoreServiceServer interface {
 // ============================================================
 
 type UnimplementedTLSSvcServer struct{}
-func (*UnimplementedTLSSvcServer) GetConfig(ctx context.Context, req *GetTLSConfigRequest) (*GetTLSConfigResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedTLSSvcServer) GetCertificates(ctx context.Context, req *GetCertificatesRequest) (*GetCertificatesResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedTLSSvcServer) GenerateCertificate(ctx context.Context, req *GenerateCertificateRequest) (*GenerateCertificateResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedTLSSvcServer) GetMTLSConfig(ctx context.Context, req *GetMTLSConfigRequest) (*GetMTLSConfigResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedTLSSvcServer) GetConfig(ctx context.Context, req *GetTLSConfigRequest) (*GetTLSConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedTLSSvcServer) GetCertificates(ctx context.Context, req *GetCertificatesRequest) (*GetCertificatesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedTLSSvcServer) GenerateCertificate(ctx context.Context, req *GenerateCertificateRequest) (*GenerateCertificateResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedTLSSvcServer) GetMTLSConfig(ctx context.Context, req *GetMTLSConfigRequest) (*GetMTLSConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedAuthServiceServer struct{}
-func (*UnimplementedAuthServiceServer) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) Logout(ctx context.Context, req *LogoutRequest) (*LogoutResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) ValidateToken(ctx context.Context, req *ValidateTokenRequest) (*ValidateTokenResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) GetUser(ctx context.Context, req *GetUserRequest) (*GetUserResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) ListUsers(ctx context.Context, req *ListUsersRequest) (*ListUsersResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) UpdateUser(ctx context.Context, req *UpdateUserRequest) (*UpdateUserResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) DeleteUser(ctx context.Context, req *DeleteUserRequest) (*DeleteUserResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) GetSessions(ctx context.Context, req *GetSessionsRequest) (*GetSessionsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedAuthServiceServer) GetAuthConfig(ctx context.Context, req *GetAuthConfigRequest) (*GetAuthConfigResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedAuthServiceServer) Login(ctx context.Context, req *LoginRequest) (*LoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) Logout(ctx context.Context, req *LogoutRequest) (*LogoutResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) ValidateToken(ctx context.Context, req *ValidateTokenRequest) (*ValidateTokenResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) GetUser(ctx context.Context, req *GetUserRequest) (*GetUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) ListUsers(ctx context.Context, req *ListUsersRequest) (*ListUsersResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) CreateUser(ctx context.Context, req *CreateUserRequest) (*CreateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) UpdateUser(ctx context.Context, req *UpdateUserRequest) (*UpdateUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) DeleteUser(ctx context.Context, req *DeleteUserRequest) (*DeleteUserResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) GetSessions(ctx context.Context, req *GetSessionsRequest) (*GetSessionsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedAuthServiceServer) GetAuthConfig(ctx context.Context, req *GetAuthConfigRequest) (*GetAuthConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedProxyServiceServer struct{}
-func (*UnimplementedProxyServiceServer) GetStats(ctx context.Context, req *GetProxyStatsRequest) (*GetProxyStatsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) GetHealth(ctx context.Context, req *GetProxyHealthRequest) (*GetProxyHealthResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) GetConfig(ctx context.Context, req *GetProxyConfigRequest) (*GetProxyConfigResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) IsEnabled(ctx context.Context, req *IsProxyEnabledRequest) (*IsProxyEnabledResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) Enable(ctx context.Context, req *EnableProxyRequest) (*EnableProxyResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) Disable(ctx context.Context, req *DisableProxyRequest) (*DisableProxyResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) GetViolations(ctx context.Context, req *GetViolationsRequest) (*GetViolationsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedProxyServiceServer) ClearViolations(ctx context.Context, req *ClearViolationsRequest) (*ClearViolationsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedProxyServiceServer) GetStats(ctx context.Context, req *GetProxyStatsRequest) (*GetProxyStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) GetHealth(ctx context.Context, req *GetProxyHealthRequest) (*GetProxyHealthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) GetConfig(ctx context.Context, req *GetProxyConfigRequest) (*GetProxyConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) IsEnabled(ctx context.Context, req *IsProxyEnabledRequest) (*IsProxyEnabledResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) Enable(ctx context.Context, req *EnableProxyRequest) (*EnableProxyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) Disable(ctx context.Context, req *DisableProxyRequest) (*DisableProxyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) GetViolations(ctx context.Context, req *GetViolationsRequest) (*GetViolationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedProxyServiceServer) ClearViolations(ctx context.Context, req *ClearViolationsRequest) (*ClearViolationsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedComplianceServiceServer struct{}
-func (*UnimplementedComplianceServiceServer) GetFrameworks(ctx context.Context, req *GetFrameworksRequest) (*GetFrameworksResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedComplianceServiceServer) GetStatus(ctx context.Context, req *GetComplianceStatusRequest) (*GetComplianceStatusResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedComplianceServiceServer) RunCheck(ctx context.Context, req *RunComplianceCheckRequest) (*RunComplianceCheckResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedComplianceServiceServer) GetFindings(ctx context.Context, req *GetFindingsRequest) (*GetFindingsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedComplianceServiceServer) GenerateReport(ctx context.Context, req *GenerateReportRequest) (*GenerateReportResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedComplianceServiceServer) GetFrameworks(ctx context.Context, req *GetFrameworksRequest) (*GetFrameworksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedComplianceServiceServer) GetStatus(ctx context.Context, req *GetComplianceStatusRequest) (*GetComplianceStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedComplianceServiceServer) RunCheck(ctx context.Context, req *RunComplianceCheckRequest) (*RunComplianceCheckResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedComplianceServiceServer) GetFindings(ctx context.Context, req *GetFindingsRequest) (*GetFindingsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedComplianceServiceServer) GenerateReport(ctx context.Context, req *GenerateReportRequest) (*GenerateReportResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedSIEMServiceServer struct{}
-func (*UnimplementedSIEMServiceServer) GetConfig(ctx context.Context, req *GetSIEMConfigRequest) (*GetSIEMConfigResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedSIEMServiceServer) GetStats(ctx context.Context, req *GetSIEMStatsRequest) (*GetSIEMStatsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedSIEMServiceServer) GetEvents(ctx context.Context, req *GetSIEMEventsRequest) (*GetSIEMEventsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedSIEMServiceServer) SendEvent(ctx context.Context, req *SendSIEMEventRequest) (*SendSIEMEventResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedSIEMServiceServer) TestConnection(ctx context.Context, req *TestSIEMConnectionRequest) (*TestSIEMConnectionResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedSIEMServiceServer) GetConfig(ctx context.Context, req *GetSIEMConfigRequest) (*GetSIEMConfigResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedSIEMServiceServer) GetStats(ctx context.Context, req *GetSIEMStatsRequest) (*GetSIEMStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedSIEMServiceServer) GetEvents(ctx context.Context, req *GetSIEMEventsRequest) (*GetSIEMEventsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedSIEMServiceServer) SendEvent(ctx context.Context, req *SendSIEMEventRequest) (*SendSIEMEventResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedSIEMServiceServer) TestConnection(ctx context.Context, req *TestSIEMConnectionRequest) (*TestSIEMConnectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedWebhookServiceServer struct{}
-func (*UnimplementedWebhookServiceServer) ListWebhooks(ctx context.Context, req *ListWebhooksRequest) (*ListWebhooksResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) GetWebhook(ctx context.Context, req *GetWebhookRequest) (*GetWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) CreateWebhook(ctx context.Context, req *CreateWebhookRequest) (*CreateWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) UpdateWebhook(ctx context.Context, req *UpdateWebhookRequest) (*UpdateWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) DeleteWebhook(ctx context.Context, req *DeleteWebhookRequest) (*DeleteWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) EnableWebhook(ctx context.Context, req *EnableWebhookRequest) (*EnableWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) DisableWebhook(ctx context.Context, req *DisableWebhookRequest) (*DisableWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) TestWebhook(ctx context.Context, req *TestWebhookRequest) (*TestWebhookResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedWebhookServiceServer) GetStats(ctx context.Context, req *GetWebhookStatsRequest) (*GetWebhookStatsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedWebhookServiceServer) ListWebhooks(ctx context.Context, req *ListWebhooksRequest) (*ListWebhooksResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) GetWebhook(ctx context.Context, req *GetWebhookRequest) (*GetWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) CreateWebhook(ctx context.Context, req *CreateWebhookRequest) (*CreateWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) UpdateWebhook(ctx context.Context, req *UpdateWebhookRequest) (*UpdateWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) DeleteWebhook(ctx context.Context, req *DeleteWebhookRequest) (*DeleteWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) EnableWebhook(ctx context.Context, req *EnableWebhookRequest) (*EnableWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) DisableWebhook(ctx context.Context, req *DisableWebhookRequest) (*DisableWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) TestWebhook(ctx context.Context, req *TestWebhookRequest) (*TestWebhookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedWebhookServiceServer) GetStats(ctx context.Context, req *GetWebhookStatsRequest) (*GetWebhookStatsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 type UnimplementedCoreServiceServer struct{}
-func (*UnimplementedCoreServiceServer) ListModules(ctx context.Context, req *ListModulesRequest) (*ListModulesResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetModule(ctx context.Context, req *GetModuleRequest) (*GetModuleResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetHealth(ctx context.Context, req *GetHealthRequest) (*GetHealthResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetMetrics(ctx context.Context, req *GetMetricsRequest) (*GetMetricsResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetVersion(ctx context.Context, req *GetVersionRequest) (*GetVersionResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetUptime(ctx context.Context, req *GetUptimeRequest) (*GetUptimeResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) GetRegistryStatus(ctx context.Context, req *GetRegistryStatusRequest) (*GetRegistryStatusResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) EnableModule(ctx context.Context, req *EnableModuleRequest) (*EnableModuleResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
-func (*UnimplementedCoreServiceServer) DisableModule(ctx context.Context, req *DisableModuleRequest) (*DisableModuleResponse, error) { return nil, status.Errorf(codes.Unimplemented, "not implemented") }
+
+func (*UnimplementedCoreServiceServer) ListModules(ctx context.Context, req *ListModulesRequest) (*ListModulesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetModule(ctx context.Context, req *GetModuleRequest) (*GetModuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetHealth(ctx context.Context, req *GetHealthRequest) (*GetHealthResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetMetrics(ctx context.Context, req *GetMetricsRequest) (*GetMetricsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetVersion(ctx context.Context, req *GetVersionRequest) (*GetVersionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetUptime(ctx context.Context, req *GetUptimeRequest) (*GetUptimeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) GetRegistryStatus(ctx context.Context, req *GetRegistryStatusRequest) (*GetRegistryStatusResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) EnableModule(ctx context.Context, req *EnableModuleRequest) (*EnableModuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
+func (*UnimplementedCoreServiceServer) DisableModule(ctx context.Context, req *DisableModuleRequest) (*DisableModuleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "not implemented")
+}
 
 // ============================================================
 // GRPC REGISTRATION HELPERS

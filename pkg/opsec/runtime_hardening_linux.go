@@ -12,10 +12,10 @@ import (
 
 // RuntimeHardening provides security hardening for the running process
 type RuntimeHardening struct {
-	aslrEnabled     bool
-	seccompEnabled  bool
+	aslrEnabled         bool
+	seccompEnabled      bool
 	capabilitiesDropped bool
-	rlimitsSet      bool
+	rlimitsSet          bool
 }
 
 // NewRuntimeHardening creates a new runtime hardening manager
@@ -120,7 +120,7 @@ func (r *RuntimeHardening) DropCapabilities() error {
 
 	// Since implementation requires CGO or syscall wrappers,
 	// we document this as a recommended hardening step
-	
+
 	return nil // Mark as success in stub
 }
 
@@ -196,7 +196,7 @@ func (r *RuntimeHardening) SetRLimits() error {
 	var rlim syscall.Rlimit
 	rlim.Cur = 65536 // Soft limit
 	rlim.Max = 65536 // Hard limit
-	
+
 	err := syscall.Setrlimit(syscall.RLIMIT_NOFILE, &rlim)
 	if err != nil {
 		return fmt.Errorf("failed to set file descriptor limit: %w", err)
@@ -205,14 +205,14 @@ func (r *RuntimeHardening) SetRLimits() error {
 	// Set memory limits (optional - may be set by container)
 	rlim.Cur = 2 * 1024 * 1024 * 1024 // 2GB soft
 	rlim.Max = 4 * 1024 * 1024 * 1024 // 4GB hard
-	
+
 	// This might fail in containers - that's okay
 	syscall.Setrlimit(syscall.RLIMIT_AS, &rlim)
 
 	// Set process limits
 	rlim.Cur = 128
 	rlim.Max = 256
-	
+
 	// This might fail - that's okay
 	syscall.Setrlimit(6, &rlim)
 
@@ -224,7 +224,7 @@ func (r *RuntimeHardening) GetRLimits() (map[string]syscall.Rlimit, error) {
 	limits := make(map[string]syscall.Rlimit)
 
 	var rlim syscall.Rlimit
-	
+
 	// File descriptors
 	if err := syscall.Getrlimit(syscall.RLIMIT_NOFILE, &rlim); err == nil {
 		limits["NOFILE"] = rlim
@@ -268,7 +268,7 @@ func (r *RuntimeHardening) CanDropCapabilities() bool {
 // GenerateHardeningReport creates a report of current hardening status
 func (r *RuntimeHardening) GenerateHardeningReport() map[string]interface{} {
 	report := map[string]interface{}{
-		"aslr_enabled": r.CheckASLR(),
+		"aslr_enabled":    r.CheckASLR(),
 		"seccomp_enabled": r.GetSeccompStatus(),
 	}
 

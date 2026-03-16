@@ -33,31 +33,31 @@ func (r RPSLevel) String() string {
 
 // RPSConfig defines the configuration for an RPS load test
 type RPSConfig struct {
-	Level             RPSLevel
-	TargetRPS         int
-	Duration          time.Duration
-	WarmupDuration    time.Duration
-	CooldownDuration  time.Duration
-	Concurrency       int
-	RequestTimeout    time.Duration
-	TargetHost        string
-	TargetPort        int
-	UseHTTPS          bool
-	KeepAlive         bool
-	NumClients        int
+	Level            RPSLevel
+	TargetRPS        int
+	Duration         time.Duration
+	WarmupDuration   time.Duration
+	CooldownDuration time.Duration
+	Concurrency      int
+	RequestTimeout   time.Duration
+	TargetHost       string
+	TargetPort       int
+	UseHTTPS         bool
+	KeepAlive        bool
+	NumClients       int
 }
 
 // RPSResult contains the results of an RPS load test
 type RPSResult struct {
-	Config           RPSConfig
-	StartTime        time.Time
-	EndTime          time.Time
-	TotalDuration    time.Duration
+	Config        RPSConfig
+	StartTime     time.Time
+	EndTime       time.Time
+	TotalDuration time.Duration
 
 	// Throughput metrics
-	ActualRPS       float64
-	TargetRPS       float64
-	RPSAchievement  float64 // Percentage of target achieved
+	ActualRPS      float64
+	TargetRPS      float64
+	RPSAchievement float64 // Percentage of target achieved
 
 	// Request metrics
 	TotalRequests   int64
@@ -67,42 +67,42 @@ type RPSResult struct {
 	ConnectionError int64
 
 	// Latency metrics
-	MinLatency      time.Duration
-	MaxLatency      time.Duration
-	AvgLatency      time.Duration
-	P50Latency      time.Duration
-	P90Latency      time.Duration
-	P95Latency      time.Duration
-	P99Latency      time.Duration
-	P999Latency     time.Duration
-	P9999Latency    time.Duration
+	MinLatency   time.Duration
+	MaxLatency   time.Duration
+	AvgLatency   time.Duration
+	P50Latency   time.Duration
+	P90Latency   time.Duration
+	P95Latency   time.Duration
+	P99Latency   time.Duration
+	P999Latency  time.Duration
+	P9999Latency time.Duration
 
 	// Latency percentiles (histogram buckets)
-	LatencyBuckets  map[string]int64
+	LatencyBuckets map[string]int64
 
 	// Error breakdown
-	ErrorBreakdown  map[string]int64
+	ErrorBreakdown map[string]int64
 
 	// Resource metrics
-	AvgMemoryMB     float64
-	PeakMemoryMB    float64
-	AvgCPUPercent   float64
-	NumGC           uint32
+	AvgMemoryMB   float64
+	PeakMemoryMB  float64
+	AvgCPUPercent float64
+	NumGC         uint32
 
 	// Scaling metrics (for auto-scaling analysis)
-	Samples         []RPSTimeSeriesSample
+	Samples []RPSTimeSeriesSample
 }
 
 // RPSTimeSeriesSample represents a point in time series data
 type RPSTimeSeriesSample struct {
-	Timestamp     time.Time
-	RPS            float64
-	LatencyP50     time.Duration
-	LatencyP99     time.Duration
-	ErrorRate      float64
-	MemoryMB       float64
-	CPUPercent     float64
-	ActiveConns    int
+	Timestamp   time.Time
+	RPS         float64
+	LatencyP50  time.Duration
+	LatencyP99  time.Duration
+	ErrorRate   float64
+	MemoryMB    float64
+	CPUPercent  float64
+	ActiveConns int
 }
 
 // DefaultRPSConfigs returns default configurations for each RPS level

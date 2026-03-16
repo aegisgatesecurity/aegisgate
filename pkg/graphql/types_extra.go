@@ -66,15 +66,15 @@ type ViolationFilter struct {
 
 // AuthConfig represents authentication configuration
 type AuthConfig struct {
-	Provider            string   `json:"provider"`
-	SessionTimeout      int      `json:"session_timeout"`
-	MaxSessionsPerUser  int      `json:"max_sessions_per_user"`
-	RequireMFA         bool     `json:"require_mfa"`
-	MFAMethods         []string `json:"mfa_methods"`
+	Provider           string          `json:"provider"`
+	SessionTimeout     int             `json:"session_timeout"`
+	MaxSessionsPerUser int             `json:"max_sessions_per_user"`
+	RequireMFA         bool            `json:"require_mfa"`
+	MFAMethods         []string        `json:"mfa_methods"`
 	PasswordPolicy     *PasswordPolicy `json:"password_policy"`
-	LoginAttempts      int      `json:"login_attempts"`
-	LockoutDuration    int      `json:"lockout_duration"`
-	Providers          []string `json:"providers"`
+	LoginAttempts      int             `json:"login_attempts"`
+	LockoutDuration    int             `json:"lockout_duration"`
+	Providers          []string        `json:"providers"`
 }
 
 // PasswordPolicy - local type for GraphQL
@@ -96,7 +96,7 @@ type SSOProvider struct {
 
 // ProxyConfig represents proxy configuration
 type ProxyConfig struct {
-	Enabled      bool   `json:"enabled"`
+	Enabled     bool   `json:"enabled"`
 	BindAddress string `json:"bind_address"`
 	Upstream    string `json:"upstream"`
 	MaxBodySize int64  `json:"max_body_size"`
@@ -107,12 +107,12 @@ type ProxyConfig struct {
 
 // ComplianceReport represents a compliance report
 type ComplianceReport struct {
-	ID         string    `json:"id"`
-	Framework  string    `json:"framework"`
-	Timestamp  time.Time `json:"timestamp"`
-	Status     string    `json:"status"`
-	Summary    string    `json:"summary"`
-	Findings   []compliance.Finding `json:"findings"`
+	ID        string               `json:"id"`
+	Framework string               `json:"framework"`
+	Timestamp time.Time            `json:"timestamp"`
+	Status    string               `json:"status"`
+	Summary   string               `json:"summary"`
+	Findings  []compliance.Finding `json:"findings"`
 }
 
 // FindingFilter represents filter parameters for compliance findings
@@ -125,32 +125,32 @@ type FindingFilter struct {
 // ComplianceFindingConnection represents a paginated list of findings
 type ComplianceFindingConnection struct {
 	Edges      []FindingEdge `json:"edges"`
-	PageInfo   PageInfo     `json:"page_info"`
+	PageInfo   PageInfo      `json:"page_info"`
 	TotalCount int           `json:"total_count"`
 }
 
 // FindingEdge represents an edge in the finding connection
 type FindingEdge struct {
 	Node   compliance.Finding `json:"node"`
-	Cursor string            `json:"cursor"`
+	Cursor string             `json:"cursor"`
 }
 
 // SIEMConfig represents SIEM configuration
 type SIEMConfig struct {
-	Enabled    bool     `json:"enabled"`
-	Platform   string   `json:"platform"`
-	Endpoint   string   `json:"endpoint"`
-	Format     string   `json:"format"`
-	BufferSize int      `json:"buffer_size"`
+	Enabled    bool   `json:"enabled"`
+	Platform   string `json:"platform"`
+	Endpoint   string `json:"endpoint"`
+	Format     string `json:"format"`
+	BufferSize int    `json:"buffer_size"`
 }
 
 // WebhookStats represents webhook statistics
 type WebhookStats struct {
 	TotalDeliveries int64     `json:"total_deliveries"`
-	SuccessCount   int64     `json:"success_count"`
-	FailureCount   int64     `json:"failure_count"`
-	LastDelivery  time.Time `json:"last_delivery"`
-	LastError     string    `json:"last_error"`
+	SuccessCount    int64     `json:"success_count"`
+	FailureCount    int64     `json:"failure_count"`
+	LastDelivery    time.Time `json:"last_delivery"`
+	LastError       string    `json:"last_error"`
 }
 
 // DashboardData represents dashboard data for the UI
@@ -163,13 +163,13 @@ type DashboardData struct {
 
 // ComplianceResult represents the result of a compliance check
 type ComplianceResult struct {
-	ID          string    `json:"id"`
-	Framework   string    `json:"framework"`
-	Status      string    `json:"status"`
-	Passed      bool      `json:"passed"`
-	Score       float64   `json:"score"`
-	Timestamp   time.Time `json:"timestamp"`
-	Findings    []compliance.Finding `json:"findings"`
+	ID        string               `json:"id"`
+	Framework string               `json:"framework"`
+	Status    string               `json:"status"`
+	Passed    bool                 `json:"passed"`
+	Score     float64              `json:"score"`
+	Timestamp time.Time            `json:"timestamp"`
+	Findings  []compliance.Finding `json:"findings"`
 }
 
 // Config represents a configuration
@@ -221,7 +221,7 @@ type WebhookFilter struct {
 
 // ProxyConfigInput represents input for configuring the proxy
 type ProxyConfigInput struct {
-	Enabled      bool
+	Enabled     bool
 	BindAddress string
 	Upstream    string
 	RateLimit   int
@@ -236,32 +236,32 @@ type UpdateUserInput struct {
 
 // WebhookInput represents input for creating/updating a webhook
 type WebhookInput struct {
-	Name      string
-	URL       string
-	Events    []string
-	Enabled   bool
+	Name    string
+	URL     string
+	Events  []string
+	Enabled bool
 }
 
 // MetricsSnapshot represents a snapshot of system metrics
 type MetricsSnapshot struct {
-	Timestamp        time.Time `json:"timestamp"`
-	TotalRequests    int64     `json:"total_requests"`
-	BlockedRequests  int64     `json:"blocked_requests"`
-	ActiveUsers      int       `json:"active_users"`
+	Timestamp       time.Time `json:"timestamp"`
+	TotalRequests   int64     `json:"total_requests"`
+	BlockedRequests int64     `json:"blocked_requests"`
+	ActiveUsers     int       `json:"active_users"`
 }
 
 // RegistryStatus represents the status of the module registry
 type RegistryStatus struct {
-	TotalModules   int            `json:"total_modules"`
-	ActiveModules  int            `json:"active_modules"`
-	HealthyModules int            `json:"healthy_modules"`
+	TotalModules   int               `json:"total_modules"`
+	ActiveModules  int               `json:"active_modules"`
+	HealthyModules int               `json:"healthy_modules"`
 	ModuleStatuses map[string]string `json:"module_statuses"`
 }
 
 // MTLSStatus represents mTLS configuration status
 type MTLSStatus struct {
 	Enabled        bool   `json:"enabled"`
-	CaCertFile    string `json:"ca_cert_file"`
+	CaCertFile     string `json:"ca_cert_file"`
 	ClientCertFile string `json:"client_cert_file"`
 }
 
@@ -277,5 +277,5 @@ type SecurityEvent struct {
 // ComplianceFindingEdge represents an edge in compliance findings
 type ComplianceFindingEdge struct {
 	Node   compliance.Finding `json:"node"`
-	Cursor string            `json:"cursor"`
+	Cursor string             `json:"cursor"`
 }

@@ -24,7 +24,7 @@ import (
 
 // PromptInjectionDetector detects potential prompt injection attacks
 type PromptInjectionDetector struct {
-	mu sync.RWMutex
+	mu          sync.RWMutex
 	sensitivity int // 0-100
 	stats       PromptInjectionStats
 	patterns    []InjectionPattern
@@ -32,10 +32,10 @@ type PromptInjectionDetector struct {
 
 // InjectionPattern represents a known prompt injection pattern
 type InjectionPattern struct {
-	Name        string
-	Regex       *regexp.Regexp
-	Severity    int // 1-5
-	Weight      float64
+	Name     string
+	Regex    *regexp.Regexp
+	Severity int // 1-5
+	Weight   float64
 }
 
 // PromptInjectionStats holds detection statistics
@@ -171,10 +171,10 @@ func NewPromptInjectionDetector(sensitivity int) *PromptInjectionDetector {
 // DetectionResult represents the result of prompt injection detection
 type DetectionResult struct {
 	IsInjection     bool
-	Score          float64 // 0-100
+	Score           float64 // 0-100
 	MatchedPatterns []string
-	Severity       int
-	Explanation    string
+	Severity        int
+	Explanation     string
 }
 
 // Detect analyzes content for prompt injection attempts
@@ -188,9 +188,9 @@ func (d *PromptInjectionDetector) Detect(content string) *DetectionResult {
 
 	result := &DetectionResult{
 		IsInjection:     false,
-		Score:          0,
+		Score:           0,
 		MatchedPatterns: []string{},
-		Severity:       0,
+		Severity:        0,
 	}
 
 	if content == "" {
@@ -205,11 +205,11 @@ func (d *PromptInjectionDetector) Detect(content string) *DetectionResult {
 	for _, pattern := range d.patterns {
 		if pattern.Regex.MatchString(content) || pattern.Regex.MatchString(contentLower) {
 			matchedPatterns = append(matchedPatterns, pattern.Name)
-			
+
 			// Calculate score based on severity and weight
 			patternScore := float64(pattern.Severity) * pattern.Weight * 20
 			totalScore += patternScore
-			
+
 			if pattern.Severity > maxSeverity {
 				maxSeverity = pattern.Severity
 			}
@@ -241,7 +241,7 @@ func (d *PromptInjectionDetector) Detect(content string) *DetectionResult {
 
 	if len(matchedPatterns) > 0 {
 		result.Explanation = "Detected " + strings.Join(matchedPatterns, ", ")
-		
+
 		d.stats.mu.Lock()
 		d.stats.ThreatsDetected++
 		d.stats.LastDetection = time.Now()
@@ -263,7 +263,7 @@ func (d *PromptInjectionDetector) GetStats() map[string]interface{} {
 		"total_scanned":    d.stats.TotalScanned,
 		"threats_detected": d.stats.ThreatsDetected,
 		"blocked_count":    d.stats.BlockedCount,
-		"by_pattern":      d.stats.ByPattern,
+		"by_pattern":       d.stats.ByPattern,
 		"sensitivity":      d.sensitivity,
 	}
 }
@@ -296,7 +296,7 @@ func (d *PromptInjectionDetector) SetSensitivity(sensitivity int) {
 
 // ContentAnalyzer analyzes LLM responses for policy violations
 type ContentAnalyzer struct {
-	mu sync.RWMutex
+	mu    sync.RWMutex
 	stats ContentAnalysisStats
 
 	// PII patterns
@@ -308,11 +308,11 @@ type ContentAnalyzer struct {
 
 // ContentAnalysisStats holds analysis statistics
 type ContentAnalysisStats struct {
-	TotalAnalyzed     int64
-	ViolationsFound   int64
-	ByType            map[string]int64
-	LastViolation     time.Time
-	mu                sync.Mutex
+	TotalAnalyzed   int64
+	ViolationsFound int64
+	ByType          map[string]int64
+	LastViolation   time.Time
+	mu              sync.Mutex
 }
 
 // ContentRule represents a custom content analysis rule
@@ -330,14 +330,14 @@ func NewContentAnalyzer() *ContentAnalyzer {
 			ByType: make(map[string]int64),
 		},
 		piiPatterns: map[string]*regexp.Regexp{
-			"ssn":           regexp.MustCompile(`\b\d{3}-\d{2}-\d{4}\b`),
-			"credit_card":   regexp.MustCompile(`\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b`),
-			"email":         regexp.MustCompile(`\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b`),
-			"phone":         regexp.MustCompile(`\b(\+1[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}\b`),
-			"ip_address":    regexp.MustCompile(`\b(?:\d{1,3}\.){3}\d{1,3}\b`),
-			"api_key":       regexp.MustCompile(`(?i)(api[_-]?key|apikey|access[_-]?token)['":\s=]+[a-zA-Z0-9_\-]{20,}`),
-			"password":      regexp.MustCompile(`(?i)(password|passwd|pwd)['":\s=]+[^\s]{8,}`),
-			"private_key":   regexp.MustCompile(`-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----`),
+			"ssn":         regexp.MustCompile(`\b\d{3}-\d{2}-\d{4}\b`),
+			"credit_card": regexp.MustCompile(`\b\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}\b`),
+			"email":       regexp.MustCompile(`\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b`),
+			"phone":       regexp.MustCompile(`\b(\+1[- ]?)?\(?\d{3}\)?[- ]?\d{3}[- ]?\d{4}\b`),
+			"ip_address":  regexp.MustCompile(`\b(?:\d{1,3}\.){3}\d{1,3}\b`),
+			"api_key":     regexp.MustCompile(`(?i)(api[_-]?key|apikey|access[_-]?token)['":\s=]+[a-zA-Z0-9_\-]{20,}`),
+			"password":    regexp.MustCompile(`(?i)(password|passwd|pwd)['":\s=]+[^\s]{8,}`),
+			"private_key": regexp.MustCompile(`-----BEGIN (RSA |EC |DSA |OPENSSH )?PRIVATE KEY-----`),
 		},
 		rules: []ContentRule{},
 	}
@@ -425,7 +425,7 @@ func (a *ContentAnalyzer) GetStats() map[string]interface{} {
 	return map[string]interface{}{
 		"total_analyzed":   a.stats.TotalAnalyzed,
 		"violations_found": a.stats.ViolationsFound,
-		"by_type":         a.stats.ByType,
+		"by_type":          a.stats.ByType,
 	}
 }
 
@@ -449,7 +449,7 @@ func (a *ContentAnalyzer) AddRule(rule ContentRule) {
 
 // BehavioralAnalyzer analyzes behavioral patterns for anomalies
 type BehavioralAnalyzer struct {
-	mu sync.RWMutex
+	mu           sync.RWMutex
 	clientStates map[string]*ClientBehavior
 	stats        BehavioralStats
 	windowSize   time.Duration
@@ -470,11 +470,11 @@ type ClientBehavior struct {
 
 // BehavioralStats holds behavioral analysis statistics
 type BehavioralStats struct {
-	TotalClients   int64
+	TotalClients     int64
 	AnomalousClients int64
-	TotalAnomalies int64
-	ByType         map[string]int64
-	mu             sync.Mutex
+	TotalAnomalies   int64
+	ByType           map[string]int64
+	mu               sync.Mutex
 }
 
 // NewBehavioralAnalyzer creates a new behavioral analyzer
@@ -491,10 +491,10 @@ func NewBehavioralAnalyzer() *BehavioralAnalyzer {
 
 // BehavioralResult represents the result of behavioral analysis
 type BehavioralResult struct {
-	IsAnomaly    bool
-	AnomalyType  string
-	Score        float64
-	Description  string
+	IsAnomaly   bool
+	AnomalyType string
+	Score       float64
+	Description string
 }
 
 // AnalyzeRequest analyzes a request for behavioral anomalies
@@ -611,11 +611,11 @@ func (ba *BehavioralAnalyzer) GetStats() map[string]interface{} {
 	defer ba.stats.mu.Unlock()
 
 	return map[string]interface{}{
-		"total_clients":      ba.stats.TotalClients,
+		"total_clients":     ba.stats.TotalClients,
 		"anomalous_clients": ba.stats.AnomalousClients,
-		"total_anomalies":    ba.stats.TotalAnomalies,
-		"by_type":            ba.stats.ByType,
-		"active_clients":     len(ba.clientStates),
+		"total_anomalies":   ba.stats.TotalAnomalies,
+		"by_type":           ba.stats.ByType,
+		"active_clients":    len(ba.clientStates),
 	}
 }
 
@@ -634,14 +634,13 @@ func (ba *BehavioralAnalyzer) Reset() {
 	ba.stats.ByType = make(map[string]int64)
 }
 
-
 // =============================================================================
 // Additional Attack Pattern Detectors
 // =============================================================================
 
 // TokenSmugglingDetector detects token-level prompt injection attempts
 type TokenSmugglingDetector struct {
-	mu sync.RWMutex
+	mu          sync.RWMutex
 	sensitivity int
 	stats       TokenSmugglingStats
 	patterns    []TokenPattern
@@ -658,12 +657,12 @@ type TokenPattern struct {
 
 // TokenSmugglingStats holds detection statistics
 type TokenSmugglingStats struct {
-	TotalScanned     int64
-	ThreatsDetected  int64
-	BlockedCount     int64
-	ByPattern        map[string]int64
-	LastDetection    time.Time
-	mu               sync.Mutex
+	TotalScanned    int64
+	ThreatsDetected int64
+	BlockedCount    int64
+	ByPattern       map[string]int64
+	LastDetection   time.Time
+	mu              sync.Mutex
 }
 
 // NewTokenSmugglingDetector creates a new token smuggling detector
@@ -839,7 +838,7 @@ func (d *TokenSmugglingDetector) GetTokenStats() map[string]interface{} {
 
 // UnicodeAttackDetector detects Unicode-based obfuscation attacks
 type UnicodeAttackDetector struct {
-	mu sync.RWMutex
+	mu          sync.RWMutex
 	sensitivity int
 	stats       UnicodeAttackStats
 	patterns    []UnicodePattern
@@ -1037,7 +1036,7 @@ func (d *UnicodeAttackDetector) GetUnicodeStats() map[string]interface{} {
 
 // ContextManipulationDetector detects attempts to manipulate conversation context
 type ContextManipulationDetector struct {
-	mu sync.RWMutex
+	mu          sync.RWMutex
 	sensitivity int
 	stats       ContextManipulationStats
 	patterns    []ContextPattern
@@ -1054,12 +1053,12 @@ type ContextPattern struct {
 
 // ContextManipulationStats holds detection statistics
 type ContextManipulationStats struct {
-	TotalScanned      int64
-	ThreatsDetected   int64
-	BlockedCount      int64
-	ByPattern         map[string]int64
-	LastDetection     time.Time
-	mu                sync.Mutex
+	TotalScanned    int64
+	ThreatsDetected int64
+	BlockedCount    int64
+	ByPattern       map[string]int64
+	LastDetection   time.Time
+	mu              sync.Mutex
 }
 
 // NewContextManipulationDetector creates a new context manipulation detector
@@ -1243,9 +1242,9 @@ func (d *ContextManipulationDetector) GetContextStats() map[string]interface{} {
 
 // CombinedDetector provides unified detection across all attack patterns
 type CombinedDetector struct {
-	PromptInjection    *PromptInjectionDetector
-	TokenSmuggling     *TokenSmugglingDetector
-	UnicodeAttack      *UnicodeAttackDetector
+	PromptInjection     *PromptInjectionDetector
+	TokenSmuggling      *TokenSmugglingDetector
+	UnicodeAttack       *UnicodeAttackDetector
 	ContextManipulation *ContextManipulationDetector
 }
 
@@ -1261,21 +1260,21 @@ func NewCombinedDetector(sensitivity int) *CombinedDetector {
 
 // CombinedResult represents the combined detection result
 type CombinedResult struct {
-	IsThreat              bool
-	TotalScore            float64
-	PromptInjectionScore  float64
-	TokenSmugglingScore   float64
-	UnicodeAttackScore    float64
-	ContextScore          float64
-	AllMatchedPatterns    []string
-	HighestSeverity       int
+	IsThreat             bool
+	TotalScore           float64
+	PromptInjectionScore float64
+	TokenSmugglingScore  float64
+	UnicodeAttackScore   float64
+	ContextScore         float64
+	AllMatchedPatterns   []string
+	HighestSeverity      int
 }
 
 // Detect analyzes content across all detection mechanisms
 func (cd *CombinedDetector) Detect(content string) *CombinedResult {
 	result := &CombinedResult{
-		IsThreat:   false,
-		TotalScore: 0,
+		IsThreat:           false,
+		TotalScore:         0,
 		AllMatchedPatterns: []string{},
 	}
 
@@ -1328,9 +1327,9 @@ func (cd *CombinedDetector) Detect(content string) *CombinedResult {
 // GetAllStats returns combined statistics from all detectors
 func (cd *CombinedDetector) GetAllStats() map[string]interface{} {
 	return map[string]interface{}{
-		"prompt_injection":    cd.PromptInjection.GetStats(),
-		"token_smuggling":     cd.TokenSmuggling.GetTokenStats(),
-		"unicode_attack":      cd.UnicodeAttack.GetUnicodeStats(),
+		"prompt_injection":     cd.PromptInjection.GetStats(),
+		"token_smuggling":      cd.TokenSmuggling.GetTokenStats(),
+		"unicode_attack":       cd.UnicodeAttack.GetUnicodeStats(),
 		"context_manipulation": cd.ContextManipulation.GetContextStats(),
 	}
 }

@@ -20,7 +20,7 @@ import (
 	"github.com/aegisgatesecurity/aegisgate/pkg/websocket"
 
 	// Security imports
-		"github.com/aegisgatesecurity/aegisgate/pkg/security"
+	"github.com/aegisgatesecurity/aegisgate/pkg/security"
 )
 
 // version represents the current dashboard API version.
@@ -94,17 +94,17 @@ type Route struct {
 type HandlerFunc func(w http.ResponseWriter, r *http.Request) error
 
 type Dashboard struct {
-	config          Config
-	server          *http.Server
-	metrics         *metrics.MetricsCollector
-	sseServer       *websocket.SSEServer
-	routes          []Route
-	startTime       time.Time
-	logger          *slog.Logger
-	rateLimiter     *RateLimiter
-	i18n            *i18n.Manager
-	csrfHandler     *security.CSRFMiddleware
-	auditLogger     *security.AuditLogger
+	config      Config
+	server      *http.Server
+	metrics     *metrics.MetricsCollector
+	sseServer   *websocket.SSEServer
+	routes      []Route
+	startTime   time.Time
+	logger      *slog.Logger
+	rateLimiter *RateLimiter
+	i18n        *i18n.Manager
+	csrfHandler *security.CSRFMiddleware
+	auditLogger *security.AuditLogger
 }
 
 type RateLimiter struct {

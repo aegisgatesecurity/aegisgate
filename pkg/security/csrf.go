@@ -47,11 +47,11 @@ func DefaultCSRFConfig() *CSRFConfig {
 
 // CSRFMiddleware provides CSRF protection for HTTP handlers
 type CSRFMiddleware struct {
-	config   *CSRFConfig
-	logger   *slog.Logger
-	tokens   map[string]time.Time
-	mu       sync.RWMutex
-	cleanup  *time.Ticker
+	config  *CSRFConfig
+	logger  *slog.Logger
+	tokens  map[string]time.Time
+	mu      sync.RWMutex
+	cleanup *time.Ticker
 }
 
 // NewCSRFMiddleware creates a new CSRF protection middleware
@@ -59,14 +59,14 @@ func NewCSRFMiddleware(config *CSRFConfig) *CSRFMiddleware {
 	if config == nil {
 		config = DefaultCSRFConfig()
 	}
-	
+
 	middleware := &CSRFMiddleware{
 		config:  config,
 		logger:  slog.Default().WithGroup("security.csrf"),
 		tokens:  make(map[string]time.Time),
 		cleanup: time.NewTicker(5 * time.Minute),
 	}
-	
+
 	go middleware.cleanupLoop()
 	return middleware
 }
@@ -123,7 +123,7 @@ func (cm *CSRFMiddleware) Handler(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		
+
 		// For state-changing methods, validate CSRF token
 		if !cm.validateRequest(w, r) {
 			cm.logger.Warn("CSRF validation failed",
@@ -134,7 +134,7 @@ func (cm *CSRFMiddleware) Handler(next http.Handler) http.Handler {
 			cm.writeError(w, "CSRF token validation failed")
 			return
 		}
-		
+
 		next.ServeHTTP(w, r)
 	})
 }
@@ -146,38 +146,38 @@ func (cm *CSRFMiddleware) validateRequest(w http.ResponseWriter, r *http.Request
 	if err != nil || cookie.Value == "" {
 		return false
 	}
-	
+
 	cookieToken := cookie.Value
 	headerToken := r.Header.Get(cm.config.HeaderName)
 	if headerToken == "" {
 		headerToken = r.FormValue(cm.config.FormFieldName)
 	}
-	
+
 	if headerToken == "" {
 		return false
 	}
-	
+
 	// Constant time comparison to prevent timing attacks
 	if subtle.ConstantTimeCompare([]byte(cookieToken), []byte(headerToken)) != 1 {
 		return false
 	}
-	
+
 	// Check if token exists and is not expired
 	cm.mu.RLock()
 	expiry, exists := cm.tokens[cookieToken]
 	cm.mu.RUnlock()
-	
+
 	if !exists {
 		return false
 	}
-	
+
 	if time.Now().After(expiry) {
 		cm.mu.Lock()
 		delete(cm.tokens, cookieToken)
 		cm.mu.Unlock()
 		return false
 	}
-	
+
 	return true
 }
 

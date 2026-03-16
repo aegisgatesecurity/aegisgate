@@ -19,31 +19,31 @@ flowchart TB
     subgraph AegisGate["AegisGate Proxy"]
         direction TB
         TLS["TLS Termination"]
-        
+
         subgraph SecurityLayer["Security Layer"]
             Auth["Auth & Rate Limit"]
             RBAC["RBAC"]
             Secrets["Secret Rotation"]
         end
-        
+
         subgraph ComplianceLayer["Compliance Layer"]
             OWASP["OWASP Checker"]
             SOC2["SOC2"]
             HIPAA["HIPAA"]
             PCI["PCI-DSS"]
         end
-        
+
         subgraph MLLayer["ML Detection Layer"]
             Anomaly["Anomaly Detection"]
             Threat["Threat Intel"]
         end
-        
+
         subgraph Observability["Observability"]
             Metrics["Metrics"]
             Logging["Logging"]
             Audit["Audit Logger"]
         end
-        
+
         Proxy["Request Proxy"]
     end
 
@@ -83,10 +83,10 @@ sequenceDiagram
     participant Provider as AI Provider
 
     Client->>AegisGate: 1. Request
-    
+
     Note over AegisGate: 2. TLS Termination
     Note over AegisGate: 3. Auth Check (API Key/JWT)
-    
+
     AegisGate->>AegisGate: 4. Rate Limiter Check
     alt Rate Limited
         AegisGate-->>Client: 429 Too Many Requests
@@ -107,7 +107,7 @@ sequenceDiagram
     AegisGate->>Provider: 7. Forward Request
     Provider-->>AegisGate: AI Response
     AegisGate-->>Client: 8. Response
-    
+
     Note over AegisGate: 9. Log & Metrics
 ```
 
@@ -158,12 +158,12 @@ flowchart TB
     HTTP --> Proxy
     HTTPS --> Proxy
     GRPC --> Proxy
-    
+
     Proxy --> Security
     Security --> Compliance
     Compliance --> ML
     ML --> Adapter
-    
+
     Adapter --> DB
     Adapter --> Cache
     Adapter --> Files
@@ -219,23 +219,23 @@ flowchart LR
 flowchart TB
     subgraph K8s["Kubernetes Cluster"]
         LB["Load Balancer"]
-        
+
         subgraph AegisGateDeploy["AegisGate Deployment"]
             Pod1["Pod 1"]
             Pod2["Pod 2"]
             PodN["Pod N"]
         end
-        
+
         subgraph Services["Services"]
             Svc["AegisGate Service"]
         end
-        
+
         subgraph Data["Data Layer"]
             PG["PostgreSQL\n(RDS)"]
             Redis["Redis\n(Cluster)"]
             S3["S3 Bucket"]
         end
-        
+
         subgraph Monitoring["Monitoring"]
             Graf["Grafana"]
             Prometheus["Prometheus"]
@@ -246,11 +246,11 @@ flowchart TB
     Svc --> Pod1
     Svc --> Pod2
     Svc --> PodN
-    
+
     Pod1 --> PG
     Pod2 --> Redis
     PodN --> S3
-    
+
     Pod1 --> Graf
     Pod2 --> Prometheus
 ```
@@ -265,21 +265,21 @@ erDiagram
     Tenant ||--o{ APIKey : "issues"
     Tenant ||--o{ Route : "configures"
     Tenant ||--o{ AuditLog : "generates"
-    
+
     User ||--o{ Session : "creates"
-    
+
     Route ||--o{ ComplianceCheck : "triggers"
     Route ||--o{ RequestLog : "logs"
-    
+
     APIKey ||--o{ RequestLog : "authenticates"
-    
+
     Tenant {
         string id PK
         string name
         string tier
         timestamp created_at
     }
-    
+
     User {
         string id PK
         string tenant_id FK
@@ -287,7 +287,7 @@ erDiagram
         string role
         timestamp created_at
     }
-    
+
     APIKey {
         string id PK
         string tenant_id FK
@@ -296,7 +296,7 @@ erDiagram
         timestamp expires_at
         timestamp created_at
     }
-    
+
     Route {
         string id PK
         string tenant_id FK
@@ -304,7 +304,7 @@ erDiagram
         string target
         string provider
     }
-    
+
     RequestLog {
         string id PK
         string route_id FK
@@ -315,7 +315,7 @@ erDiagram
         int latency_ms
         timestamp created_at
     }
-    
+
     AuditLog {
         string id PK
         string tenant_id FK
@@ -333,27 +333,27 @@ erDiagram
 ```mermaid
 flowchart TB
     Request["Request"] --> KeyGen["Generate Key\n(API Key or IP)"]
-    
+
     KeyGen --> Lookup["Lookup in\nToken Bucket"]
-    
+
     subgraph Check["Rate Limit Check"]
         Tokens["Tokens Available?"]
     end
-    
+
     Lookup --> Tokens
-    
+
     alt Yes
         Tokens --> Decrement["Decrement Token"]
         Decrement --> Forward["Forward Request"]
         Forward --> Success["200 OK"]
     end
-    
+
     alt No
         Tokens --> Block["Block Request"]
         Block --> RateLimited["429 Rate Limited"]
         RateLimited --> Retry["Retry-After: 60s"]
     end
-    
+
     subgraph Cleanup["Background Cleanup"]
         Timer["Timer\n(every minute)"]
         Timer --> Remove["Remove Stale Entries"]
@@ -367,34 +367,34 @@ flowchart TB
 ```mermaid
 flowchart TB
     Request["Request"] --> Parse["Parse Request"]
-    
+
     Parse --> Match["Match Against\nPatterns"]
-    
+
     subgraph Evaluate["Evaluation"]
         OWASP["OWASP Patterns"]
         PII["PII Detection"]
         Sensitive["Sensitive Data"]
     end
-    
+
     Match --> Evaluate
-    
+
     Evaluate --> Violation["Violation Found?"]
-    
+
     alt Yes
         Violation --> Log["Log Finding"]
         Log --> Alert["Generate Alert"]
         Alert --> Action["Action: Block/Log/Warn"]
     end
-    
+
     alt No
         Violation --> Forward["Forward Request"]
     end
-    
+
     subgraph Report["Reporting"]
         Summary["Generate Summary"]
         Export["Export: JSON/PDF"]
     end
-    
+
     Log --> Report
     Forward --> Report
 ```
@@ -408,21 +408,21 @@ sequenceDiagram
     participant User as User
     participant AegisGate as AegisGate
     participant License as License Server
-    
+
     User->>AegisGate: Enter License Key
     AegisGate->>License: Validate License
-    
+
     alt Valid License
         License-->>AegisGate: License Valid
         AegisGate->>AegisGate: Enable Tier Features
         AegisGate-->>User: Success! Tier Activated
     end
-    
+
     alt Invalid License
         License-->>AegisGate: Invalid/Expired
         AegisGate-->>User: Error: Invalid License
     end
-    
+
     alt Community (No License)
         AegisGate-->>AegisGate: Use Community Features
         AegisGate-->>User: Running Community Tier
@@ -439,24 +439,24 @@ flowchart TB
         TLS["TLS 1.3"]
         Firewall["Firewall"]
     end
-    
+
     subgraph L2["Layer 2: Transport"]
         MTLS["mTLS"]
         Certs["Certificates"]
     end
-    
+
     subgraph L3["Layer 3: Application"]
         Auth["AuthN/AuthZ"]
         RBAC["RBAC"]
         JWT["JWT Validation"]
     end
-    
+
     subgraph L4["Layer 4: Data"]
         Encrypt["Encryption at Rest"]
         Mask["Data Masking"]
         Audit["Audit Logging"]
     end
-    
+
     L1 --> L2
     L2 --> L3
     L3 --> L4

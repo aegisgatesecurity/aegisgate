@@ -71,7 +71,7 @@ func (f *InputFuzzer) Run(ctx context.Context) (*FuzzResult, error) {
 }
 
 func (f *InputFuzzer) sendInput(ctx context.Context, input string) error {
-ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	conn, err := net.DialTimeout("tcp", fmt.Sprintf("%s:%d", f.TargetHost, f.TargetPort), 5*time.Second)

@@ -15,10 +15,10 @@ import (
 
 // SubscriptionManager manages GraphQL subscriptions
 type SubscriptionManager struct {
-	mu           sync.RWMutex
+	mu            sync.RWMutex
 	subscriptions map[string]*Subscription
-	handlers     map[string]EventHandler
-	logger       *slog.Logger
+	handlers      map[string]EventHandler
+	logger        *slog.Logger
 }
 
 // Subscription represents an active subscription
@@ -48,8 +48,8 @@ type EventHandler func(ctx context.Context, event *SubscriptionEvent)
 func NewSubscriptionManager() *SubscriptionManager {
 	return &SubscriptionManager{
 		subscriptions: make(map[string]*Subscription),
-		handlers:     make(map[string]EventHandler),
-		logger:       slog.Default(),
+		handlers:      make(map[string]EventHandler),
+		logger:        slog.Default(),
 	}
 }
 
@@ -162,17 +162,17 @@ func (sm *SubscriptionManager) Count() int {
 
 // WebSocketHandler handles GraphQL WebSocket connections
 type WebSocketHandler struct {
-	manager    *SubscriptionManager
-	upgrader   *WebSocketUpgrader
-	authFunc   func(http.Header) (context.Context, error)
-	logger     *slog.Logger
+	manager  *SubscriptionManager
+	upgrader *WebSocketUpgrader
+	authFunc func(http.Header) (context.Context, error)
+	logger   *slog.Logger
 }
 
 // WebSocketUpgrader upgrades HTTP to WebSocket
 type WebSocketUpgrader struct {
 	ReadBufferSize  int
 	WriteBufferSize int
-	CheckOrigin    func(r *http.Request) bool
+	CheckOrigin     func(r *http.Request) bool
 }
 
 // DefaultUpgrader returns default WebSocket upgrader

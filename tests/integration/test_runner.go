@@ -13,8 +13,8 @@ import (
 
 // TestRunnerConfig holds the test runner configuration
 type TestRunnerConfig struct {
-	ConfigPath      string
-	FixturesPath    string
+	ConfigPath     string
+	FixturesPath   string
 	OutputPath     string
 	Parallel       bool
 	Verbose        bool
@@ -24,23 +24,23 @@ type TestRunnerConfig struct {
 
 // TestReport represents the test execution report
 type TestReport struct {
-	Timestamp     time.Time       `json:"timestamp"`
-	Duration      time.Duration   `json:"duration"`
-	TotalTests    int             `json:"total_tests"`
-	PassedTests   int             `json:"passed_tests"`
-	FailedTests   int             `json:"failed_tests"`
-	SkippedTests  int             `json:"skipped_tests"`
-	Coverage      CoverageReport  `json:"coverage"`
-	Results       []TestResult    `json:"results"`
+	Timestamp    time.Time      `json:"timestamp"`
+	Duration     time.Duration  `json:"duration"`
+	TotalTests   int            `json:"total_tests"`
+	PassedTests  int            `json:"passed_tests"`
+	FailedTests  int            `json:"failed_tests"`
+	SkippedTests int            `json:"skipped_tests"`
+	Coverage     CoverageReport `json:"coverage"`
+	Results      []TestResult   `json:"results"`
 }
 
 // CoverageReport represents test coverage information
 type CoverageReport struct {
 	TechniquesCovered int      `json:"techniques_covered"`
-	TechniquesTotal  int      `json:"techniques_total"`
-	PatternsCovered int       `json:"patterns_covered"`
-	PatternsTotal   int       `json:"patterns_total"`
-	Techniques     []string  `json:"techniques"`
+	TechniquesTotal   int      `json:"techniques_total"`
+	PatternsCovered   int      `json:"patterns_covered"`
+	PatternsTotal     int      `json:"patterns_total"`
+	Techniques        []string `json:"techniques"`
 }
 
 // TestResult represents an individual test result
@@ -49,14 +49,14 @@ type TestResult struct {
 	Category   string        `json:"category"`
 	Status     string        `json:"status"`
 	Duration   time.Duration `json:"duration"`
-	Techniques []string     `json:"techniques"`
+	Techniques []string      `json:"techniques"`
 	Error      string        `json:"error,omitempty"`
 }
 
 var (
-	configPath      string
-	fixturesPath    string
-	outputPath      string
+	configPath     string
+	fixturesPath   string
+	outputPath     string
 	parallel       bool
 	verbose        bool
 	generateReport bool
@@ -183,12 +183,12 @@ func testAtlasPatternFromFixture(t *testing.T, fixture TestFixture) AtlasTestRes
 // generateTestReport generates a JSON report of test results
 func generateTestReport() {
 	report := TestReport{
-		Timestamp:     time.Now(),
-		Duration:      0,
-		TotalTests:    0,
-		PassedTests:   0,
-		FailedTests:   0,
-		SkippedTests:  0,
+		Timestamp:    time.Now(),
+		Duration:     0,
+		TotalTests:   0,
+		PassedTests:  0,
+		FailedTests:  0,
+		SkippedTests: 0,
 		Coverage: CoverageReport{
 			TechniquesTotal: 18,
 			PatternsTotal:   60,
@@ -248,4 +248,3 @@ func PrintTestSummary(tracker *CoverageTracker) {
 	fmt.Printf("Pattern Coverage:   %.1f%% (%d/60)\n", patCov, len(tracker.Patterns))
 	fmt.Println(strings.Repeat("=", 60))
 }
-

@@ -27,14 +27,14 @@ func licenseToSign(l *License) string {
 // TestRSASignature verifies RSA signing and verification
 func TestRSASignature(t *testing.T) {
 	privateKey, publicKey := generateTestKeyPair(t)
-	
+
 	license := &License{
 		ID:        "test-license-001",
 		Email:     "admin@test.com",
 		ExpiresAt: time.Now().Add(24 * time.Hour),
 		Features:  []string{"ai_proxy", "openai"},
 	}
-	
+
 	// Sign it
 	data := licenseToSign(license)
 	h := sha256.Sum256([]byte(data))
@@ -42,17 +42,17 @@ func TestRSASignature(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Failed to sign: %v", err)
 	}
-	
+
 	// Verify with correct key
 	encodedSig := base64.StdEncoding.EncodeToString(signature)
 	license.Signature = encodedSig
-	
+
 	sigBytes, _ := base64.StdEncoding.DecodeString(license.Signature)
 	err = rsa.VerifyPKCS1v15(publicKey, crypto.SHA256, h[:], sigBytes)
 	if err != nil {
 		t.Errorf("Verification with correct key failed: %v", err)
 	}
-	
+
 	// Verify with wrong key should fail
 	wrongKey, _ := generateTestKeyPair(t)
 	wrongPub := wrongKey.PublicKey
@@ -65,23 +65,23 @@ func TestRSASignature(t *testing.T) {
 // TestRSASignatureTampered verifies tampered data fails verification
 func TestRSASignatureTampered(t *testing.T) {
 	privateKey, publicKey := generateTestKeyPair(t)
-	
+
 	license := &License{
 		ID:        "test-license-002",
 		Email:     "admin@test.com",
 		ExpiresAt: time.Now().Add(24 * time.Hour),
 		Features:  []string{"ai_proxy"},
 	}
-	
+
 	data := licenseToSign(license)
 	h := sha256.Sum256([]byte(data))
 	signature, _ := rsa.SignPKCS1v15(rand.Reader, privateKey, crypto.SHA256, h[:])
 	license.Signature = base64.StdEncoding.EncodeToString(signature)
-	
+
 	// Tamper with data
 	oldID := license.ID
 	license.ID = "tampered-id"
-	
+
 	// Verification should fail
 	dataTampered := licenseToSign(license)
 	hTampered := sha256.Sum256([]byte(dataTampered))
@@ -90,7 +90,7 @@ func TestRSASignatureTampered(t *testing.T) {
 	if err == nil {
 		t.Error("Verification of tampered license should have failed")
 	}
-	
+
 	// Restore
 	license.ID = oldID
 }
@@ -110,7 +110,7 @@ func TestLicenseStructFields(t *testing.T) {
 		Features:     []string{"ai_proxy"},
 		Signature:    "dGVzdA==",
 	}
-	
+
 	if license.ID != "test-001" {
 		t.Errorf("Expected ID test-001, got %s", license.ID)
 	}
@@ -128,23 +128,23 @@ func TestLicenseStructFields(t *testing.T) {
 // TestLicenseExpiration tests license expiration logic
 func TestLicenseExpiration(t *testing.T) {
 	now := time.Now()
-	
+
 	// Not expired
 	notExpired := &License{
 		ID:        "not-expired",
 		ExpiresAt: now.Add(24 * time.Hour),
 	}
-	
+
 	if now.After(notExpired.ExpiresAt) {
 		t.Error("License should not be expired")
 	}
-	
+
 	// Already expired
 	expired := &License{
 		ID:        "expired",
 		ExpiresAt: now.Add(-24 * time.Hour),
 	}
-	
+
 	if !now.After(expired.ExpiresAt) {
 		t.Error("License should be expired")
 	}

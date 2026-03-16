@@ -63,18 +63,18 @@ func DefaultCircuitBreakerConfig() CircuitBreakerConfig {
 type CircuitBreaker struct {
 	config CircuitBreakerConfig
 
-	mu                sync.RWMutex
-	state             CircuitState
-	failures          int
-	successes         int
-	lastFailure       time.Time
-	halfOpenRequests  int
+	mu               sync.RWMutex
+	state            CircuitState
+	failures         int
+	successes        int
+	lastFailure      time.Time
+	halfOpenRequests int
 
 	// Metrics
-	totalRequests     atomic.Int64
-	failedRequests    atomic.Int64
-	rejectedRequests  atomic.Int64
-	stateChanges      atomic.Int64
+	totalRequests    atomic.Int64
+	failedRequests   atomic.Int64
+	rejectedRequests atomic.Int64
+	stateChanges     atomic.Int64
 }
 
 // NewCircuitBreaker creates a new circuit breaker with the given configuration
@@ -112,8 +112,8 @@ func (cb *CircuitBreaker) Execute(ctx context.Context, fn func(ctx context.Conte
 			"state", cb.state.String(),
 			"timeout_remaining", cb.timeUntilHalfOpen())
 		return &CircuitOpenError{
-			State:       cb.state.String(),
-			RetryAfter:  cb.timeUntilHalfOpen(),
+			State:      cb.state.String(),
+			RetryAfter: cb.timeUntilHalfOpen(),
 		}
 	}
 
@@ -268,7 +268,6 @@ func (cb *CircuitBreaker) GetMetrics() CircuitBreakerMetrics {
 	}
 }
 
-
 // GetState returns the current circuit state as a string
 func (cb *CircuitBreaker) GetState() string {
 	cb.mu.RLock()
@@ -295,7 +294,6 @@ func (cb *CircuitBreaker) RejectedRequests() int64 {
 func (cb *CircuitBreaker) StateChanges() int64 {
 	return cb.stateChanges.Load()
 }
-
 
 // CircuitBreakerMetrics holds circuit breaker metrics
 type CircuitBreakerMetrics struct {

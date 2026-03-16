@@ -162,8 +162,8 @@ func TestAnthropicAuthenticationFailure(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusUnauthorized)
 		json.NewEncoder(w).Encode(map[string]interface{}{
-			"type":      "authentication_error",
-			"message":   "API key missing or invalid",
+			"type":       "authentication_error",
+			"message":    "API key missing or invalid",
 			"request_id": "test-request-123",
 		})
 	}))

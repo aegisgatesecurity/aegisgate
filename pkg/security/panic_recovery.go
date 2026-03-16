@@ -41,7 +41,7 @@ func (prm *PanicRecoveryMiddleware) Handler(next http.Handler) http.Handler {
 					"remote_addr", r.RemoteAddr,
 					"stack", string(stack),
 				)
-				
+
 				// Return a safe error response
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Header().Set("Content-Type", "application/json")
@@ -157,7 +157,7 @@ func (arm *AdvancedRecoveryMiddleware) Handler(next http.Handler) http.Handler {
 				if arm.options.EnableStackTrace {
 					logAttrs = append(logAttrs, "stack", string(debug.Stack()))
 				}
-				
+
 				switch arm.options.LogLevel {
 				case slog.LevelDebug:
 					arm.logger.Debug("Panic recovered", logAttrs...)
@@ -168,7 +168,7 @@ func (arm *AdvancedRecoveryMiddleware) Handler(next http.Handler) http.Handler {
 				default:
 					arm.logger.Error("Panic recovered", logAttrs...)
 				}
-				
+
 				w.WriteHeader(http.StatusInternalServerError)
 				w.Header().Set("Content-Type", "application/json")
 				_ = json.NewEncoder(w).Encode(map[string]interface{}{

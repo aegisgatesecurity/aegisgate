@@ -46,10 +46,10 @@ type ManagerConfig struct {
 // DefaultManagerConfig returns sensible defaults
 func DefaultManagerConfig() *ManagerConfig {
 	return &ManagerConfig{
-		PluginDirs:        []string{"./plugins", "/etc/aegisgate/plugins"},
-		PluginConfig:      make(map[string]PluginConfig),
-		PluginTimeout:     30 * time.Second,
-		EnablePeriodic:    true,
+		PluginDirs:     []string{"./plugins", "/etc/aegisgate/plugins"},
+		PluginConfig:   make(map[string]PluginConfig),
+		PluginTimeout:  30 * time.Second,
+		EnablePeriodic: true,
 	}
 }
 
@@ -58,9 +58,9 @@ func NewManager(config *ManagerConfig) *Manager {
 	if config == nil {
 		config = DefaultManagerConfig()
 	}
-	
+
 	ctx, cancel := context.WithCancel(context.Background())
-	
+
 	return &Manager{
 		plugins:      make(map[string]*PluginState),
 		hookPlugins:  make(map[HookType][]*PluginState),
@@ -78,11 +78,11 @@ func (m *Manager) Register(p Plugin) error {
 	defer m.mu.Unlock()
 
 	meta := p.Metadata()
-	
+
 	if meta.ID == "" {
 		return fmt.Errorf("plugin ID cannot be empty")
 	}
-	
+
 	if _, exists := m.plugins[meta.ID]; exists {
 		return fmt.Errorf("plugin %q already registered", meta.ID)
 	}
@@ -100,11 +100,11 @@ func (m *Manager) Register(p Plugin) error {
 		Metadata: meta,
 		Config:   cfg,
 		Status:   StatusUnregistered,
-		Plugin:  p,
+		Plugin:   p,
 	}
 
 	m.plugins[meta.ID] = state
-	
+
 	// Register for hooks
 	for _, hook := range p.Hooks() {
 		m.hookPlugins[hook] = append(m.hookPlugins[hook], state)
@@ -116,7 +116,7 @@ func (m *Manager) Register(p Plugin) error {
 	}
 
 	m.logger.Debug("Plugin registered", "id", meta.ID, "name", meta.Name, "hooks", p.Hooks())
-	
+
 	return nil
 }
 
@@ -162,7 +162,7 @@ func (m *Manager) LoadGoPlugin(path string) error {
 		Metadata: meta,
 		Config:   cfg,
 		Status:   StatusUnregistered,
-		Plugin:  p,
+		Plugin:   p,
 	}
 
 	m.plugins[meta.ID] = state
@@ -221,7 +221,7 @@ func (m *Manager) Init(ctx context.Context) error {
 // Start starts all initialized plugins
 func (m *Manager) Start(ctx context.Context) error {
 	m.mu.Lock()
-	
+
 	if m.started {
 		m.mu.Unlock()
 		return fmt.Errorf("plugin manager already started")
@@ -256,7 +256,7 @@ func (m *Manager) Start(ctx context.Context) error {
 	}
 
 	m.started = true
-	
+
 	// Copy periodic plugins before unlocking
 	var periodicPlugins []*PluginState
 	if m.config.EnablePeriodic {
@@ -268,7 +268,7 @@ func (m *Manager) Start(ctx context.Context) error {
 			}
 		}
 	}
-	
+
 	m.mu.Unlock()
 
 	// Start periodic tasks in background (after releasing lock to avoid deadlock)

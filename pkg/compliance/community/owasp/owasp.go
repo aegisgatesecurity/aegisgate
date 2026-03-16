@@ -20,9 +20,9 @@ type OWASPFramework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	risks         []Risk
+	configObj *common.FrameworkConfig
+	tierInfo  common.TierInfo
+	risks     []Risk
 }
 
 // Risk represents an OWASP AI security risk
@@ -103,12 +103,12 @@ func (of *OWASPFramework) Check(ctx context.Context, input common.CheckInput) (*
 
 	return &common.CheckResult{
 		Framework:       of.name,
-		Passed:            len(findings) == 0,
-		Findings:          findings,
-		CheckedAt:         time.Now(),
-		Duration:          time.Since(start),
-		TotalPatterns:     len(of.risks),
-		MatchedPatterns:   len(findings),
+		Passed:          len(findings) == 0,
+		Findings:        findings,
+		CheckedAt:       time.Now(),
+		Duration:        time.Since(start),
+		TotalPatterns:   len(of.risks),
+		MatchedPatterns: len(findings),
 	}, nil
 }
 

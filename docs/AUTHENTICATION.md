@@ -204,8 +204,8 @@ Sessions are implemented using encrypted HTTP cookies with the following propert
 
 ```
 session_cookie = base64(
-    nonce(12 bytes) || 
-    encrypted_data || 
+    nonce(12 bytes) ||
+    encrypted_data ||
     auth_tag(16 bytes)
 )
 
@@ -496,18 +496,18 @@ services:
       # Core settings
       AEGISGATE_BIND_ADDRESS: ":8080"
       AEGISGATE_UPSTREAM: "http://backend:3000"
-      
+
       # Authentication
       AUTH_MODE: "oauth"
       SECRET_KEY: "${SECRET_KEY}"
       SESSION_TIMEOUT: "8h"
       SESSION_SECURE: "true"
       COOKIE_DOMAIN: "aegisgate.example.com"
-      
+
       # Google OAuth
       GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
       GOOGLE_CLIENT_SECRET: "${GOOGLE_CLIENT_SECRET}"
-      
+
       # Security
       CSRF_ENABLED: "true"
       MAX_LOGIN_ATTEMPTS: "5"

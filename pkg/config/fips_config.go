@@ -37,11 +37,11 @@ type FIPSConfig struct {
 func DefaultFIPSConfig() FIPSConfig {
 	return FIPSConfig{
 		Enabled:                false,
-		Level:                 "140-2",
+		Level:                  "140-2",
 		AuditLogging:           true,
 		ApprovedAlgorithmsOnly: true,
-		MinRSAKeySize:         2048,
-		MinTLSVersion:         "1.2",
+		MinRSAKeySize:          2048,
+		MinTLSVersion:          "1.2",
 		AllowDeprecated:        false,
 	}
 }

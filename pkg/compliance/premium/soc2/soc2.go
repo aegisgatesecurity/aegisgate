@@ -20,9 +20,9 @@ type SOC2Framework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	principles    []TrustServicePrinciple
+	configObj  *common.FrameworkConfig
+	tierInfo   common.TierInfo
+	principles []TrustServicePrinciple
 }
 
 // TrustServicePrinciple represents a SOC 2 Trust Service Principle
@@ -124,12 +124,12 @@ func (sf *SOC2Framework) Check(ctx context.Context, input common.CheckInput) (*c
 
 	return &common.CheckResult{
 		Framework:       sf.name,
-		Passed:            len(findings) == 0,
-		Findings:          findings,
-		CheckedAt:         time.Now(),
-		Duration:          time.Since(start),
-		TotalPatterns:     len(sf.principles),
-		MatchedPatterns:   len(findings),
+		Passed:          len(findings) == 0,
+		Findings:        findings,
+		CheckedAt:       time.Now(),
+		Duration:        time.Since(start),
+		TotalPatterns:   len(sf.principles),
+		MatchedPatterns: len(findings),
 	}, nil
 }
 

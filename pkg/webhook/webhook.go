@@ -4,17 +4,17 @@ import "time"
 
 // Webhook represents a webhook configuration
 type Webhook struct {
-	ID          string        `json:"id"`
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	URL         string        `json:"url"`
-	Method      string        `json:"method"`
-	Enabled     bool          `json:"enabled"`
-	Auth        Authentication `json:"auth"`
-	TLS         TLSConfig     `json:"tls"`
+	ID          string             `json:"id"`
+	Name        string             `json:"name"`
+	Description string             `json:"description"`
+	URL         string             `json:"url"`
+	Method      string             `json:"method"`
+	Enabled     bool               `json:"enabled"`
+	Auth        Authentication     `json:"auth"`
+	TLS         TLSConfig          `json:"tls"`
 	Triggers    []TriggerCondition `json:"triggers"`
-	CreatedAt   time.Time    `json:"created_at"`
-	UpdatedAt   time.Time    `json:"updated_at"`
+	CreatedAt   time.Time          `json:"created_at"`
+	UpdatedAt   time.Time          `json:"updated_at"`
 }
 
 // GetID returns the webhook ID

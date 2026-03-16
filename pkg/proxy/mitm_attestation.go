@@ -143,7 +143,7 @@ func NewMITMAttestation(config *MITMAttestationConfig) (*MITMAttestation, error)
 		backdoorPrevention: backdoorPrevention,
 		trustStore:         trustStore,
 		crlManager:         crlManager,
-		ocspManager:         ocspManager,
+		ocspManager:        ocspManager,
 		resultCache:        make(map[string]*MITMAttestationResult),
 		cacheTTL:           config.CacheTTL,
 	}, nil
@@ -403,14 +403,14 @@ func (m *MITMAttestation) FetchAndAttestCertificate(host string, timeout time.Du
 // GetStats returns attestation statistics
 func (m *MITMAttestation) GetStats() map[string]interface{} {
 	return map[string]interface{}{
-		"enabled":                  m.config.Enabled,
-		"chain_verification":       m.config.RequireChainVerification,
-		"crl_checking":             m.config.RequireCRL,
-		"ocsp_checking":            m.config.RequireOCSP,
-		"backdoor_prevention":      m.config.BackdoorPrevention,
-		"fail_closed":              m.config.FailClosed,
-		"trust_anchor_count":       len(m.attestation.GetTrustAnchors()),
-		"cached_result_count":      len(m.resultCache),
+		"enabled":             m.config.Enabled,
+		"chain_verification":  m.config.RequireChainVerification,
+		"crl_checking":        m.config.RequireCRL,
+		"ocsp_checking":       m.config.RequireOCSP,
+		"backdoor_prevention": m.config.BackdoorPrevention,
+		"fail_closed":         m.config.FailClosed,
+		"trust_anchor_count":  len(m.attestation.GetTrustAnchors()),
+		"cached_result_count": len(m.resultCache),
 	}
 }
 

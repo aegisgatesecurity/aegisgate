@@ -48,16 +48,16 @@ const (
 
 // ThreatEntry represents a cataloged threat with mitigation strategies
 type ThreatEntry struct {
-	ID              string            `json:"id"`
-	Name            string            `json:"name"`
-	Vector          ThreatVector      `json:"vector"`
-	Category        ThreatCategory    `json:"category"`
-	Description     string            `json:"description"`
-	Indicators      []string          `json:"indicators"`
-	Mitigation      string            `json:"mitigation"`
-	Implementation  []string          `json:"implementation"`
-	References      []string          `json:"references"`
-	OWASPCategory   string            `json:"owasp_category,omitempty"`
+	ID             string         `json:"id"`
+	Name           string         `json:"name"`
+	Vector         ThreatVector   `json:"vector"`
+	Category       ThreatCategory `json:"category"`
+	Description    string         `json:"description"`
+	Indicators     []string       `json:"indicators"`
+	Mitigation     string         `json:"mitigation"`
+	Implementation []string       `json:"implementation"`
+	References     []string       `json:"references"`
+	OWASPCategory  string         `json:"owasp_category,omitempty"`
 }
 
 // ThreatModel represents a complete threat model for a system
@@ -71,10 +71,10 @@ type ThreatModel struct {
 
 // ThreatModelingEngine manages threat models and threat catalog
 type ThreatModelingEngine struct {
-	mu              sync.RWMutex
-	threatCatalog   map[string]ThreatEntry
-	activeModel     *ThreatModel
-	enabled         bool
+	mu            sync.RWMutex
+	threatCatalog map[string]ThreatEntry
+	activeModel   *ThreatModel
+	enabled       bool
 }
 
 // NewThreatModelingEngine creates a new threat modeling engine
@@ -83,10 +83,10 @@ func NewThreatModelingEngine() *ThreatModelingEngine {
 		threatCatalog: make(map[string]ThreatEntry),
 		enabled:       true,
 	}
-	
+
 	// Initialize with default LLM/AI threat catalog
 	engine.initializeDefaultThreats()
-	
+
 	return engine
 }
 
@@ -349,9 +349,9 @@ func (e *ThreatModelingEngine) GenerateReport() (map[string]interface{}, error) 
 	defer e.mu.RUnlock()
 
 	report := map[string]interface{}{
-		"engine_status":  e.enabled,
-		"threat_count":   len(e.threatCatalog),
-		"threats":        e.threatCatalog,
+		"engine_status": e.enabled,
+		"threat_count":  len(e.threatCatalog),
+		"threats":       e.threatCatalog,
 	}
 
 	if e.activeModel != nil {
@@ -391,11 +391,11 @@ func (e *ThreatModelingEngine) AnalyzePatterns(input, output string) []ThreatEnt
 
 // containsPattern checks if text contains a pattern (simple implementation)
 func containsPattern(text, pattern string) bool {
-	return len(text) > 0 && len(pattern) > 0 && 
-		(len(text) >= len(pattern) && 
-		(text == pattern || 
-		(len(text) > len(pattern) && 
-		  (text[:len(pattern)] == pattern || text[len(text)-len(pattern):] == pattern))))
+	return len(text) > 0 && len(pattern) > 0 &&
+		(len(text) >= len(pattern) &&
+			(text == pattern ||
+				(len(text) > len(pattern) &&
+					(text[:len(pattern)] == pattern || text[len(text)-len(pattern):] == pattern))))
 }
 
 // CreateDefaultThreatModel returns a default threat model for LLM gateways

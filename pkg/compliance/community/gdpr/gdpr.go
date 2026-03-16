@@ -20,9 +20,9 @@ type GDPRFramework struct {
 	config      map[string]interface{}
 	enabled     bool
 
-	configObj     *common.FrameworkConfig
-	tierInfo       common.TierInfo
-	requirements   []string
+	configObj    *common.FrameworkConfig
+	tierInfo     common.TierInfo
+	requirements []string
 }
 
 // NewGDPRFramework creates a new GDPR framework checker
