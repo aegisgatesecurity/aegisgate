@@ -235,16 +235,16 @@ graph TD
 
 ## 📊 Performance Benchmarks
 
-### 🚀 Industry-Leading Performance
+### 🚀 Performance
 
-| Metric | AegisGate | Improvement |
-|--------|:---------:|:-----------:|
-| **Latency (p99)** | <5ms | 75-80% faster |
-| **Throughput** | 50,000 req/s | 2.5x higher |
-| **Memory Usage** | 128MB base | 75% less |
-| **CPU Overhead** | <2% | 85% less |
-| **Cold Start** | <500ms | 4-10x faster |
-| **Connection Pool** | 10,000 concurrent | 5-10x higher |
+| Metric | AegisGate | Context |
+|--------|:---------:|---------|
+| **Latency (p99)** | <5ms | Per-request overhead |
+| **Throughput** | 50,000 req/s | Sustained throughput |
+| **Memory Usage** | 128MB | Base footprint |
+| **CPU Overhead** | <2% | Under normal load |
+| **Cold Start** | <500ms | Containerized deployment |
+| **Connection Pool** | 10,000 | Concurrent connections |
 
 ### 🏆 Verified Results
 
