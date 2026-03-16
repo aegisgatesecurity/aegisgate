@@ -1,0 +1,29 @@
+name: Gitignore Sync Check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  check-gitignore:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Verify temp scripts in .gitignore
+        run: |
+          echo "Checking .gitignore patterns..."
+          
+          # Check critical patterns are present
+          patterns=("add_.*.ps1" "PROJECT_MEMORY.md" "Archive/" "*.key" "*.pem" "certs/")
+          
+          for pattern in "${patterns[@]}"; do
+            if grep -qE "$pattern" .gitignore; then
+              echo "OK: $pattern"
+            else
+              echo "MISSING: $pattern"
+              exit 1
+            fi
+          done
