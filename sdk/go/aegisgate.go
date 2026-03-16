@@ -1,3 +1,13 @@
+// SPDX-License-Identifier: MIT
+// =========================================================================
+// PROPRIETARY - AegisGate Security
+// Copyright (c) 2025-2026 AegisGate Security. All rights reserved.
+// =========================================================================
+//
+// This file contains proprietary trade secret information.
+// Unauthorized reproduction, distribution, or reverse engineering is prohibited.
+// =========================================================================
+
 // Package aegisgate provides a Go SDK for the AegisGate API
 //
 // This SDK provides a clean, idiomatic Go interface to the AegisGate enterprise security platform.

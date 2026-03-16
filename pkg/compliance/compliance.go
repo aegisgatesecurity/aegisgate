@@ -1,3 +1,13 @@
+// SPDX-License-Identifier: MIT
+// =========================================================================
+// PROPRIETARY - AegisGate Security
+// Copyright (c) 2025-2026 AegisGate Security. All rights reserved.
+// =========================================================================
+//
+// This file contains proprietary trade secret information.
+// Unauthorized reproduction, distribution, or reverse engineering is prohibited.
+// =========================================================================
+
 // Package compliance provides compliance checking capabilities for AegisGate
 // Implements MITRE ATLAS, NIST AI RMF, OWASP, GDPR, HIPAA, PCI-DSS, SOC2, and ISO 42001
 package compliance

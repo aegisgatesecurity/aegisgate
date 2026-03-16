@@ -4,12 +4,22 @@ build/
 *.exe
 *.out
 coverage_*.out
+dist/
 
-# IDE
+# Go
+vendor/
+*.test
+coverage.txt
+
+# IDE & Editor
 .idea/
 .vscode/
 *.swp
 *.swo
+*.iml
+*.iws
+.project
+.classpath
 
 # OS
 .DS_Store
@@ -20,39 +30,30 @@ Thumbs.db
 .env.local
 .env.*.local
 
-# Go
-vendor/
-*.test
-coverage.txt
-
 # Logs
 *.log
 logs/
 
-# Distribution
-dist/
-
-# Temp files
-*.txt
-
-# ========================================
-# SECURITY - Sensitive Files
-# ========================================
+# Security-sensitive
 PROJECT_MEMORY.md
 Archive/
 *.key
 *.pem
 *.crt
 certs/
-*.log
+cmd/licensegen/
+cmd/padlock/
+cmd/debug/
+cmd/gencerts/
 
-# IDE & Editor
-*.iml
-*.iws
-.project
-.classpath
-
-# Build
-*.dylib
-*.so
-*.dll
+# Development clutter
+*.txt
+_commit_msg.txt
+RELEASE_NOTES*.md
+RELEASE_BODY.md
+MIGRATION.md
+commit_msg*.txt
+tagmsg.txt
+gitmsg.txt
+msg*.txt
+cov*.txt

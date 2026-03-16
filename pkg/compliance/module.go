@@ -1,3 +1,13 @@
+// SPDX-License-Identifier: MIT
+// =========================================================================
+// PROPRIETARY - AegisGate Security
+// Copyright (c) 2025-2026 AegisGate Security. All rights reserved.
+// =========================================================================
+//
+// This file contains proprietary trade secret information.
+// Unauthorized reproduction, distribution, or reverse engineering is prohibited.
+// =========================================================================
+
 // Package compliance provides the compliance module infrastructure for AegisGate.
 // Each compliance framework is implemented as a separate, independently licensable module.
 package compliance

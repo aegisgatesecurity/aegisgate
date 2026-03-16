@@ -1,3 +1,13 @@
+// SPDX-License-Identifier: MIT
+// =========================================================================
+// PROPRIETARY - AegisGate Security
+// Copyright (c) 2025-2026 AegisGate Security. All rights reserved.
+// =========================================================================
+//
+// This file contains proprietary trade secret information.
+// Unauthorized reproduction, distribution, or reverse engineering is prohibited.
+// =========================================================================
+
 // Package siem provides Security Information and Event Management integration
 // for the AegisGate AI Security Gateway. It supports multiple SIEM platforms
 // including Splunk, Elasticsearch, QRadar, Sentinel, and more.

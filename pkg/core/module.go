@@ -1,3 +1,13 @@
+// SPDX-License-Identifier: MIT
+// =========================================================================
+// PROPRIETARY - AegisGate Security
+// Copyright (c) 2025-2026 AegisGate Security. All rights reserved.
+// =========================================================================
+//
+// This file contains proprietary trade secret information.
+// Unauthorized reproduction, distribution, or reverse engineering is prohibited.
+// =========================================================================
+
 // Package core provides the foundational module system for AegisGate.
 // It defines the Module interface, module registry, and license management
 // for the modular plugin architecture.
