@@ -9,13 +9,15 @@ on:
     branches: [main]
     paths:
       - cmd/aegisgate/main.go
+      - VERSION
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   version-sync:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      actions: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -23,34 +25,103 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Read main.go version
-        id: version
-        run: |
-          VERSION=$(grep -o 'const version = "[^"]*"' cmd/aegisgate/main.go | grep -o '[0-9.]*')
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "main.go version: $VERSION"
-
-      - name: Extract tag version
-        if: startsWith(github.ref, 'refs/tags/')
-        id: tag_version
-        run: |
-          GIT_TAG=${GITHUB_REF#refs/tags/v}
-          echo "git_tag=$GIT_TAG" >> $GITHUB_OUTPUT
-          echo "Git tag: v$GIT_TAG"
-
-      - name: Sync main.go to match tag
-        if: startsWith(github.ref, 'refs/tags/') && steps.version.outputs.version != steps.tag_version.outputs.git_tag
-        run: |
-          VERSION="${{ steps.tag_version.outputs.git_tag }}"
-          sed -i "s/const version = \"[0-9.]*\"/const version = \"$VERSION\"/" cmd/aegisgate/main.go
-          echo "Updated main.go to version $VERSION"
-
-      - name: Commit and push if changed
-        if: startsWith(github.ref, 'refs/tags/') && steps.version.outputs.version != steps.tag_version.outputs.git_tag
+      - name: Setup Git config
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git config set advice.addIgnoredFile false
-          git add -f cmd/aegisgate/main.go
-          git commit -m "chore: Sync version to ${{ steps.tag_version.outputs.git_tag }}"
-          git push
+
+      - name: Read main.go version
+        id: version_main
+        run: |
+          VERSION_MAIN=$(grep -oP 'const version = "\K[^"]+' cmd/aegisgate/main.go || echo "")
+          echo "version_main=$VERSION_MAIN" >> $GITHUB_OUTPUT
+          echo "main.go version: $VERSION_MAIN"
+
+      - name: Read VERSION file
+        id: version_file
+        run: |
+          if [ -f "VERSION" ]; then
+            VERSION_FILE=$(cat VERSION)
+            echo "version_file=$VERSION_FILE" >> $GITHUB_OUTPUT
+            echo "VERSION file: $VERSION_FILE"
+          else
+            echo "version_file=" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Extract tag version
+        if: startsWith(github.ref, 'refs/tags/')
+        id: version_tag
+        run: |
+          GIT_TAG=${GITHUB_REF#refs/tags/v}
+          echo "version_tag=$GIT_TAG" >> $GITHUB_OUTPUT
+          echo "Git tag: v$GIT_TAG"
+
+      - name: Synchronize versions
+        id: sync
+        run: |
+          MAIN_VERSION="${{ steps.version_main.outputs.version_main }}"
+          FILE_VERSION="${{ steps.version_file.outputs.version_file }}"
+          TAG_VERSION=""
+          if [ -n "${{ steps.version_tag.outputs.version_tag }}" ]; then
+            TAG_VERSION="${{ steps.version_tag.outputs.version_tag }}"
+          fi
+          
+          CHANGES_MADE=false
+          
+          # If there's a tag, sync it to main.go and VERSION
+          if [ -n "$TAG_VERSION" ]; then
+            if [ "$MAIN_VERSION" != "v$TAG_VERSION" ]; then
+              echo "Syncing main.go: v$TAG_VERSION"
+              sed -i "s/const version = \"[^\"]*\"/const version = \"v$TAG_VERSION\"/" cmd/aegisgate/main.go
+              CHANGES_MADE=true
+            fi
+            if [ "$FILE_VERSION" != "$TAG_VERSION" ]; then
+              echo "Syncing VERSION file: $TAG_VERSION"
+              echo "$TAG_VERSION" > VERSION
+              CHANGES_MADE=true
+            fi
+          fi
+          
+          # If no tag but main.go/VERSION differ, sync VERSION from main.go
+          if [ -z "$TAG_VERSION" ] && [ -n "$MAIN_VERSION" ]; then
+            MAIN_NUM=${MAIN_VERSION#v}
+            if [ "$FILE_VERSION" != "$MAIN_NUM" ]; then
+              echo "Syncing VERSION file from main.go: $MAIN_NUM"
+              echo "$MAIN_NUM" > VERSION
+              CHANGES_MADE=true
+            fi
+          fi
+          
+          if [ "$CHANGES_MADE" = "true" ]; then
+            echo "changes_made=true" >> $GITHUB_OUTPUT
+          else
+            echo "changes_made=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Commit and push sync changes
+        if: steps.sync.outputs.changes_made == 'true'
+        run: |
+          CHANGES=$(git status --porcelain)
+          if [ -n "$CHANGES" ]; then
+            echo "Changes to commit:"
+            echo "$CHANGES"
+            
+            git add -A
+            git commit --signoff -m "chore: Sync version files
+            
+            Auto-synced by version-sync workflow."
+            
+            # Push with force to handle race conditions
+            git push --force-with-lease || git push --force
+            echo "Pushed sync commit"
+          else
+            echo "No changes to sync"
+          fi
+
+      - name: Verify final state
+        run: |
+          echo "=== Version Verification ==="
+          echo "main.go:      $(grep -oP 'const version = \"\K[^"]+' cmd/aegisgate/main.go)"
+          echo "VERSION file:  $(cat VERSION 2>/dev/null || echo 'N/A')"
+          echo "Git tag:       ${GITHUB_REF#refs/tags/}"
+          echo "==========================="
