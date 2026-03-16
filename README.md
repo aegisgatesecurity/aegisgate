@@ -5,7 +5,7 @@
 <!-- Badges Row 1 -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.0.8-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Version](https://img.shields.io/badge/version-v1.0.10-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Release Date](https://img.shields.io/badge/Released-March_2026-blue)](https://github.com/aegisgatesecurity/aegisgate/releases)
 
 <!-- Badges Row 2 -->

@@ -31,3 +31,6 @@ logs/
 
 # Distribution
 dist/
+
+# Temp files
+*.txt
