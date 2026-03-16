@@ -1,5 +1,0 @@
-feat: Add pre-commit hook and CI coverage threshold
-
-- Add pre-commit hook to run tests before commit
-- Add 75% coverage threshold to CI pipeline
-- Re-skip 5 MITM/TLS tests needing internal CA fix
