@@ -418,18 +418,21 @@ func TestOCSPManagerAddOCSPResponseNil(t *testing.T) {
 
 func TestOCSPManagerGetOCSPResponse(t *testing.T) {
 	om := NewOCSPManager(5*time.Minute, 5*time.Second)
+	// Use NextUpdate far enough in the future to avoid "stale" check
+	// The staleness check compares Now().After(NextUpdate - cacheTTL)
+	// So we need NextUpdate - 5min > Now(), meaning NextUpdate should be > 5min from now
 	resp := &OCSPResponse{
 		CertificateID: "cert-1",
 		Status:         OCSPStatusGood,
 		ProducedAt:     time.Now(),
 		ThisUpdate:     time.Now(),
-		NextUpdate:     time.Now().Add(5 * time.Minute),
+		NextUpdate:     time.Now().Add(10 * time.Minute), // 10min to avoid stale check with 5min cacheTTL
 	}
 	om.AddOCSPResponse("cert-1", resp)
 
 	retrieved, err := om.GetOCSPResponse("cert-1")
 	if err != nil {
-		t.Errorf("GetOCSPResponse returned error: %v", err)
+		t.Fatalf("GetOCSPResponse returned error: %v", err)
 	}
 	if retrieved.Status != OCSPStatusGood {
 		t.Errorf("Expected status Good, got %d", retrieved.Status)
@@ -487,18 +490,19 @@ func TestOCSPManagerCheckCertificateStatus(t *testing.T) {
 	leaf := createTestLeafCertificate(t)
 
 	certID := caCert.Subject.CommonName + "-" + leaf.SerialNumber.String()
+	// Use NextUpdate far enough in the future to avoid "stale" check
 	resp := &OCSPResponse{
 		CertificateID: certID,
 		Status:        OCSPStatusGood,
 		ProducedAt:    time.Now(),
 		ThisUpdate:    time.Now(),
-		NextUpdate:    time.Now().Add(5 * time.Minute),
+		NextUpdate:    time.Now().Add(10 * time.Minute),
 	}
 	om.AddOCSPResponse(certID, resp)
 
 	status, err := om.CheckCertificateStatus(leaf, caCert)
 	if err != nil {
-		t.Errorf("CheckCertificateStatus returned error: %v", err)
+		t.Fatalf("CheckCertificateStatus returned error: %v", err)
 	}
 	if status != OCSPStatusGood {
 		t.Errorf("Expected Good status, got %d", status)
@@ -513,18 +517,19 @@ func TestOCSPManagerIsRevokedViaOCSP(t *testing.T) {
 
 	certID := caCert.Subject.CommonName + "-" + leaf.SerialNumber.String()
 
+	// Use NextUpdate far enough in the future to avoid "stale" check
 	resp := &OCSPResponse{
 		CertificateID: certID,
 		Status:        OCSPStatusGood,
 		ProducedAt:    time.Now(),
 		ThisUpdate:    time.Now(),
-		NextUpdate:    time.Now().Add(5 * time.Minute),
+		NextUpdate:    time.Now().Add(10 * time.Minute),
 	}
 	om.AddOCSPResponse(certID, resp)
 
 	revoked, err := om.IsRevokedViaOCSP(leaf, caCert)
 	if err != nil {
-		t.Errorf("IsRevokedViaOCSP returned error: %v", err)
+		t.Fatalf("IsRevokedViaOCSP returned error: %v", err)
 	}
 	if revoked {
 		t.Error("Certificate should not be revoked")
@@ -535,13 +540,13 @@ func TestOCSPManagerIsRevokedViaOCSP(t *testing.T) {
 		Status:        OCSPStatusRevoked,
 		ProducedAt:    time.Now(),
 		ThisUpdate:    time.Now(),
-		NextUpdate:    time.Now().Add(5 * time.Minute),
+		NextUpdate:    time.Now().Add(10 * time.Minute),
 	}
 	om.AddOCSPResponse(certID, respRevoked)
 
 	revoked, err = om.IsRevokedViaOCSP(leaf, caCert)
 	if err != nil {
-		t.Errorf("IsRevokedViaOCSP returned error: %v", err)
+		t.Fatalf("IsRevokedViaOCSP returned error: %v", err)
 	}
 	if !revoked {
 		t.Error("Certificate should be revoked")
