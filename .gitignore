@@ -57,3 +57,7 @@ tagmsg.txt
 gitmsg.txt
 msg*.txt
 cov*.txt
+
+
+# Temp helper scripts (local only)
+*.ps1
