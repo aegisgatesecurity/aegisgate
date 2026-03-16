@@ -6,6 +6,9 @@ on:
   push:
     branches: [main, develop]
 
+permissions:
+  contents: read
+
 jobs:
   dco-signed-off-check:
     runs-on: ubuntu-latest
@@ -16,40 +19,53 @@ jobs:
         with:
           fetch-depth: 0
           
+      - name: Get commit range
+        id: commits
+        run: |
+          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
+            echo "range=${GITHUB_BASE_REF}...${GITHUB_HEAD_REF}" >> $GITHUB_OUTPUT
+          else
+            echo "range=${GITHUB_SHA}~1..${GITHUB_SHA}" >> $GITHUB_OUTPUT
+          fi
+          
       - name: Check for DCO sign-off
         run: |
           echo "Checking commits for DCO sign-off..."
+          echo "Commit range: ${{ steps.commits.outputs.range }}"
           
-          # Only check the commits introduced by this push/PR
-          if [ "$GITHUB_EVENT_NAME" = "pull_request" ]; then
-            COMMITS=$(git log --format='%H' "$GITHUB_BASE_REF".."$GITHUB_HEAD_REF")
-          else
-            # For push: only check the NEW commits (compare to parent of HEAD)
-            COMMITS=$(git log --format='%H' HEAD~1..HEAD 2>/dev/null) || COMMITS=$(git rev-parse HEAD)
+          COMMITS=$(git log --format='%H' "${{ steps.commits.outputs.range }}" 2>/dev/null)
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No commits to check"
+            exit 0
           fi
           
           FAILED=0
+          CHECKED=0
+          
           for commit_hash in $COMMITS; do
-            commit_message=$(git log --format='%B' -1 "$commit_hash")
+            CHECKED=$((CHECKED + 1))
+            commit_short=$(echo "$commit_hash" | cut -c1-7)
+            commit_msg=$(git log --format='%B' -1 "$commit_hash")
             
-            if echo "$commit_message" | grep -q "Signed-off-by:"; then
-              commit_short=$(echo "$commit_hash" | cut -c1-7)
-              echo "OK $commit_short has sign-off"
+            if echo "$commit_msg" | grep -qi "Signed-off-by:"; then
+              echo "✓ $commit_short has sign-off"
             else
-              commit_short=$(echo "$commit_hash" | cut -c1-7)
-              echo "FAIL $commit_short MISSING sign-off"
-              FAILED=1
+              echo "✗ $commit_short MISSING sign-off"
+              FAILED=$((FAILED + 1))
             fi
           done
           
           echo ""
-          if [ $FAILED -eq 1 ]; then
+          echo "Checked $CHECKED commits, $FAILED missing sign-off"
+          
+          if [ $FAILED -gt 0 ]; then
             echo "============================================"
-            echo "ERROR: Some commits are missing the Required DCO sign-off."
+            echo "ERROR: $FAILED commit(s) missing DCO sign-off"
             echo "============================================"
             echo ""
             echo "All commits MUST include:"
-            echo "  Signed-off-by: Your Name <your.email@example.com>"
+            echo "  Signed-off-by: Your Name <email@example.com>"
             echo ""
             echo "To fix, run locally:"
             echo "  git commit --amend --no-edit --signoff"
@@ -57,4 +73,4 @@ jobs:
             exit 1
           fi
           
-          echo "SUCCESS: All commits have DCO sign-off"
+          echo "SUCCESS: All $CHECKED commits have DCO sign-off"
