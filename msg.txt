@@ -1,0 +1,1 @@
+Fix CI coverage threshold - exclude untested packages and add test files 
