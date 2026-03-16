@@ -50,18 +50,26 @@ repos:
       - id: check-json
         description: Validates JSON files
 
-      # Validate TOML syntax
-      - id: check-toml
-        description: Validates TOML files
+  # ---------------------------------------------------------------------
+  # Spell checker - misspell (already configured in .golangci.yml)
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/client9/misspell
+    rev: v0.4.1
+    hooks:
+      - id: misspell
+        description: Checks for commonly misspelled words
+        args: ['--ignore-words=vendor.txt']
+        types: [text]
+        exclude: '^vendor/|^go\.(mod|sum)$'
 
   # ---------------------------------------------------------------------
-  # Go code formatting (local - no download needed)
+  # Go code formatting (local - uses system Go)
   # ---------------------------------------------------------------------
   - repo: local
     hooks:
       # Format Go source code with gofmt
       - id: gofmt
-        name: gofmt (format)
+        name: gofmt
         description: Format Go source code
         entry: gofmt -l -w
         language: system
@@ -77,6 +85,32 @@ repos:
         types: [go]
         pass_filenames: false
         args: [./...]
+
+  # ---------------------------------------------------------------------
+  # golangci-lint - Comprehensive Go linter (already configured in .golangci.yml)
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/golangci/golangci-lint
+    rev: v1.62.2
+    hooks:
+      - id: golangci-lint
+        description: Run golangci-lint linter (errcheck, gosimple, staticcheck, gosec, gofmt, goimports, misspell, etc.)
+        args: [./...]
+        types: [go]
+        pass_filenames: false
+        stages: [pre-commit]
+
+  # ---------------------------------------------------------------------
+  # gosec - Security scanner (already configured in .golangci.yml)
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/securego/gosec
+    rev: 2.21.4
+    hooks:
+      - id: gosec
+        name: gosec
+        description: Go security scanner - detects security vulnerabilities
+        args: ['-no-fail', '-exclude=G104,G108,G202,G304,G501,G505']
+        types: [go]
+        stages: [pre-commit]
 
   # ---------------------------------------------------------------------
   # Go tests - short mode for fast pre-commit checks
@@ -107,6 +141,28 @@ repos:
         types: [go]
         pass_filenames: false
 
+  # ---------------------------------------------------------------------
+  # Markdown linting
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/DavidAnson/markdownlint-cli2
+    rev: v0.14.0
+    hooks:
+      - id: markdownlint
+        description: Lint Markdown files
+        args: ['--ignore', 'node_modules', '--ignore', '.git']
+        types: [markdown]
+        exclude: '^CHANGELOG.*\.md$|^RELEASE_NOTES.*\.md$|^vendor/'
+
+  # ---------------------------------------------------------------------
+  # Docker file linting (hadolint)
+  # ---------------------------------------------------------------------
+  - repo: https://github.com/hadolint/hadolint
+    rev: v2.12.1
+    hooks:
+      - id: hadolint
+        description: Lint Dockerfiles
+        types: [dockerfile]
+
 # ---------------------------------------------------------------------
 # Files and folders to exclude from checks
 # ---------------------------------------------------------------------
@@ -127,36 +183,3 @@ exclude: |
 # Stop on first failure (set to false to run all checks)
 # ---------------------------------------------------------------------
 fail_fast: false
-
-# ---------------------------------------------------------------------
-# OPTIONAL - Additional hooks (uncomment and run 'pre-commit autoupdate'
-# to enable these after basic setup is working)
-# ---------------------------------------------------------------------
-#
-# Additional checks you can add later:
-#
-# - Spell checking (misspell):
-#   - repo: https://github.com/client9/misspell
-#     rev: v0.4.1
-#     hooks:
-#       - id: misspell
-#
-# - Go linter (golangci-lint) - comprehensive Go linting:
-#   - repo: https://github.com/golangci/golangci-lint
-#     rev: v1.62.2
-#     hooks:
-#       - id: golangci-lint
-#         args: [./...]
-#
-# - Security scanner (gosec):
-#   - repo: https://github.com/securego/gosec
-#     rev: 2.21.4
-#     hooks:
-#       - id: gosec
-#         args: ['-no-fail', '-exclude=G104,G108,G202,G304,G501,G505']
-#
-# - Markdown linting:
-#   - repo: https://github.com/DavidAnson/markdownlint-cli2
-#     rev: v0.14.0
-#     hooks:
-#       - id: markdownlint
