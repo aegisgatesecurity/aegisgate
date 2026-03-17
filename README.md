@@ -323,6 +323,15 @@ graph TD
 
 ## 📚 Documentation
 
+### 🚀 Quick Start (Beginner-Friendly)
+| Guide | Description | Time |
+|-------|-------------|------|
+| [⚡ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
+| [📖 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
+| [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
+| [🔧 Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
+
+### 📚 Full Documentation
 | Guide | Description | Time |
 |-------|-------------|------|
 | [🚀 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |

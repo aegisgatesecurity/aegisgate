@@ -31,46 +31,46 @@ AegisGate is language-agnostic because it works as a proxy. Any application that
 | Integration | Support |
 |-------------|---------|
 | **REST API** | ✅ Full |
-| **gRPC** | ✅ Professional+ |
-| **Webhooks** | ✅ Developer+ |
-| **SDK (Go, Python, JS)** | ✅ Professional+ |
+| **gRPC** | ✅ Available |
+| **Webhooks** | ✅ Available |
+| **SDK (Go, Python, JS)** | ✅ Available |
 
 ### Which AI providers does AegisGate support?
 
-| Provider | Community | Developer | Professional | Enterprise |
-|----------|:--------:|:---------:|:------------:|:----------:|
-| OpenAI | ✅ | ✅ | ✅ | ✅ |
-| Anthropic | ✅ | ✅ | ✅ | ✅ |
-| Cohere | ❌ | ✅ | ✅ | ✅ |
-| Azure OpenAI | ❌ | ✅ | ✅ | ✅ |
-| AWS Bedrock | ❌ | ❌ | ✅ | ✅ |
-| Google Vertex | ❌ | ❌ | ❌ | ✅ |
-| Custom/Internal | ❌ | ❌ | ❌ | ✅ |
+| Provider | Support |
+|----------|---------|
+| OpenAI | ✅ |
+| Anthropic | ✅ |
+| Cohere | ✅ |
+| Azure OpenAI | ✅ |
+| AWS Bedrock | ✅ |
+| Google Vertex | ✅ |
+| Custom/Internal | ✅ |
 
 ### What compliance frameworks does AegisGate support?
 
-| Framework | Tier | Description |
-|-----------|------|-------------|
-| OWASP Top 10 | Community | Security vulnerabilities |
-| SOC 2 | Community (view) | Service organization control |
-| GDPR | Community (view) | Data protection |
-| NIST | Developer | Cybersecurity framework |
-| HIPAA | Professional | Healthcare compliance |
-| PCI-DSS | Professional | Payment card security |
-| ISO 27001 | Professional | Information security |
-| ISO 42001 | Enterprise | AI-specific standard |
-| FedRAMP | Enterprise | US government security |
+| Framework | Description |
+|-----------|-------------|
+| OWASP Top 10 | Security vulnerabilities |
+| SOC 2 | Service organization control |
+| GDPR | Data protection |
+| NIST | Cybersecurity framework |
+| HIPAA | Healthcare compliance |
+| PCI-DSS | Payment card security |
+| ISO 27001 | Information security |
+| ISO 42001 | AI-specific standard |
+| FedRAMP | US government security |
 
 ### Can I run AegisGate on my own infrastructure?
 
 Yes! AegisGate is designed for self-hosting.
 
-| Deployment | Community | Developer | Professional | Enterprise |
-|------------|:---------:|:---------:|:------------:|:----------:|
-| Docker | ✅ | ✅ | ✅ | ✅ |
-| Kubernetes | ❌ | ❌ | ✅ | ✅ |
-| Bare Metal | ❌ | ❌ | ❌ | ✅ |
-| Air-gapped | ❌ | ❌ | ❌ | ✅ |
+| Deployment | Support |
+|------------|---------|
+| Docker | ✅ |
+| Kubernetes | ✅ |
+| Bare Metal | ✅ |
+| Air-gapped | ✅ |
 
 ### What are the system requirements?
 
@@ -90,16 +90,16 @@ For production with PostgreSQL:
 
 ---
 
-## Licensing & Pricing
+## Licensing
 
 ### How does licensing work?
 
-AegisGate uses license keys that activate paid features:
+AegisGate uses license keys to activate different feature tiers:
 
-- **Community (Free)**: No license required
-- **Developer ($29/mo)**: Self-hosted license key
-- **Professional ($99/mo)**: Self-hosted license key
-- **Enterprise (Custom)**: Custom license with support
+- **Community**: Base features, no license required
+- **Developer**: Additional features with self-hosted license
+- **Professional**: Enhanced features with self-hosted license
+- **Enterprise**: Full features with custom license and support
 
 ### Can I use AegisGate commercially?
 
@@ -107,12 +107,7 @@ Yes! The Apache 2.0 license allows commercial use for the Community edition. Pai
 
 ### What happens if my license expires?
 
-- **Community**: No change - free forever
-- **Paid tiers**: Features revert to Community tier. You have a 7-day grace period.
-
-### Do you offer refunds?
-
-Yes! We offer a 30-day money-back guarantee for all paid plans.
+Features may revert to Community tier during any transition period.
 
 ---
 
@@ -206,7 +201,7 @@ You're hitting your tier's rate limits. Options:
 
 ### How do I report bugs?
 
-See our [Issue Template](.github/ISSUE_TEMPLATE/ISSUE_TEMPLATE.md) or email security@aegisgatesecurity.ioaegisgate.example.com for security issues.
+See our [Issue Template](.github/ISSUE_TEMPLATE/ISSUE_TEMPLATE.md) or email security@aegisgatesecurity.example.com for security issues.
 
 ---
 
@@ -228,4 +223,4 @@ Yes! See [bugbounty.aegisgate.example.com](https://bugbounty.aegisgate.example.c
 
 ---
 
-*Can't find your answer? Contact us at support@aegisgatesecurity.ioaegisgate.example.com*
+*Can't find your answer? Contact us at support@aegisgatesecurity.example.com*
