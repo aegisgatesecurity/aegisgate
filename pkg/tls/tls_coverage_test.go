@@ -376,7 +376,7 @@ func TestNewmTLSContextNil(t *testing.T) {
 	}
 }
 
-func TestmTLSContextDisabledMode(t *testing.T) {
+func TestMTLSContextDisabledMode(t *testing.T) {
 	cfg := &mTLSConfig{
 		Mode: mTLSModeDisabled,
 	}
@@ -388,7 +388,7 @@ func TestmTLSContextDisabledMode(t *testing.T) {
 	}
 }
 
-func TestmTLSContextIsInitialized(t *testing.T) {
+func TestMTLSContextIsInitialized(t *testing.T) {
 	cfg := &mTLSConfig{
 		Mode: mTLSModeDisabled,
 	}
@@ -400,7 +400,7 @@ func TestmTLSContextIsInitialized(t *testing.T) {
 	}
 }
 
-func TestmTLSContextGetTLSConfigDisabled(t *testing.T) {
+func TestMTLSContextGetTLSConfigDisabled(t *testing.T) {
 	cfg := &mTLSConfig{
 		Mode: mTLSModeDisabled,
 	}
@@ -416,7 +416,7 @@ func TestmTLSContextGetTLSConfigDisabled(t *testing.T) {
 	}
 }
 
-func TestmTLSContextReload(t *testing.T) {
+func TestMTLSContextReload(t *testing.T) {
 	cfg := &mTLSConfig{
 		Mode: mTLSModeDisabled,
 	}
@@ -474,7 +474,7 @@ func TestNewmTLSClientNil(t *testing.T) {
 	}
 }
 
-func TestmTLSClientGetTLSConfig(t *testing.T) {
+func TestMTLSClientGetTLSConfig(t *testing.T) {
 	tempDir := t.TempDir()
 
 	certFile, keyFile, caFile := createTestCerts(t, tempDir)
@@ -493,7 +493,7 @@ func TestmTLSClientGetTLSConfig(t *testing.T) {
 	}
 }
 
-func TestmTLSClientShouldRenew(t *testing.T) {
+func TestMTLSClientShouldRenew(t *testing.T) {
 	tempDir := t.TempDir()
 
 	certFile, keyFile, caFile := createTestCerts(t, tempDir)
@@ -513,7 +513,7 @@ func TestmTLSClientShouldRenew(t *testing.T) {
 	}
 }
 
-func TestmTLSClientRenew(t *testing.T) {
+func TestMTLSClientRenew(t *testing.T) {
 	tempDir := t.TempDir()
 
 	certFile, keyFile, caFile := createTestCerts(t, tempDir)

@@ -84,6 +84,7 @@ func NewmTLSContext(cfg *mTLSConfig) (*mTLSContext, error) {
 
 	if cfg.Mode == mTLSModeDisabled {
 		slog.Info("mTLS is disabled")
+		ctx.isInitialized = true
 		return ctx, nil
 	}
 
@@ -98,7 +99,11 @@ func NewmTLSContext(cfg *mTLSConfig) (*mTLSContext, error) {
 func (m *mTLSContext) Initialize() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
+	return m.initializeLocked()
+}
 
+// initializeLocked is the internal initialization that assumes lock is held
+func (m *mTLSContext) initializeLocked() error {
 	if m.isInitialized {
 		return nil
 	}
@@ -261,9 +266,8 @@ func (m *mTLSContext) GetMode() mTLSMode {
 func (m *mTLSContext) Reload() error {
 	m.mu.Lock()
 	defer m.mu.Unlock()
-
 	m.isInitialized = false
-	return m.Initialize()
+	return m.initializeLocked()
 }
 
 // ==================== Client-Side mTLS ====================

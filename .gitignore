@@ -62,3 +62,6 @@ cov*.txt
 # Temp helper scripts (local only)
 add_*.ps1
 *.ps1
+
+# Test artifacts
+test_run.zip
