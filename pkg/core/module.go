@@ -62,9 +62,9 @@ type Tier int
 
 const (
 	TierCommunity    Tier = iota // Tier 0: Community (free, open source)
-	TierDeveloper                // Tier 1: Developer ($29/mo) - NEW
-	TierProfessional             // Tier 2: Professional ($99/mo)
-	TierEnterprise               // Tier 3: Enterprise (custom pricing)
+	TierDeveloper                // Tier 1: Developer
+	TierProfessional             // Tier 2: Professional
+	TierEnterprise               // Tier 3: Enterprise
 )
 
 func (t Tier) String() string {
