@@ -107,8 +107,8 @@ type ValidationResult struct {
 | Level | Tier | Description |
 |-------|------|-------------|
 | 0 | Community | Free tier - 1 server, 3 users, 60/min |
-| 1 | Developer | $29/mo - 5 servers, 10 users, 600/min |
-| 2 | Professional | $99/mo - 25 servers, 50 users, 3000/min |
+| 1 | Developer | See pricing - 5 servers, 10 users, 600/min |
+| 2 | Professional | See pricing - 25 servers, 50 users, 3000/min |
 | 3 | Enterprise | Custom - Unlimited |
 
 ## Error Handling
