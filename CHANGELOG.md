@@ -1,5 +1,11 @@
 # Changelog
 
+## [1.0.12] - 2026-03-18
+
+### Security
+- Version badge updated to reflect release
+- README and documentation consistency fixes
+
 ## [1.0.11] - 2026-03-16
 
 ### Security & Legal Protection
