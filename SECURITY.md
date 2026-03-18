@@ -4,7 +4,9 @@
 
 | Version | Supported          |
 | ------- | ------------------ |
-| 1.0.10  | Yes |
+| 1.0.12  | Yes |
+| 1.0.11  | Yes |
+| 1.0.10  | No (upgrade to latest) |
 | 1.0.3   | Yes (legacy) |
 | 1.0.2   | No (critical vulnerability) |
 | 1.0.1   | No (critical vulnerability) |
