@@ -65,3 +65,4 @@ add_*.ps1
 
 # Test artifacts
 test_run.zip
+SESSION_MEMORY.md  
