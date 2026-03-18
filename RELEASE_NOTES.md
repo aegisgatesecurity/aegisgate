@@ -51,8 +51,8 @@ Defines tier limits for offline/fallback operation.
 | Tier | Price | Max Servers | Max Users | Rate Limit |
 |------|-------|-------------|-----------|------------|
 | Community | Free | 1 | 3 | 60/min |
-| Developer | $29/mo | 5 | 10 | 600/min |
-| Professional | $99/mo | 25 | 50 | 3000/min |
+| Developer | | 5 | 10 | 600/min |
+| Professional | | 25 | 50 | 3000/min |
 | Enterprise | Custom | Unlimited | Unlimited | Unlimited |
 
 ---

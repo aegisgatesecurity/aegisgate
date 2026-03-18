@@ -6,12 +6,12 @@ AegisGate implements a comprehensive four-tier licensing model designed to scale
 
 The licensing system differentiates access based on organizational needs:
 
-| Tier | Level | Price | Target Audience |
-|------|-------|-------|-----------------|
-| Community | 0 | Free | Testing, Personal |
-| Developer | 1 | $29/mo | Individual Developers |
-| Professional | 2 | $99/mo | Teams, Businesses |
-| Enterprise | 3 | Custom | Large Organizations |
+| Tier | Level | Target Audience |
+|------|-------|-----------------|
+| Community | 0 | Testing, Personal |
+| Developer | 1 | Individual Developers |
+| Professional | 2 | Teams, Businesses |
+| Enterprise | 3 | Large Organizations |
 
 ## Tier Details
 
@@ -45,7 +45,6 @@ The Community tier is designed for testing, learning, and personal projects.
 
 The Developer tier is designed for individual developers and small projects.
 
-- **Price**: $29/month
 - **Level Value**: `1`
 - **Max Servers**: 5
 - **Max Users**: 10
@@ -56,6 +55,8 @@ The Developer tier is designed for individual developers and small projects.
 - API Access
 - Email Support
 - Custom Modules
+
+**Price**: Contact for pricing
 
 **Use Cases**:
 - Individual developers
@@ -73,7 +74,7 @@ export LICENSE_KEY="AG-xxxxxxxxxxxxx"
 
 The Professional tier is designed for professional teams and businesses.
 
-- **Price**: $99/month
+- **Price**: nth
 - **Level Value**: `2`
 - **Max Servers**: 25
 - **Max Users**: 50
@@ -94,7 +95,7 @@ The Professional tier is designed for professional teams and businesses.
 
 The Enterprise tier is designed for large organizations with custom needs.
 
-- **Price**: Custom (contact sales)
+- **Price**: Custom (Contact for pricing)
 - **Level Value**: `3`
 - **Max Servers**: Unlimited
 - **Max Users**: Unlimited
@@ -128,7 +129,7 @@ tier := validator.GetTier(ctx)
 
 // Check tier level
 if tier >= core.TierProfessional {
-    // Enable advanced features
+ // Enable advanced features
 }
 ```
 
@@ -136,7 +137,7 @@ if tier >= core.TierProfessional {
 
 ```go
 func checkTierAccess(tier core.Tier, requiredTier core.Tier) bool {
-    return tier >= requiredTier
+ return tier >= requiredTier
 }
 
 // Usage
@@ -147,10 +148,10 @@ isProOrHigher := checkTierAccess(userTier, core.TierProfessional)
 
 ```go
 const (
-    TierCommunity    Tier = iota  // 0
-    TierDeveloper                 // 1
-    TierProfessional              // 2
-    TierEnterprise                // 3
+ TierCommunity Tier = iota // 0
+ TierDeveloper // 1
+ TierProfessional // 2
+ TierEnterprise // 3
 )
 ```
 
@@ -158,7 +159,7 @@ const (
 
 1. **Community**: No registration required
 2. **Developer/Professional**: Sign up at [aegisgate.security](https://aegisgate.security)
-3. **Enterprise**: Contact sales at [sales@aegisgate.security](mailto:sales@aegisgate.security)
+3. **Enterprise**: Contact for pricing at [sales@aegisgate.security](mailto:sales@aegisgate.security)
 
 ## License Key Format
 
