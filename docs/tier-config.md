@@ -6,8 +6,8 @@ AegisGate uses a four-tier licensing system that defines resource limits for dif
 
 The tier system provides scalable access control:
 - **Community**: Free tier for testing/personal use
-- **Developer**: Individual developers ($29/mo)
-- **Professional**: Teams and businesses ($99/mo)
+- **Developer**: Individual developers (see pricing)
+- **Professional**: Teams and businesses (see pricing)
 - **Enterprise**: Large organizations (custom pricing)
 
 ## Configuration File
@@ -28,10 +28,10 @@ AegisGate/
 # Tier 0: Community (Free)
 community = { max_servers = 1, max_users = 3, rate_limit = 60 }
 
-# Tier 1: Developer ($29/mo)
+# Tier 1: Developer
 developer = { max_servers = 5, max_users = 10, rate_limit = 600 }
 
-# Tier 2: Professional ($99/mo)
+# Tier 2: Professional
 professional = { max_servers = 25, max_users = 50, rate_limit = 3000 }
 
 # Tier 3: Enterprise (Custom)
@@ -45,21 +45,21 @@ fail_open = true
 ## Tier Definitions
 
 ### Community (Tier 0)
-- **Price**: Free
+- **Price**: Free (no license required)
 - **Max Servers**: 1
 - **Max Users**: 3
 - **Rate Limit**: 60 requests/minute
 - **Use Case**: Testing, personal projects, learning
 
 ### Developer (Tier 1)
-- **Price**: $29/month
+- **Price**: See pricing page
 - **Max Servers**: 5
 - **Max Users**: 10
 - **Rate Limit**: 600 requests/minute
 - **Use Case**: Individual developers, small projects
 
 ### Professional (Tier 2)
-- **Price**: $99/month
+- **Price**: See pricing page
 - **Max Servers**: 25
 - **Max Users**: 50
 - **Rate Limit**: 3000 requests/minute

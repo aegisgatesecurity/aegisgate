@@ -9,8 +9,8 @@ The licensing system differentiates access based on organizational needs:
 | Tier | Level | Price | Target Audience |
 |------|-------|-------|-----------------|
 | Community | 0 | Free | Testing, Personal |
-| Developer | 1 | $29/mo | Individual Developers |
-| Professional | 2 | $99/mo | Teams, Businesses |
+| Developer | 1 | See pricing page | Individual Developers |
+| Professional | 2 | See pricing page | Teams, Businesses |
 | Enterprise | 3 | Custom | Large Organizations |
 
 ## Tier Details
@@ -45,7 +45,7 @@ The Community tier is designed for testing, learning, and personal projects.
 
 The Developer tier is designed for individual developers and small projects.
 
-- **Price**: $29/month
+- **Price**: See pricing page
 - **Level Value**: `1`
 - **Max Servers**: 5
 - **Max Users**: 10
@@ -73,7 +73,7 @@ export LICENSE_KEY="AG-xxxxxxxxxxxxx"
 
 The Professional tier is designed for professional teams and businesses.
 
-- **Price**: $99/month
+- **Price**: See pricing page
 - **Level Value**: `2`
 - **Max Servers**: 25
 - **Max Users**: 50
@@ -94,7 +94,7 @@ The Professional tier is designed for professional teams and businesses.
 
 The Enterprise tier is designed for large organizations with custom needs.
 
-- **Price**: Custom (contact sales)
+- **Price**: Contact sales
 - **Level Value**: `3`
 - **Max Servers**: Unlimited
 - **Max Users**: Unlimited
