@@ -1,6 +1,10 @@
 ﻿<div align="center">
 
+<<<<<<< HEAD
 # 🛡️ AegisGate™ 🔐
+=======
+# 🛡️ AegisGateT ⭐
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 <!-- Badges Row 1 -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
@@ -21,7 +25,11 @@
 
 ---
 
+<<<<<<< HEAD
 ### 🛡️ Enterprise-Grade AI API Security Platform
+=======
+### 🚀 Enterprise-Grade AI API Security Platform
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 **Zero code changes. Complete AI traffic security in under 5 minutes.**
 
@@ -31,20 +39,35 @@
 
 ---
 
+<<<<<<< HEAD
 ## ⚡ TL;DR
+=======
+## 📖 TL;DR
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
-**AegisGate™** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
+**AegisGateT** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
 
+<<<<<<< HEAD
 - 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
 - 📋 **Out-of-the-box compliance** — SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
 - 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
 - ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
+=======
+- 🛡️ **Real-time threat blocking** - Prompt injection, data leakage, adversarial attacks
+- ✅ **Out-of-the-box compliance** - SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
+- 🤖 **ML-powered detection** - Behavioral anomaly detection, cost monitoring
+- ⚡ **<5ms latency** - HTTP/2, HTTP/3, gRPC support
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
-**No code changes required.** Just point your AI traffic through AegisGate™.
+**No code changes required.** Just point your AI traffic through AegisGateT.
 
 ---
 
+<<<<<<< HEAD
 ## 🚀 Quick Start
+=======
+## ⚡ Quick Start
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 ### Docker (30 seconds)
 
@@ -94,7 +117,11 @@ rate_limit:
 
 ---
 
+<<<<<<< HEAD
 ## ✨ Features
+=======
+## 🔒 Features
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 ### 🛡️ Security & Threat Protection
 
@@ -107,7 +134,11 @@ rate_limit:
 | **Rate Limiting** | Smart throttling with per-user, per-endpoint policies | DoS Prevention |
 | **Secret Rotation** | Automated API key rotation with zero downtime | Best Practice |
 
+<<<<<<< HEAD
 ### 📋 Compliance & Governance
+=======
+### ✅ Compliance & Governance
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 | Capability | Description | Framework Coverage |
 |------------|-------------|-------------------|
@@ -117,7 +148,11 @@ rate_limit:
 | **Gap Analysis** | Automated compliance assessment & remediation guidance | Continuous Monitoring |
 | **Data Residency** | Regional routing and storage controls | GDPR Art. 44-49 |
 
+<<<<<<< HEAD
 ### 🔧 Enterprise Features
+=======
+### 🏢 Enterprise Features
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 | Capability | Description |
 |------------|-------------|
@@ -132,25 +167,9 @@ rate_limit:
 
 ## 🏗️ Architecture
 
-```mermaid
-%%{ init: {
-    'theme': 'dark',
-    'themeVariables': {
-        'primaryColor': '#0d47a1',
-        'primaryBorderColor': '#1565c0',
-        'primaryTextColor': '#ffffff',
-        'lineColor': '#ffffff',
-        'background': '#000000'
-    }
-} }%%
-graph TD
-    subgraph Clients
-        C1[Web Applications]
-        C2[Mobile Apps]
-        C3[API Clients]
-        C4[Server Services]
-    end
+Please see the full README in the repository for the architecture diagram.
 
+<<<<<<< HEAD
     subgraph "AegisGate™ Platform"
         subgraph "API Gateway Layer"
             AG[API Gateway<br/>Load Balancing & Routing]
@@ -220,6 +239,8 @@ graph TD
     class OPENAI,ANTHROPIC,GOOGLE,AZURE,COHERE provider;
 ```
 
+=======
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 ### 📦 Package Structure
 
 | Package | Purpose | Size |
@@ -235,9 +256,13 @@ graph TD
 
 ## 📊 Performance Benchmarks
 
+<<<<<<< HEAD
 ### 🚀 Performance
+=======
+### ⚡ Performance
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
-| Metric | AegisGate™ | Context |
+| Metric | AegisGateT | Context |
 |--------|:---------:|---------|
 | **Latency (p99)** | <5ms | Per-request overhead |
 | **Throughput** | 50,000 req/s | Sustained throughput |
@@ -246,7 +271,11 @@ graph TD
 | **Cold Start** | <500ms | Containerized deployment |
 | **Connection Pool** | 10,000 | Concurrent connections |
 
+<<<<<<< HEAD
 ### 🏆 Verified Results
+=======
+### ✅ Verified Results
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 - **Independent Testing**: Benchmarks performed by third-party security analysts
 - **Real-World Traffic**: Tested under production loads of 50M+ requests/day
@@ -261,11 +290,19 @@ graph TD
 | 50,000 req/min | <5ms | 99.95% | 512MB RAM |
 | 100,000 req/min | <7ms | 99.90% | 1GB RAM |
 
+<<<<<<< HEAD
 > 💡 **Key Insight**: AegisGate™ adds less than 5ms latency while providing enterprise-grade security—making it transparent to end users in most AI applications.
 
 ---
 
 ## 📊 Tiers & Licensing
+=======
+> ⚡ **Key Insight**: AegisGateT adds less than 5ms latency while providing enterprise-grade security-making it transparent to end users in most AI applications.
+
+---
+
+## 💰 Tiers & Licensing
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 | Feature | Community | Developer | Professional | Enterprise |
 |---------|:---------:|:---------:|:------------:|:----------:|
@@ -274,18 +311,28 @@ graph TD
 | **AI Providers** | OpenAI, Anthropic | + Cohere, Azure | All | All + Custom |
 | **Compliance frameworks** | View | Standard | Full | Full + Custom |
 | **Threat detection** | Basic | Advanced | Advanced | Advanced + Custom |
+<<<<<<< HEAD
 | **SSO/SAML** | — | ✅ | ✅ | ✅ |
 | **SIEM integration** | — | — | ✅ | ✅ |
 | **Custom policies** | — | — | ✅ | ✅ |
+=======
+| **SSO/SAML** | - | ✅ | ✅ | ✅ |
+| **SIEM integration** | - | - | ✅ | ✅ |
+| **Custom policies** | - | - | ✅ | ✅ |
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 | **Support** | Community | Email | Priority | 24/7 SLA |
-| **SLA** | — | — | 99.9% | 99.99% |
+| **SLA** | - | - | 99.9% | 99.99% |
 | **Price** | **Free** | Contact | Contact | Contact |
 
 > 📧 **Contact sales@aegisgatesecurity.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
 ---
 
+<<<<<<< HEAD
 ## 🔒 Security
+=======
+## 🔐 Security
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 ### Defense in Depth Model
 
@@ -326,6 +373,7 @@ graph TD
 ### 🚀 Quick Start (Beginner-Friendly)
 | Guide | Description | Time |
 |-------|-------------|------|
+<<<<<<< HEAD
 | [⚡ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
 | [📖 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
 | [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
@@ -336,17 +384,33 @@ graph TD
 |-------|-------------|------|
 | [🚀 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
 | [🏛️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
+=======
+| [✅ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
+| [📊 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
+| [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
+| [🔧 Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
+
+### 📖 Full Documentation
+| Guide | Description | Time |
+|-------|-------------|------|
+| [📖 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
+| [🏗️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 | [⚙️ Configuration](docs/configuration.md) | Full configuration reference | Reference |
 | [🐳 Docker Deployment](docs/docker-deployment.md) | Docker & Compose deployment | 10 min |
 | [☸️ Kubernetes](docs/kubernetes.md) | Helm, K8s, Istio integration | 15 min |
 | [🛡️ Security Model](docs/security-model.md) | Security architecture & hardening | 20 min |
+<<<<<<< HEAD
 | [📋 API Reference](docs/api-reference.md) | REST API documentation | Reference |
+=======
+| [🔌 API Reference](docs/api-reference.md) | REST API documentation | Reference |
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 ---
 
 ## 🤝 Contributing
 
-We welcome contributions to AegisGate™! All contributions are subject to the following legal agreements:
+We welcome contributions to AegisGateT! All contributions are subject to the following legal agreements:
 
 > ⚠️ **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
 
@@ -369,7 +433,11 @@ For legal questions: **support@aegisgatesecurity.io**
 
 ---
 
+<<<<<<< HEAD
 ## 📈 Project Statistics
+=======
+## 📊 Project Statistics
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 | Metric | Value |
 |--------|-------|
@@ -383,7 +451,11 @@ For legal questions: **support@aegisgatesecurity.io**
 
 ---
 
+<<<<<<< HEAD
 ## 💬 Support & Community
+=======
+## 👥 Support & Community
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 | Resource | Link |
 |----------|------|
@@ -391,12 +463,20 @@ For legal questions: **support@aegisgatesecurity.io**
 | 📖 **Docs** | aegisgate.io/docs |
 | 🐛 **Issue Tracker** | GitHub Issues |
 | 💬 **Discord** | Join Community |
+<<<<<<< HEAD
 | 🐦 **Twitter** | @AegisGate™ |
+=======
+| 🐦 **Twitter** | @AegisGateT |
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 | 📧 **Email** | support@aegisgatesecurity.io |
 
 ---
 
+<<<<<<< HEAD
 ## 🏢 Who's Using AegisGate™?
+=======
+## 🏢 Who's Using AegisGateT?
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 *[Add your company here!]*
 
@@ -404,9 +484,13 @@ Interested in being listed? Contact **support@aegisgatesecurity.io**
 
 ---
 
+<<<<<<< HEAD
 ## 📝 License
+=======
+## 📜 License
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
-**MIT License** - Copyright 2025-2026 AegisGate™ Security. All rights reserved.
+**MIT License** - Copyright 2025-2026 AegisGateT Security. All rights reserved.
 
 See [LICENSE](LICENSE) for full text.
 
@@ -414,12 +498,20 @@ See [LICENSE](LICENSE) for full text.
 
 <div align="center">
 
+<<<<<<< HEAD
 ### 🖤 Love AegisGate™?
+=======
+### 💖 Love AegisGateT?
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 **[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
 
 ---
 
+<<<<<<< HEAD
 Built with 🔐 by the AegisGate™ Security Team
+=======
+Built with ❤️ by the AegisGateT Security Team
+>>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
 </div>
