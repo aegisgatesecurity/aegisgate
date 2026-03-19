@@ -1,70 +1,48 @@
-# AegisGate Production-hardened Dockerfile
-# Security-Optimized: Minimal attack surface, rootless, read-only where possible
+# AegisGate Production Dockerfile
+# Security-Optimized with distroless base
 # SPDX-License-Identifier: MIT
 # Copyright 2025-2026 AegisGate Security
 
 # ============================================================================
-# STAGE 1: Builder (for reproducible builds, uses digest pinned deps)
+# STAGE 1: Builder
 # ============================================================================
 FROM golang:1.25.8-alpine AS builder
 
-# Install build dependencies
 RUN apk add --no-cache git ca-certificates
 
 WORKDIR /build
 
-# Copy go mod files first for better caching
 COPY go.mod ./
 COPY go.sum ./
 
-# Copy source code
 COPY cmd/ ./cmd/
 COPY pkg/ ./pkg/
 COPY config/ ./config/
 
-# Verify module checksums before build
 RUN go mod download && go mod verify
 
-# Build with security flags
 RUN CGO_ENABLED=0 GOOS=linux go build \
     -a -installsuffix cgo \
-    -ldflags="-s -w -buildid= -extldflags=-Wl,-z,now,-z,relro" \
+    -ldflags="-s -w" \
     -o /aegisgate \
     ./cmd/aegisgate
-
-# Copy config
-RUN cp config/aegisgate.yml.example /config.yml
 
 # ============================================================================
 # STAGE 2: Production Runtime Image
 # ============================================================================
-# Use Chainguard minimal image - has ca-certificates and basic utils
-FROM cgr.dev/chainguard/static:latest AS runtime
+FROM gcr.io/distroless/static:nonroot
 
-# Create non-root user (using uid/gid explicitly, no /etc/passwd needed)
-RUN echo "nonroot:x:65532:65532:::/bin/false" > /passwd && \
-    echo "nonroot:x:65532:" > /group
-
-# Copy binary from builder with correct permissions
-COPY --from=builder --chown=65532:65532 /aegisgate /usr/local/bin/aegisgate
-COPY --from=builder --chown=65532:65532 /config.yml /etc/aegisgate/config.yml
-
-# Copy user/group files
-COPY --from=builder /passwd /etc/passwd
-COPY --from=builder /group /etc/group
+# Copy binary and config
+COPY --from=builder /aegisgate /usr/local/bin/aegisgate
+COPY --from=builder /build/config/aegisgate.yml.example /etc/aegisgate/config.yml
 
 WORKDIR /app
 
-# Switch to non-root user
-USER 65532:65532
-
-# Expose ports
 EXPOSE 8080 8443 8444
 
-# Health check - wget is available
+# Health check (wget is available in distroless/static:nonroot)
 HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
     CMD ["wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/health"]
 
-# Use exec form
 ENTRYPOINT ["aegisgate"]
-CMD ["-config", "/etc/aegisgate/config.yml", "-bind", "0.0.0.0:8080", "-tier", "community"]
+CMD ["-bind", "0.0.0.0:8080", "-tier", "community"]
