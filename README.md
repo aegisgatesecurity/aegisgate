@@ -1,11 +1,11 @@
-<div align="center">
+﻿<div align="center">
 
-# ??? AegisGate� ??
+# 🛡️ AegisGate™ 🔐
 
 <!-- Badges Row 1 -->
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.0.14-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Version](https://img.shields.io/badge/version-v1.0.13-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Release Date](https://img.shields.io/badge/Released-March_2026-blue)](https://github.com/aegisgatesecurity/aegisgate/releases)
 
 <!-- Badges Row 2 -->
@@ -21,30 +21,30 @@
 
 ---
 
-### ??? Enterprise-Grade AI API Security Platform
+### 🛡️ Enterprise-Grade AI API Security Platform
 
 **Zero code changes. Complete AI traffic security in under 5 minutes.**
 
-[Website](https://aegisgate.io) � [Features](#features) � [Quick Start](#quick-start) � [Architecture](#architecture) � [Tiers](#tiers--licensing) � [Security](#security) � [Contribute](#contributing)
+[Website](https://aegisgate.io) • [Features](#features) • [Quick Start](#quick-start) • [Architecture](#architecture) • [Tiers](#tiers--licensing) • [Security](#security) • [Contribute](#contributing)
 
 </div>
 
 ---
 
-## ? TL;DR
+## ⚡ TL;DR
 
-**AegisGate�** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
+**AegisGate™** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
 
-- ??? **Real-time threat blocking** � Prompt injection, data leakage, adversarial attacks
-- ?? **Out-of-the-box compliance** � OWASP AI Top 10, GDPR, ISO 27001, SOC 2, and more
-- ?? **ML-powered detection** � Behavioral anomaly detection, cost monitoring
-- ? **<5ms latency** � HTTP/2, HTTP/3, gRPC support
+- 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
+- 📋 **Out-of-the-box compliance** — OWASP AI Top 10, GDPR, ISO 27001, SOC 2, and more
+- 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
+- ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
 
-**No code changes required.** Just point your AI traffic through AegisGate�.
+**No code changes required.** Just point your AI traffic through AegisGate™.
 
 ---
 
-## ?? Quick Start
+## 🚀 Quick Start
 
 ### Docker (30 seconds)
 
@@ -94,9 +94,9 @@ rate_limit:
 
 ---
 
-## ? Features
+## ✨ Features
 
-### ??? Security & Threat Protection
+### 🛡️ Security & Threat Protection
 
 | Capability | Description | OWASP/Industry Alignment |
 |------------|-------------|--------------------------|
@@ -107,7 +107,7 @@ rate_limit:
 | **Rate Limiting** | Smart throttling with per-user, per-endpoint policies | DoS Prevention |
 | **Secret Rotation** | Automated API key rotation with zero downtime | Best Practice |
 
-### ?? Compliance & Governance
+### 📋 Compliance & Governance
 
 | Capability | Description | Framework Coverage |
 |------------|-------------|-------------------|
@@ -117,7 +117,7 @@ rate_limit:
 | **Gap Analysis** | Automated compliance assessment & remediation guidance | Continuous Monitoring |
 | **Data Residency** | Regional routing and storage controls | GDPR Art. 44-49 |
 
-### ?? Enterprise Features
+### 🔧 Enterprise Features
 
 | Capability | Description |
 |------------|-------------|
@@ -130,7 +130,7 @@ rate_limit:
 
 ---
 
-## ??? Architecture
+## 🏗️ Architecture
 
 ```mermaid
 %%{ init: {
@@ -151,7 +151,7 @@ graph TD
         C4[Server Services]
     end
 
-    subgraph "AegisGate� Platform"
+    subgraph "AegisGate™ Platform"
         subgraph "API Gateway Layer"
             AG[API Gateway<br/>Load Balancing & Routing]
         end
@@ -204,7 +204,7 @@ graph TD
     ML --> AZURE
     ML --> COHERE
 
-    %% Blue-tinted classes for a dark background
+    %% Blue‑tinted classes for a dark background
     classDef client fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px;
     classDef gateway fill:#1e40af,stroke:#60a5fa,stroke-width:2px;
     classDef security fill:#1d4ed8,stroke:#93c5fd,stroke-width:2px;
@@ -220,7 +220,7 @@ graph TD
     class OPENAI,ANTHROPIC,GOOGLE,AZURE,COHERE provider;
 ```
 
-### ?? Package Structure
+### 📦 Package Structure
 
 | Package | Purpose | Size |
 |---------|---------|------|
@@ -233,11 +233,11 @@ graph TD
 | pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
 
 
-## ?? Performance Benchmarks
+## 📊 Performance Benchmarks
 
-### ?? Performance
+### 🚀 Performance
 
-| Metric | AegisGate� | Context |
+| Metric | AegisGate™ | Context |
 |--------|:---------:|---------|
 | **Latency (p99)** | <5ms | Per-request overhead |
 | **Throughput** | 50,000 req/s | Sustained throughput |
@@ -246,13 +246,13 @@ graph TD
 | **Cold Start** | <500ms | Containerized deployment |
 | **Connection Pool** | 10,000 | Concurrent connections |
 
-### ?? Verified Results
+### 🏆 Verified Results
 
 - **Independent Testing**: Benchmarks performed by third-party security analysts
 - **Real-World Traffic**: Tested under production loads of 50M+ requests/day
 - **Cloud-Agnostic**: Verified on AWS, GCP, Azure, and on-premise deployments
 
-### ?? Scaling Characteristics
+### 📈 Scaling Characteristics
 
 | Load Level | Latency | Success Rate | Resource Usage |
 |------------|---------|--------------|----------------|
@@ -261,11 +261,11 @@ graph TD
 | 50,000 req/min | <5ms | 99.95% | 512MB RAM |
 | 100,000 req/min | <7ms | 99.90% | 1GB RAM |
 
-> ?? **Key Insight**: AegisGate� adds less than 5ms latency while providing enterprise-grade security�making it transparent to end users in most AI applications.
+> 💡 **Key Insight**: AegisGate™ adds less than 5ms latency while providing enterprise-grade security—making it transparent to end users in most AI applications.
 
 ---
 
-## ?? Tiers & Licensing
+## 📊 Tiers & Licensing
 
 | Feature | Community | Developer | Professional | Enterprise |
 |---------|:---------:|:---------:|:------------:|:----------:|
@@ -274,18 +274,18 @@ graph TD
 | **AI Providers** | OpenAI, Anthropic | + Cohere, Azure | All | All + Custom |
 | **Compliance frameworks** | View | Standard | Full | Full + Custom |
 | **Threat detection** | Basic | Advanced | Advanced | Advanced + Custom |
-| **SSO/SAML** | � | ? | ? | ? |
-| **SIEM integration** | � | � | ? | ? |
-| **Custom policies** | � | � | ? | ? |
+| **SSO/SAML** | — | ✅ | ✅ | ✅ |
+| **SIEM integration** | — | — | ✅ | ✅ |
+| **Custom policies** | — | — | ✅ | ✅ |
 | **Support** | Community | Email | Priority | 24/7 SLA |
-| **SLA** | � | � | 99.9% | 99.99% |
+| **SLA** | — | — | 99.9% | 99.99% |
 | **Price** | **Free** | Contact | Contact | Contact |
 
-> ?? **Contact sales@aegisgatesecurity.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
+> 📧 **Contact sales@aegisgatesecurity.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
 
 ---
 
-## ?? Security
+## 🔒 Security
 
 ### Defense in Depth Model
 
@@ -301,51 +301,51 @@ graph TD
 
 | Framework | Status | Documentation |
 |-----------|:------:|---------------|
-| OWASP AI Top 10 | ? Complete | docs/ |
-| SOC 2 Type II | ? Coming | � |
-| GDPR | ? Complete | docs/ |
-| ISO 27001 | ? Complete | docs/ |
+| OWASP AI Top 10 | ✅ Complete | docs/ |
+| SOC 2 Type II | ✅ Coming | — |
+| GDPR | ✅ Complete | docs/ |
+| ISO 27001 | ✅ Complete | docs/ |
 
-> ?? **Enterprise Compliance**: Additional compliance frameworks (HIPAA, PCI-DSS, ISO 42001, NIST AI RMF) available with Enterprise license. Contact sales@aegisgatesecurity.io
+> 💡 **Enterprise Compliance**: Additional compliance frameworks (HIPAA, PCI-DSS, ISO 42001, NIST AI RMF) available with Enterprise license. Contact sales@aegisgatesecurity.io
 
-### ?? Vulnerability Disclosure
+### 🐛 Vulnerability Disclosure
 
 **Found a security issue? DO NOT open a public issue.**
 
-?? **Email:** security@aegisgatesecurity.io  
-?? **Response:** Within 48 hours  
-?? **Remediation:** 90 days timeline  
+📧 **Email:** security@aegisgatesecurity.io  
+⏱️ **Response:** Within 48 hours  
+🔧 **Remediation:** 90 days timeline  
 
 ---
 
-## ?? Documentation
+## 📚 Documentation
 
-### ?? Quick Start (Beginner-Friendly)
+### 🚀 Quick Start (Beginner-Friendly)
 | Guide | Description | Time |
 |-------|-------------|------|
-| [? One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
-| [?? Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
-| [? Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
-| [?? Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
+| [⚡ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
+| [📖 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
+| [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
+| [🔧 Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
 
-### ?? Full Documentation
+### 📚 Full Documentation
 | Guide | Description | Time |
 |-------|-------------|------|
-| [?? Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
-| [??? Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
-| [?? Configuration](docs/configuration.md) | Full configuration reference | Reference |
-| [?? Docker Deployment](docs/docker-deployment.md) | Docker & Compose deployment | 10 min |
-| [?? Kubernetes](docs/kubernetes.md) | Helm, K8s, Istio integration | 15 min |
-| [??? Security Model](docs/security-model.md) | Security architecture & hardening | 20 min |
-| [?? API Reference](docs/api-reference.md) | REST API documentation | Reference |
+| [🚀 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
+| [🏛️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
+| [⚙️ Configuration](docs/configuration.md) | Full configuration reference | Reference |
+| [🐳 Docker Deployment](docs/docker-deployment.md) | Docker & Compose deployment | 10 min |
+| [☸️ Kubernetes](docs/kubernetes.md) | Helm, K8s, Istio integration | 15 min |
+| [🛡️ Security Model](docs/security-model.md) | Security architecture & hardening | 20 min |
+| [📋 API Reference](docs/api-reference.md) | REST API documentation | Reference |
 
 ---
 
-## ?? Contributing
+## 🤝 Contributing
 
-We welcome contributions to AegisGate�! All contributions are subject to the following legal agreements:
+We welcome contributions to AegisGate™! All contributions are subject to the following legal agreements:
 
-> ?? **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
+> ⚠️ **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
 
 | Document | Purpose |
 |----------|---------|
@@ -366,7 +366,7 @@ For legal questions: **support@aegisgatesecurity.io**
 
 ---
 
-## ?? Project Statistics
+## 📈 Project Statistics
 
 | Metric | Value |
 |--------|-------|
@@ -380,20 +380,20 @@ For legal questions: **support@aegisgatesecurity.io**
 
 ---
 
-## ?? Support & Community
+## 💬 Support & Community
 
 | Resource | Link |
 |----------|------|
-| ?? **Website** | aegisgate.io |
-| ?? **Docs** | aegisgate.io/docs |
-| ?? **Issue Tracker** | GitHub Issues |
-| ?? **Discord** | Join Community |
-| ?? **Twitter** | @AegisGate� |
-| ?? **Email** | support@aegisgatesecurity.io |
+| 🌐 **Website** | aegisgate.io |
+| 📖 **Docs** | aegisgate.io/docs |
+| 🐛 **Issue Tracker** | GitHub Issues |
+| 💬 **Discord** | Join Community |
+| 🐦 **Twitter** | @AegisGate™ |
+| 📧 **Email** | support@aegisgatesecurity.io |
 
 ---
 
-## ?? Who's Using AegisGate�?
+## 🏢 Who's Using AegisGate™?
 
 *[Add your company here!]*
 
@@ -401,9 +401,9 @@ Interested in being listed? Contact **support@aegisgatesecurity.io**
 
 ---
 
-## ?? License
+## 📝 License
 
-**MIT License** - Copyright 2025-2026 AegisGate� Security. All rights reserved.
+**MIT License** - Copyright 2025-2026 AegisGate™ Security. All rights reserved.
 
 See [LICENSE](LICENSE) for full text.
 
@@ -411,12 +411,12 @@ See [LICENSE](LICENSE) for full text.
 
 <div align="center">
 
-### ?? Love AegisGate�?
+### 🖤 Love AegisGate™?
 
 **[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
 
 ---
 
-Built with ?? by the AegisGate� Security Team
+Built with 🔐 by the AegisGate™ Security Team
 
 </div>
