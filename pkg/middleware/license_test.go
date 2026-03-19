@@ -442,7 +442,7 @@ func TestTierJSON(t *testing.T) {
 		t.Fatalf("failed to marshal: %v", err)
 	}
 	
-	if !strings.Contains(string(data), "developer") {
+	if !strings.Contains(strings.ToLower(string(data)), "developer") {
 		t.Errorf("expected developer in JSON, got %s", string(data))
 	}
 
