@@ -36,7 +36,7 @@
 **AegisGate™** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
 
 - 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
-- 📋 **Out-of-the-box compliance** — SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
+- 📋 **Out-of-the-box compliance** — OWASP AI Top 10, GDPR, ISO 27001, SOC 2, and more
 - 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
 - ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
 
@@ -111,7 +111,7 @@ rate_limit:
 
 | Capability | Description | Framework Coverage |
 |------------|-------------|-------------------|
-| **Multi-Framework Support** | 10+ compliance frameworks built-in | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF |
+| **Multi-Framework Support** | Multiple compliance frameworks built-in | OWASP AI Top 10, GDPR, ISO 27001, SOC 2 |
 | **Audit Trails** | Cryptographically signed, tamper-evident logs | Immutable Logging |
 | **Policy Engine** | Custom security policies with live enforcement | OPA/Rego |
 | **Gap Analysis** | Automated compliance assessment & remediation guidance | Continuous Monitoring |
@@ -301,15 +301,12 @@ graph TD
 
 | Framework | Status | Documentation |
 |-----------|:------:|---------------|
-| OWASP AI Top 10 | ✅ Complete | docs/security/owasp-ai-top-10.md |
-| MITRE ATLAS | ✅ Complete | docs/security/mitre-atlas.md |
-| SOC 2 Type II | ✅ Complete | docs/compliance/soc2.md |
-| HIPAA | ✅ Complete | docs/compliance/hipaa.md |
-| PCI-DSS | ✅ Complete | docs/compliance/pci-dss.md |
-| GDPR | ✅ Complete | docs/compliance/gdpr.md |
-| ISO 27001 | ✅ Complete | docs/compliance/iso-27001.md |
-| ISO 42001 | ✅ Complete | docs/compliance/iso-42001.md |
-| NIST AI RMF | ✅ Complete | docs/compliance/nist-ai-rmf.md |
+| OWASP AI Top 10 | ✅ Complete | docs/ |
+| SOC 2 Type II | ✅ Coming | — |
+| GDPR | ✅ Complete | docs/ |
+| ISO 27001 | ✅ Complete | docs/ |
+
+> 💡 **Enterprise Compliance**: Additional compliance frameworks (HIPAA, PCI-DSS, ISO 42001, NIST AI RMF) available with Enterprise license. Contact sales@aegisgatesecurity.io
 
 ### 🐛 Vulnerability Disclosure
 
