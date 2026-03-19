@@ -11,7 +11,7 @@
 ### Security & Legal Protection
 - Added PROPRIETARY headers to all .go source files (155+ files)
 - Added trade secret designation to SECURITY.md
-- Added trademark (™) to AegisGate brand name in README
+- Added trademark (â„¢) to AegisGate brand name in README
 - Updated .gitignore with comprehensive security exclusions
 - Created NOTICE.md with proprietary notices
 - Added Contributing section to README with CLA/DCO links
@@ -83,7 +83,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **GitHub Actions** - Updated release.yml, test.yml to use correct artifact names (aegisgate-* instead of padlock-*)
 - **CI/CD Pipeline** - Resolved Docker build failures due to missing cmd/padlock directory
 - **Compliance Package** - Fixed duplicate const blocks causing "undefined: Framework" errors
-- **Type Naming** - Fixed type stuttering (ComplianceResult→Result, etc.)
+- **Type Naming** - Fixed type stuttering (ComplianceResultâ†’Result, etc.)
 - **Documentation** - Added missing Go doc comments on exported symbols
 - **Docker** - Updated Dockerfile binary names and user references
 
