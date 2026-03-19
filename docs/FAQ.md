@@ -12,7 +12,7 @@ AegisGate is an enterprise-grade security platform that provides comprehensive p
 
 If you're using AI APIs (OpenAI, Anthropic, etc.) in production, you need:
 - **Security** - Protect against attacks and unauthorized access
-- **Compliance** - Meet regulatory requirements (HIPAA, PCI-DSS, SOC2)
+- **Compliance** - Meet regulatory requirements (GDPR, SOC 2, OWASP)
 - **Observability** - Understand your AI usage patterns
 - **Cost Control** - Monitor and control AI spending
 
@@ -49,17 +49,19 @@ AegisGate is language-agnostic because it works as a proxy. Any application that
 
 ### What compliance frameworks does AegisGate support?
 
-| Framework | Description |
-|-----------|-------------|
-| OWASP Top 10 | Security vulnerabilities |
-| SOC 2 | Service organization control |
-| GDPR | Data protection |
-| NIST | Cybersecurity framework |
-| HIPAA | Healthcare compliance |
-| PCI-DSS | Payment card security |
-| ISO 27001 | Information security |
-| ISO 42001 | AI-specific standard |
-| FedRAMP | US government security |
+| Framework | Description | Availability |
+|-----------|-------------|--------------|
+| OWASP Top 10 | Security vulnerabilities | Community |
+| SOC 2 | Service organization control | Community |
+| GDPR | Data protection | Community |
+| ISO 27001 | Information security | Community |
+| NIST AI RMF | AI risk management | Enterprise |
+| HIPAA | Healthcare compliance | Enterprise |
+| PCI-DSS | Payment card security | Enterprise |
+| ISO 42001 | AI-specific standard | Enterprise |
+| FedRAMP | US government security | Enterprise |
+
+> 💡 **Enterprise Compliance**: Additional compliance frameworks (HIPAA, PCI-DSS, ISO 42001, NIST AI RMF) available with Enterprise license. Contact sales@aegisgatesecurity.io
 
 ### Can I run AegisGate on my own infrastructure?
 
