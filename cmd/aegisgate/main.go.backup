@@ -44,8 +44,7 @@ var managementEndpoints = map[string]bool{
 
 func main() {
 	showVersion := flag.Bool("version", false, "Show version information")
-	tierName := flag.String("tier", "community", "License tier (requires LICENSE_KEY for Developer/Professional/Enterprise)")
-	licenseKey := flag.String("license-key", os.Getenv("LICENSE_KEY"), "License key (required for non-community tiers)")
+	tierName := flag.String("tier", "community", "License tier")
 	targetURL := flag.String("target", "https://api.openai.com", "Target AI provider URL")
 	bindAddress := flag.String("bind", "0.0.0.0:8080", "Bind address")
 	flag.Parse()
@@ -56,24 +55,6 @@ func main() {
 	}
 
 	tier := core.GetTierByName(*tierName)
-	
-	// SECURITY: Require license key for non-community tiers
-	if *tierName != "community" {
-		if *licenseKey == "" {
-			log.Fatal("ERROR: License key is required for non-community tiers. Set LICENSE_KEY environment variable or use -license-key flag.")
-		}
-		// Validate the license with the admin panel
-		validator := middleware.GetGlobalValidator()
-		ctx := context.Background()
-		result, err := validator.Validate(ctx)
-		if err != nil || !result.Valid {
-			log.Fatalf("ERROR: Invalid license key: %v", err)
-		}
-		// Use tier from license, not CLI flag (prevents bypass)
-		tier = result.Tier
-		log.Printf("License validated: tier=%s, expires=%s", tier.String(), result.ExpiresAt.Format("2006-01-02"))
-	}
-	
 	log.Printf("Starting AegisGate v%s with tier: %s", version, tier.String())
 
 	limits := tier.GetTierLimits()

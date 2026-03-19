@@ -65,3 +65,9 @@ add_*.ps1
 
 # Test artifacts
 test_run.zip
+  
+"# Licensing & Pricing (sensitive business docs - REMOVED from repo)"  
+"docs/licensing-tiers.md"  
+"docs/tier-config.md"  
+"docs/license-middleware.md"  
+"config/tier.conf"  
