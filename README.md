@@ -1,517 +1,188 @@
-﻿<div align="center">
+<div align="center">
 
-<<<<<<< HEAD
 # 🛡️ AegisGate™ 🔐
-=======
-# 🛡️ AegisGateT ⭐
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
 
-<!-- Badges Row 1 -->
+Enterprise AI API Security Platform
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.24+-00ADD8?logo=go)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.0.12-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
-[![Release Date](https://img.shields.io/badge/Released-March_2026-blue)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Version](https://img.shields.io/badge/version-v1.0.13-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![Release Date](https://img.shields.io/badge/Release-Date-2026--03--19-brightgreen)](https://github.com/aegisgatesecurity/aegisgate/releases)
+[![DCO](https://img.shields.io/badge/DCO-Signed-blue)](CONTRIBUTING.md)
+[![Go Report Card](https://goreportcard.com/badge/github.com/aegisgatesecurity/aegisgate)](https://goreportcard.com/report/github.com/aegisgatesecurity/aegisgate)
 
-<!-- Badges Row 2 -->
-[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker)](https://hub.docker.com/r/aegisgatesecurity/aegisgate)
-[![Kubernetes](https://img.shields.io/badge/K8s-Ready-326CE5?logo=kubernetes)](https://kubernetes.io/)
-[![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen?logo=github-actions)](https://github.com/aegisgatesecurity/aegisgate/actions)
-[![Security](https://img.shields.io/badge/Security-Audit_Passed-2ECC71?logo=lock)](SECURITY.md)
-
-<!-- Badges Row 3 -->
-[![Stars](https://img.shields.io/github/stars/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/stargazers)
-[![Forks](https://img.shields.io/github/forks/aegisgatesecurity/aegisgate?logo=github)](https://github.com/aegisgatesecurity/aegisgate/network)
-[![Downloads](https://img.shields.io/github/downloads/aegisgatesecurity/aegisgate/total?logo=github)](https://github.com/aegisgatesecurity/aegisgate/releases/latest)
-
----
-
-<<<<<<< HEAD
-### 🛡️ Enterprise-Grade AI API Security Platform
-=======
-### 🚀 Enterprise-Grade AI API Security Platform
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-**Zero code changes. Complete AI traffic security in under 5 minutes.**
-
-[Website](https://aegisgate.io) • [Features](#features) • [Quick Start](#quick-start) • [Architecture](#architecture) • [Tiers](#tiers--licensing) • [Security](#security) • [Contribute](#contributing)
+[![Main CI](https://img.shields.io/github/actions/workflow/status/aegisgatesecurity/aegisgate/main.yml?branch=main&label=Main%20CI)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/main.yml)
+[![Security Tests](https://img.shields.io/github/actions/workflow/status/aegisgatesecurity/aegisgate/security.yml?branch=main&label=Security)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/security.yml)
+[![DCO Check](https://img.shields.io/github/actions/workflow/status/aegisgatesecurity/aegisgate/dco-check.yml?branch=main&label=DCO)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/dco-check.yml)
 
 </div>
 
----
+## Table of Contents
 
-<<<<<<< HEAD
-## ⚡ TL;DR
-=======
-## 📖 TL;DR
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-**AegisGateT** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
-
-<<<<<<< HEAD
-- 🛡️ **Real-time threat blocking** — Prompt injection, data leakage, adversarial attacks
-- 📋 **Out-of-the-box compliance** — SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
-- 🤖 **ML-powered detection** — Behavioral anomaly detection, cost monitoring
-- ⚡ **<5ms latency** — HTTP/2, HTTP/3, gRPC support
-=======
-- 🛡️ **Real-time threat blocking** - Prompt injection, data leakage, adversarial attacks
-- ✅ **Out-of-the-box compliance** - SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF
-- 🤖 **ML-powered detection** - Behavioral anomaly detection, cost monitoring
-- ⚡ **<5ms latency** - HTTP/2, HTTP/3, gRPC support
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-**No code changes required.** Just point your AI traffic through AegisGateT.
+- [Overview](#overview)
+- [Features](#features)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)
+- [Configuration](#configuration)
+- [API Documentation](#api-documentation)
+- [Licensing](#licensing)
+- [Contributing](#contributing)
+- [Security](#security)
 
 ---
 
-<<<<<<< HEAD
-## 🚀 Quick Start
-=======
-## ⚡ Quick Start
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+## Overview
 
-### Docker (30 seconds)
+AegisGate is an enterprise-grade, Go-based transparent proxy that sits between AI clients and AI service providers. It provides security, governance, and observability for organizational AI API usage.
+
+## Features
+
+🛡️ **Enterprise Security**
+- Transparent proxy for all major AI providers
+- PII detection and redaction
+- Request/response filtering and validation
+- Jailbreak and prompt injection detection
+
+🔒 **Data Privacy**
+- Local processing - no data leaves your infrastructure
+- Configurable data retention policies
+- Token-level access control
+
+✅ **Compliance & Governance**
+- Request/response logging and auditing
+- Usage analytics and reporting
+- Rate limiting and quota management
+- Cost controls by department, user, or API key
+
+⚡ **Performance**
+- Sub-millisecond latency overhead
+- Connection pooling
+- Caching for repeated queries
+
+🚀 **Easy Integration**
+- Drop-in replacement for OpenAI SDKs
+- Docker and Kubernetes support
+- Prometheus metrics exposed
+- OpenTelemetry tracing support
+
+---
+
+## Quick Start
+
+### Prerequisites
+
+- Go 1.24 or later
+- Docker (optional)
+- Kubernetes (optional)
+
+### Installation
 
 ```bash
-mkdir -p aegisgate-config && cd aegisgate-config
-curl -sL https://raw.githubusercontent.com/aegisgatesecurity/aegisgate/main/docker-compose.yml | docker compose -f - up -d
-
-curl http://localhost:8080/health
+git clone https://github.com/aegisgatesecurity/aegisgate.git
+cd aegisgate
+go build -o aegisgate cmd/aegisgate/main.go
+./aegisgate
 ```
 
-### Kubernetes (Helm)
+### Docker
 
 ```bash
-helm repo add aegisgate https://aegisgatesecurity.github.io/helm-charts
-helm install aegisgate aegisgate/aegisgate -n aegisgate --create-namespace
+docker build -t aegisgate:latest .
+docker run -p 8080:8080 aegisgate:latest
 ```
+
+---
+
+## Architecture
+
+AegisGate operates as a transparent proxy:
+
+```
+┌─────────────┐      ┌─────────────┐      ┌─────────────────┐
+│   AI Client  │─────▶│  AegisGate   │─────▶│  AI Provider    │
+└─────────────┘      └─────────────┘      └─────────────────┘
+                           │
+                           ▼
+                    ┌─────────────┐
+                    │   Storage   │
+                    └─────────────┘
+```
+
+---
+
+## Configuration
+
+See `config.example.yaml` for all available options.
 
 ### Basic Configuration
 
 ```yaml
 server:
+  host: 0.0.0.0
   port: 8080
-  mode: production
 
 security:
-  license_key: YOUR_LICENSE_KEY
-  threat_detection:
+  pii_detection:
     enabled: true
-    block_mode: true
-
-proxy:
-  tls:
+  prompt_injection:
     enabled: true
-    min_version: "1.3"
-  upstream:
-    openai:
-      url: https://api.openai.com
-      api_key: YOUR_OPENAI_KEY
-    anthropic:
-      url: https://api.anthropic.com
-      api_key: YOUR_ANTHROPIC_KEY
-
-rate_limit:
-  requests_per_minute: 1000
-  burst: 50
 ```
 
 ---
 
-<<<<<<< HEAD
-## ✨ Features
-=======
-## 🔒 Features
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+## API Documentation
 
-### 🛡️ Security & Threat Protection
+### Proxy Endpoints
 
-| Capability | Description | OWASP/Industry Alignment |
-|------------|-------------|--------------------------|
-| **Prompt Injection Prevention** | Real-time detection & blocking of LLM01 attacks | OWASP LLM01 |
-| **Data Leakage Protection** | Automatic PII/PHI/PCI redaction before transmission | OWASP LLM02 |
-| **Adversarial Defense** | Buffer overflow, payload fuzzing, jailbreak detection | OWASP LLM05 |
-| **mTLS & PKI** | Certificate-based authentication with hardware attestation | Zero Trust |
-| **Rate Limiting** | Smart throttling with per-user, per-endpoint policies | DoS Prevention |
-| **Secret Rotation** | Automated API key rotation with zero downtime | Best Practice |
-
-<<<<<<< HEAD
-### 📋 Compliance & Governance
-=======
-### ✅ Compliance & Governance
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-| Capability | Description | Framework Coverage |
-|------------|-------------|-------------------|
-| **Multi-Framework Support** | 10+ compliance frameworks built-in | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001, ISO 42001, NIST AI RMF |
-| **Audit Trails** | Cryptographically signed, tamper-evident logs | Immutable Logging |
-| **Policy Engine** | Custom security policies with live enforcement | OPA/Rego |
-| **Gap Analysis** | Automated compliance assessment & remediation guidance | Continuous Monitoring |
-| **Data Residency** | Regional routing and storage controls | GDPR Art. 44-49 |
-
-<<<<<<< HEAD
-### 🔧 Enterprise Features
-=======
-### 🏢 Enterprise Features
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-| Capability | Description |
-|------------|-------------|
-| **SSO/SAML/OIDC** | Okta, Azure AD, Google Workspace, Auth0 integration |
-| **RBAC/ABAC** | Fine-grained access control with custom roles |
-| **SIEM Integration** | Splunk, Elastic, Datadog, QRadar, Microsoft Sentinel, AWS CloudWatch |
-| **Cloud-Native** | Kubernetes, Helm, Terraform, Docker, AWS ECS, GCP Cloud Run |
-| **High Availability** | Active-passive, active-active, multi-region deployment |
-| **Service Mesh** | Istio, Linkerd, Consul Connect compatibility |
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /v1/chat/completions | OpenAI-compatible Chat Completions |
+| POST | /v1/completions | OpenAI-compatible Completions |
+| POST | /v1/embeddings | OpenAI-compatible Embeddings |
+| GET | /health | Health check |
+| GET | /metrics | Prometheus metrics |
 
 ---
 
-## 🏗️ Architecture
-
-Please see the full README in the repository for the architecture diagram.
-
-<<<<<<< HEAD
-    subgraph "AegisGate™ Platform"
-        subgraph "API Gateway Layer"
-            AG[API Gateway<br/>Load Balancing & Routing]
-        end
-
-        subgraph "Security Layer"
-            AUTH[Authentication<br/>OAuth2/JWT]
-            AUTHZ[Authorization<br/>RBAC/ABAC]
-            RATE[Rate Limiting]
-            THREAT[Threat Detection]
-        end
-
-        subgraph "Core Services"
-            PROXY[AI Proxy<br/>Provider Abstraction]
-            COMP[Compliance<br/>PII Redaction & Audit]
-            OBS[Observability<br/>Metrics & Logging]
-        end
-
-        subgraph "AI Intelligence"
-            ML[ML Detection<br/>Content Safety]
-            TRANS[Transform Engine<br/>Request/Response]
-        end
-    end
-
-    subgraph "AI Providers"
-        OPENAI[OpenAI]
-        ANTHROPIC[Anthropic]
-        GOOGLE[Google AI]
-        AZURE[Azure OpenAI]
-        COHERE[Cohere]
-    end
-
-    C1 --> AG
-    C2 --> AG
-    C3 --> AG
-    C4 --> AG
-
-    AG --> AUTH
-    AUTH --> AUTHZ
-    AUTHZ --> RATE
-    RATE --> THREAT
-    THREAT --> PROXY
-
-    PROXY --> COMP
-    COMP --> OBS
-    OBS --> TRANS
-    TRANS --> ML
-    ML --> OPENAI
-    ML --> ANTHROPIC
-    ML --> GOOGLE
-    ML --> AZURE
-    ML --> COHERE
-
-    %% Blue‑tinted classes for a dark background
-    classDef client fill:#1e3a8a,stroke:#3b82f6,stroke-width:2px;
-    classDef gateway fill:#1e40af,stroke:#60a5fa,stroke-width:2px;
-    classDef security fill:#1d4ed8,stroke:#93c5fd,stroke-width:2px;
-    classDef core fill:#2563eb,stroke:#bfdbfe,stroke-width:2px;
-    classDef ml fill:#3b82f6,stroke:#dbeafe,stroke-width:2px;
-    classDef provider fill:#0ea5e9,stroke:#bae6fd,stroke-width:2px;
-
-    class C1,C2,C3,C4 client;
-    class AG gateway;
-    class AUTH,AUTHZ,RATE,THREAT security;
-    class PROXY,COMP,OBS core;
-    class TRANS,ML ml;
-    class OPENAI,ANTHROPIC,GOOGLE,AZURE,COHERE provider;
-```
-
-=======
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-### 📦 Package Structure
-
-| Package | Purpose | Size |
-|---------|---------|------|
-| pkg/proxy/ | HTTP/2, HTTP/3, mTLS proxying, load balancing | 86KB |
-| pkg/compliance/ | SOC2, HIPAA, PCI-DSS, GDPR, ISO 27001 frameworks | 35KB |
-| pkg/threatintel/ | STIX/TAXII threat intel, IOC management | 71KB |
-| pkg/ml/ | Anomaly detection, behavioral analysis ML models | 49KB |
-| pkg/siem/ | Splunk, Elastic, Datadog, QRadar event streaming | 37KB |
-| pkg/sso/ | SAML 2.0, OIDC, OAuth 2.0, LDAP integration | 27KB |
-| pkg/policy/ | OPA/Rego policy engine, RBAC, ABAC | 31KB |
-
-
-## 📊 Performance Benchmarks
-
-<<<<<<< HEAD
-### 🚀 Performance
-=======
-### ⚡ Performance
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-| Metric | AegisGateT | Context |
-|--------|:---------:|---------|
-| **Latency (p99)** | <5ms | Per-request overhead |
-| **Throughput** | 50,000 req/s | Sustained throughput |
-| **Memory Usage** | 128MB | Base footprint |
-| **CPU Overhead** | <2% | Under normal load |
-| **Cold Start** | <500ms | Containerized deployment |
-| **Connection Pool** | 10,000 | Concurrent connections |
-
-<<<<<<< HEAD
-### 🏆 Verified Results
-=======
-### ✅ Verified Results
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-- **Independent Testing**: Benchmarks performed by third-party security analysts
-- **Real-World Traffic**: Tested under production loads of 50M+ requests/day
-- **Cloud-Agnostic**: Verified on AWS, GCP, Azure, and on-premise deployments
-
-### 📈 Scaling Characteristics
-
-| Load Level | Latency | Success Rate | Resource Usage |
-|------------|---------|--------------|----------------|
-| 1,000 req/min | <3ms | 99.99% | 128MB RAM |
-| 10,000 req/min | <4ms | 99.98% | 256MB RAM |
-| 50,000 req/min | <5ms | 99.95% | 512MB RAM |
-| 100,000 req/min | <7ms | 99.90% | 1GB RAM |
-
-<<<<<<< HEAD
-> 💡 **Key Insight**: AegisGate™ adds less than 5ms latency while providing enterprise-grade security—making it transparent to end users in most AI applications.
-
----
-
-## 📊 Tiers & Licensing
-=======
-> ⚡ **Key Insight**: AegisGateT adds less than 5ms latency while providing enterprise-grade security-making it transparent to end users in most AI applications.
-
----
-
-## 💰 Tiers & Licensing
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+## Licensing
 
 | Feature | Community | Developer | Professional | Enterprise |
 |---------|:---------:|:---------:|:------------:|:----------:|
-| **Requests/min** | Limited | Standard | High | Custom |
-| **Concurrent connections** | Limited | Standard | High | Custom |
-| **AI Providers** | OpenAI, Anthropic | + Cohere, Azure | All | All + Custom |
-| **Compliance frameworks** | View | Standard | Full | Full + Custom |
-| **Threat detection** | Basic | Advanced | Advanced | Advanced + Custom |
-<<<<<<< HEAD
-| **SSO/SAML** | — | ✅ | ✅ | ✅ |
-| **SIEM integration** | — | — | ✅ | ✅ |
-| **Custom policies** | — | — | ✅ | ✅ |
-=======
-| **SSO/SAML** | - | ✅ | ✅ | ✅ |
-| **SIEM integration** | - | - | ✅ | ✅ |
-| **Custom policies** | - | - | ✅ | ✅ |
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-| **Support** | Community | Email | Priority | 24/7 SLA |
-| **SLA** | - | - | 99.9% | 99.99% |
-| **Price** | **Free** | Contact | Contact | Contact |
+| **Price** | Free | $49/mo | $199/mo | Custom |
+| **API Calls/mo** | 10,000 | 500,000 | Unlimited | Unlimited |
+| **Users** | 1 | 10 | Unlimited | Unlimited |
+| **PII Detection** | ❌ | ✅ | ✅ | ✅ |
+| **Prompt Injection** | ❌ | ✅ | ✅ | ✅ |
+| **SSO/SAML** | ❌ | ❌ | ✅ | ✅ |
+| **SLA** | None | None | 99.9% | 99.99% |
 
-> 📧 **Contact sales@aegisgatesecurity.io** for Developer, Professional, and Enterprise pricing and a personalized demo.
+Contact [enterprise@aegisgatesecurity.io](mailto:enterprise@aegisgatesecurity.io) for Enterprise licensing.
 
 ---
 
-<<<<<<< HEAD
-## 🔒 Security
-=======
-## 🔐 Security
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+## Contributing
 
-### Defense in Depth Model
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md).
 
-| Layer | Technologies |
-|-------|---------------|
-| **Transport** | TLS 1.3, mTLS, HTTP/2, HTTP/3 (QUIC), certificate pinning |
-| **Authentication** | OAuth 2.0, OIDC, SAML 2.0, LDAP, API keys, JWT |
-| **Authorization** | RBAC, ABAC, attribute-based permissions, zero-trust |
-| **Data Protection** | AES-256 encryption at rest, TLS in transit, key vault integration |
-| **Runtime** | Seccomp, AppArmor, gvisor, hardened containers, rootless mode |
-
-### Compliance Coverage
-
-| Framework | Status | Documentation |
-|-----------|:------:|---------------|
-| OWASP AI Top 10 | ✅ Complete | docs/security/owasp-ai-top-10.md |
-| MITRE ATLAS | ✅ Complete | docs/security/mitre-atlas.md |
-| SOC 2 Type II | ✅ Complete | docs/compliance/soc2.md |
-| HIPAA | ✅ Complete | docs/compliance/hipaa.md |
-| PCI-DSS | ✅ Complete | docs/compliance/pci-dss.md |
-| GDPR | ✅ Complete | docs/compliance/gdpr.md |
-| ISO 27001 | ✅ Complete | docs/compliance/iso-27001.md |
-| ISO 42001 | ✅ Complete | docs/compliance/iso-42001.md |
-| NIST AI RMF | ✅ Complete | docs/compliance/nist-ai-rmf.md |
-
-### 🐛 Vulnerability Disclosure
-
-**Found a security issue? DO NOT open a public issue.**
-
-📧 **Email:** security@aegisgatesecurity.io  
-⏱️ **Response:** Within 48 hours  
-🔧 **Remediation:** 90 days timeline  
+All contributions must include a DCO sign-off:
+```
+Signed-off-by: Your Name <your@email.com>
+```
 
 ---
 
-## 📚 Documentation
+## Security
 
-### 🚀 Quick Start (Beginner-Friendly)
-| Guide | Description | Time |
-|-------|-------------|------|
-<<<<<<< HEAD
-| [⚡ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
-| [📖 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
-| [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
-| [🔧 Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
+For security vulnerabilities, contact security@aegisgatesecurity.io
 
-### 📚 Full Documentation
-| Guide | Description | Time |
-|-------|-------------|------|
-| [🚀 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
-| [🏛️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
-=======
-| [✅ One-Click Install](docs/INSTALL_ONE_CLICK.md) | 2-minute installation for complete beginners | 2 min |
-| [📊 Visual Deployment Guide](docs/DEPLOYMENT_GUIDE_VISUAL.md) | Step-by-step with screenshots and ASCII diagrams | 10 min |
-| [⚡ Quick Configuration](docs/CONFIG_QUICKSTART.md) | Configure in 3 simple methods | 5 min |
-| [🔧 Visual Troubleshooting](docs/TROUBLESHOOTING_VISUAL.md) | Visual flowcharts for common issues | Reference |
-
-### 📖 Full Documentation
-| Guide | Description | Time |
-|-------|-------------|------|
-| [📖 Getting Started](docs/getting-started.md) | 5-minute quick start guide | 5 min |
-| [🏗️ Architecture](docs/architecture.md) | Deep dive into system design | 30 min |
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-| [⚙️ Configuration](docs/configuration.md) | Full configuration reference | Reference |
-| [🐳 Docker Deployment](docs/docker-deployment.md) | Docker & Compose deployment | 10 min |
-| [☸️ Kubernetes](docs/kubernetes.md) | Helm, K8s, Istio integration | 15 min |
-| [🛡️ Security Model](docs/security-model.md) | Security architecture & hardening | 20 min |
-<<<<<<< HEAD
-| [📋 API Reference](docs/api-reference.md) | REST API documentation | Reference |
-=======
-| [🔌 API Reference](docs/api-reference.md) | REST API documentation | Reference |
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
----
-
-## 🤝 Contributing
-
-We welcome contributions to AegisGateT! All contributions are subject to the following legal agreements:
-
-> ⚠️ **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
-
-| Document | Purpose |
-|----------|---------|
-| [CONTRIBUTING.md](CONTRIBUTING.md) | Full contribution guidelines |
-| [CLA.md](CLA.md) | Contributor License Agreement (REQUIRED) |
-| [DCO.md](DCO.md) | Developer Certificate of Origin (sign-off required on all commits) |
-| [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) | Community code of conduct |
-
-### Quick Steps
-
-1. Read CONTRIBUTING.md for development guidelines
-2. Review CLA.md and DCO.md
-3. Fork the repository and create a feature branch
-4. Sign off all commits with `git commit -s`
-5. Submit a Pull Request
-
-For legal questions: **support@aegisgatesecurity.io**
-
----
-
-<<<<<<< HEAD
-## 📈 Project Statistics
-=======
-## 📊 Project Statistics
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-| Metric | Value |
-|--------|-------|
-| **Files** | ~246 |
-| **Lines of Code** | 94,700+ |
-| **Primary Language** | Go (99%) |
-| **Functions** | 3,900+ |
-| **Types/Structs** | 1,050+ |
-| **Test Coverage** | 75%+ |
-| **Contributors** | [GitHub](https://github.com/aegisgatesecurity/aegisgate/graphs/contributors) |
-
----
-
-<<<<<<< HEAD
-## 💬 Support & Community
-=======
-## 👥 Support & Community
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-| Resource | Link |
-|----------|------|
-| 🌐 **Website** | aegisgate.io |
-| 📖 **Docs** | aegisgate.io/docs |
-| 🐛 **Issue Tracker** | GitHub Issues |
-| 💬 **Discord** | Join Community |
-<<<<<<< HEAD
-| 🐦 **Twitter** | @AegisGate™ |
-=======
-| 🐦 **Twitter** | @AegisGateT |
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-| 📧 **Email** | support@aegisgatesecurity.io |
-
----
-
-<<<<<<< HEAD
-## 🏢 Who's Using AegisGate™?
-=======
-## 🏢 Who's Using AegisGateT?
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-*[Add your company here!]*
-
-Interested in being listed? Contact **support@aegisgatesecurity.io**
-
----
-
-<<<<<<< HEAD
-## 📝 License
-=======
-## 📜 License
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
-
-**MIT License** - Copyright 2025-2026 AegisGateT Security. All rights reserved.
-
-See [LICENSE](LICENSE) for full text.
+See [SECURITY.md](SECURITY.md) and [SECURITY_HARDENING.md](SECURITY_HARDENING.md).
 
 ---
 
 <div align="center">
 
-<<<<<<< HEAD
-### 🖤 Love AegisGate™?
-=======
-### 💖 Love AegisGateT?
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+**AegisGate** - Enterprise AI API Security Platform
 
-**[Star us on GitHub](https://github.com/aegisgatesecurity/aegisgate/stargazers)** | **[Share with your team](https://github.com/aegisgatesecurity/aegisgate/discussions)** | **[Become a sponsor](https://github.com/sponsors/aegisgatesecurity)**
-
----
-
-<<<<<<< HEAD
-Built with 🔐 by the AegisGate™ Security Team
-=======
-Built with ❤️ by the AegisGateT Security Team
->>>>>>> 29d422f (fix: Correct UTF-8 emoji encoding in README.md)
+© 2024-2026 AegisGate Security. All rights reserved.
 
 </div>
