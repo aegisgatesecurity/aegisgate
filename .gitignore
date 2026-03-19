@@ -71,3 +71,9 @@ test_run.zip
 "docs/tier-config.md"  
 "docs/license-middleware.md"  
 "config/tier.conf"  
+  
+"# Premium/Enterprise compliance modules (moved to private repo)" 
+"pkg/compliance/enterprise/"  
+"pkg/compliance/premium/"  
+"pkg/compliance/hipaa/"  
+"pkg/compliance/pci/"  
