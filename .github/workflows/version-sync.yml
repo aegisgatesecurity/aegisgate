@@ -106,13 +106,19 @@ jobs:
             echo "Changes to commit:"
             echo "$CHANGES"
             
+            # Ensure we're on main branch (handles detached HEAD from tag push)
+            if [ "$(git rev-parse --abbrev-ref HEAD)" = "HEAD" ]; then
+              echo "Detached HEAD detected, checking out main branch"
+              git checkout -B main origin/main || git checkout -B main
+            fi
+            
             git add -A
             git commit --signoff -m "chore: Sync version files
             
             Auto-synced by version-sync workflow."
             
             # Push with force to handle race conditions
-            git push --force-with-lease || git push --force
+            git push --force-with-lease origin main || git push --force origin main
             echo "Pushed sync commit"
           else
             echo "No changes to sync"
