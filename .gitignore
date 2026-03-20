@@ -160,6 +160,12 @@ deploy_*.sh
 setup_*.sh
 *.sh.bak
 
+# Security audit scripts (REQUIRED for repository security maintenance)
+!REMOVE_KEYS_FROM_GIT_HISTORY.ps1
+!REMOVE_ENTERPRISE_PREMIUM.ps1
+!REMOVE_KEYS_FROM_GIT_HISTORY.sh
+!REMOVE_ENTERPRISE_PREMIUM.sh
+
 # ============================================================================
 # TEST ARTIFACTS
 # ============================================================================
