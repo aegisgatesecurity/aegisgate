@@ -12,8 +12,8 @@
 [![Security](https://img.shields.io/badge/Security-0%20CVEs-brightgreen?style=for-the-badge&logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0id2hpdGUiPjxwYXRoIGQ9Ik0xMiAxTDMgNXY2YzAgNS41NSAzLjg0IDEwLjc0IDkgMTIgNS4xNi0xLjI2IDktNi41NCA5LTEyVjVsLTktNHptMCAxMC45OWgzLjljLS41IDIuNzEtMi4yNCA1LjAzLTQuOTMgNi4yNXYtNi4yNUg5Yy0xLjEgMC0yLS45LTItMnMuOS0yIDItMmgxLjkzVjcuN2MtMi40OS42NC00LjM4IDIuNjktNC45OCA1LjI1LS4yLjktLjA1IDEuODUuMzkgMi42NS4zOS43MS45OSAxLjMgMS43MSAxLjcxLjguNDQgMS43NS41OSAyLjY1LjM5IDIuNTYtLjYxIDQuNjEtMi41IDUuMjUtNWgtMi44em0zLjkzIDBoMi44Yy0uNSAyLjcxLTIuMjQgNS4wMy00LjkzIDYuMjV2LTYuMjV6Ii8+PC9zdmc+)](https://github.com/aegisgatesecurity/aegisgate)
 
 [![Build Status](https://img.shields.io/github/actions/workflow/status/aegisgatesecurity/aegisgate/ci.yml?branch=main&style=for-the-badge&logo=github)](https://github.com/aegisgatesecurity/aegisgate/actions)
-[![Docker Pulls](https://img.shields.io/docker/pulls/aegisgatesecurity/aegisgate?style=for-the-badge&logo=docker)](https://hub.docker.com/r/aegisgatesecurity/aegisgate)
-[![Docker Size](https://img.shields.io/badge/Image%20Size-27.3MB-00ADD8?style=for-the-badge&logo=docker)](https://hub.docker.com/r/aegisgatesecurity/aegisgate)
+[![ghcr](https://img.shields.io/github/v/release/aegisgatesecurity/aegisgate?style=for-the-badge&logo=github)](https://github.com/aegisgatesecurity/aegisgate/pkgs/container/aegisgate)
+[![GHCR Size](https://img.shields.io/github/actions/workflow/status/aegisgatesecurity/aegisgate/.github/workflows/docker.yml?style=for-the-badge&logo=github)](https://github.com/aegisgatesecurity/aegisgate/pkgs/container/aegisgate)
 
 [**🚀 Quick Start**](#-quick-start) · [**📚 Documentation**](#-documentation) · [**🔐 Security**](#-security--compliance) · [**🤝 Contributing**](#-contributing)
 
@@ -150,10 +150,10 @@ from aegisgate.langchain import AegisGateTool
 
 ```bash
 # Pull our tiny 27.3 MB image
-docker pull aegisgatesecurity/aegisgate:latest
+docker pull ghcr.io/aegisgatesecurity/aegisgate:latest
 
 # Run with default configuration
-docker run -d -p 8443:8443 aegisgatesecurity/aegisgate:latest
+docker run -d -p 8443:8443 ghcr.io/aegisgatesecurity/aegisgate:latest
 
 # Or with custom config
 docker run -d \
