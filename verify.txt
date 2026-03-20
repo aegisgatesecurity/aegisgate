@@ -1,0 +1,11 @@
+First 150 bytes: ef bb bf 3c 64 69 76 20 61 6c 69 67 6e 3d 22 63 65 6e 74 65 72 22 3e 0d 0a 0d 0a 23 20 f0 9f 9b a1 20 41 65 67 69 73 47 61 74 65 e2 84 a2 20 f0 9f 94 90 0d 0a 0d 0a 3c 21 2d 2d 20 42 61 64 67 65 73 20 52 6f 77 20 31 20 2d 2d 3e 0d 0a 5b 21
+Line 2: '\r'
+Version: v1.0.13
+Header: '# ? AegisGate? ?'
+Has TM (2122): True
+Has Shield (1F6E1): True
+Has Lock (1F510): True
+---
+.gitignore has *.txt: True
+.gitignore has Archive: True
+.gitignore has cmd/padlock: True

@@ -1,0 +1,11 @@
+HEADER HEX: 69 67 6e 3d 22 63 65 6e 74 65 72 22 3e 0d 0a 0d 0a 23 20 f0 9f 9b a1 ef b8 8f 20 41 65 67 69 73 47 61 74 65 e2 84 a2 20 
+HEADER TEXT: '\r'
+HAS TM: False
+HAS SHIELD: False
+HAS LOCK: False
+VERSION: v1.0.13
+
+GITIGNORE CHECK:
+  cmd/padlock: True
+  *.txt: True
+  Archive: True

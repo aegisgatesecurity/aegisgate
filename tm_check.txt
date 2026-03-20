@@ -1,0 +1,12 @@
+# 🛡️ AegisGateT ⭐
+**AegisGateT** is a transparent proxy that secures AI API traffic between your applications and providers (OpenAI, Anthropic, Azure, AWS Bedrock, Cohere). Deploy as a drop-in gateway and get:
+**No code changes required.** Just point your AI traffic through AegisGateT.
+| Metric | AegisGateT | Context |
+> ⚡ **Key Insight**: AegisGateT adds less than 5ms latency while providing enterprise-grade security-making it transparent to end users in most AI applications.
+We welcome contributions to AegisGateT! All contributions are subject to the following legal agreements:
+> ⚠️ **IMPORTANT**: By contributing, you agree to transfer all IP rights to AegisGate Security.
+| 🐦 **Twitter** | @AegisGateT |
+## 🏢 Who's Using AegisGateT?
+**MIT License** - Copyright 2025-2026 AegisGateT Security. All rights reserved.
+### 💖 Love AegisGateT?
+Built with ❤️ by the AegisGateT Security Team

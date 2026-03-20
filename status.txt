@@ -1,0 +1,9 @@
+CURRENT VERSION: v1.0.8
+HEADER: 17 chars
+Has TM: True
+Raw ? count: 125
+Version replaced: True
+File written OK
+---
+.gitignore has cmd/padlock: True
+.gitignore has *.txt: True

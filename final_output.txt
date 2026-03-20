@@ -1,0 +1,5 @@
+Proper header: # ? AegisGate? ?
+Fixed header at line 2
+Version set to v1.0.13
+Header bytes: f0 9f 9b a1 20 41 65 67 69 73 47 61 74 65 e2 84 a2 20 f0 9f 94 90 0d 0a 0d
+Push result: 0

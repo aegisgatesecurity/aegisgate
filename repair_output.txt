@@ -1,0 +1,37 @@
+Original length: 14121 chars
+Header line 2: '# ?? AegisGate? ?'
+Fixed header: '# ?? AegisGate? ?'
+Header line 389: "## ?? Who's Using AegisGate?"
+Fixed header: "# ?? ?? Who's Using AegisGate?? ?"
+Header line 407: '### ?? Love AegisGate?'
+Fixed header: '# ?? ?? Love AegisGate?? ?'
+Set header to: # ?? AegisGate? ?
+Found versions: ['version-v1.0.13']
+Updated to v1.0.13
+New length: 14130 chars
+
+=== FIXING .gitignore ===
+Files to remove from git: 21
+  Removed from git index: ci_full_log2.txt
+  Removed from git index: ci_test_log.txt
+  Removed from git index: cmsg.txt
+  Removed from git index: commit_clean.txt
+  Removed from git index: commit_msg.txt
+  Removed from git index: coverage_func.txt
+  Removed from git index: cov_func.txt
+  Removed from git index: files.txt
+  Removed from git index: full_ci_log.txt
+  Removed from git index: full_log.txt
+  Removed from git index: job_log.txt
+  Removed from git index: msg.txt
+  Removed from git index: security.txt
+  Removed from git index: tag_msg.txt
+  Removed from git index: temp_log.txt
+  Removed from git index: test_log.txt
+  Removed from git index: test_log2.txt
+  Removed from git index: test_out.txt
+  Removed from git index: test_results.txt
+  Removed from git index: Archive
+  .gitignore has '*.txt': OK
+  .gitignore has 'Archive': OK
+  .gitignore has 'cmd/padlock': OK

@@ -1,0 +1,64 @@
+=== README ENCODING CHECK ===
+Has UTF-8 BOM: True
+First 5 lines:
+  Line 0: 21 chars
+  Line 1: 1 chars
+  Line 2: 18 chars
+  Line 3: 1 chars
+  Line 4: 22 chars
+Header found, length: 18
+Has TM (2122): True
+Has Shield (1F6E1): True
+Has Lock (1F510): True
+Version badge: 0 matches
+=== GITIGNORE ===
+  # Build outputs
+  bin/
+  build/
+  *.exe
+  *.out
+  coverage_*.out
+  # IDE
+  .idea/
+  .vscode/
+  *.swp
+  *.swo
+  # OS
+  .DS_Store
+  Thumbs.db
+  # Environment
+  .env
+  .env.local
+  .env.*.local
+  # Go
+  vendor/
+  *.test
+  coverage.txt
+  # Logs
+  *.log
+  logs/
+  # Distribution
+  dist/
+  cmd/padlock
+=== UNTRACKED FILES ===
+  ci_full_log2.txt
+  ci_test_log.txt
+  cmsg.txt
+  commit_clean.txt
+  commit_msg.txt
+  coverage_func.txt
+  cov_func.txt
+  files.txt
+  full_ci_log.txt
+  full_log.txt
+  job_log.txt
+  msg.txt
+  security.txt
+  tag_msg.txt
+  temp_log.txt
+  test_log.txt
+  test_log2.txt
+  test_out.txt
+  test_results.txt
+  _commit_msg.txt
+  Archive
