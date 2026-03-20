@@ -1,17 +1,33 @@
-# Build outputs
+# ============================================================================
+# AegisGate .gitignore
+# ============================================================================
+# Security Note: Never commit sensitive data, keys, or proprietary information
+
+# ============================================================================
+# BUILD OUTPUTS
+# ============================================================================
 bin/
 build/
+dist/
 *.exe
 *.out
+*.dll
+*.so
+*.dylib
 coverage_*.out
-dist/
+*.egg-info/
 
-# Go
+# ============================================================================
+# GO
+# ============================================================================
 vendor/
 *.test
 coverage.txt
+*.sum
 
-# IDE & Editor
+# ============================================================================
+# IDE & EDITOR
+# ============================================================================
 .idea/
 .vscode/
 *.swp
@@ -20,49 +36,165 @@ coverage.txt
 *.iws
 .project
 .classpath
+.settings/
+*.sublime-*
 
-# OS
+# ============================================================================
+# OPERATING SYSTEM
+# ============================================================================
 .DS_Store
 Thumbs.db
+ehthumbs.db
+Desktop.ini
 
-# Environment
+# ============================================================================
+# ENVIRONMENT & SECRETS
+# ============================================================================
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
+*.pem
+*.key
+*.crt
+*.pfx
+*.p12
+*.jks
+*. keystore
+credentials.json
+secrets.yaml
+secrets.yml
 
-# Logs
-*.log
-logs/
-
-# Security-sensitive
-PROJECT_MEMORY.md
-Archive/
+# ============================================================================
+# CERTIFICATES & KEYS
+# ============================================================================
+certs/
 *.key
 *.pem
 *.crt
-certs/
+*.csr
+*.p8
+*.pub  # SSH public keys should not be in repo
+server.key
+server.crt
+ca.key
+ca.crt
+
+# Key generation and debug tools (local only)
 cmd/licensegen/
 cmd/padlock/
 cmd/debug/
 cmd/gencerts/
+cmd/secrets/
 
-# Development clutter
-*.txt
-_commit_msg.txt
+# ============================================================================
+# LOGS & TEMPORARY FILES
+# ============================================================================
+*.log
+logs/
+*.tmp
+*.temp
+*.bak
+*.backup
+*.swp
+~*
+
+# ============================================================================
+# DEVELOPMENT MEMORANDA & NOTES
+# ============================================================================
+
+# Memory files from AI assistants
+MEMORIES/
+*_memory.md
+*memory.md
+memory/
+project_memory.md
+PROJECT_MEMORY.md
+SESSION_MEMORY.md
+
+# Internal notes and planning
+internal_notes/
+internal/
+notes/
+planning/
+roadmap.md
+TODO.md
+NOTES.md
+CHANGELOG_DEV.md
+
+# Pricing and business information (PRIVATE)
+pricing/
+pricing.md
+pricing.txt
+commercial/
+business_model/
+BUSINESS_MODEL.md
+
+# Archive files
+Archive/
+archive/
+*.zip
+*.tar
+*.tar.gz
+*.tgz
+
+# ============================================================================
+# RELEASE & DEPLOYMENT ARTIFACTS
+# ============================================================================
 RELEASE_NOTES*.md
 RELEASE_BODY.md
 MIGRATION.md
 commit_msg*.txt
 tagmsg.txt
 gitmsg.txt
-msg*.txt
 cov*.txt
+CHANGELOG_AUTOMATED.md
 
-
-# Temp helper scripts (local only)
+# ============================================================================
+# SCRIPTS (local helper scripts)
+# ============================================================================
 add_*.ps1
 *.ps1
+deploy_*.sh
+setup_*.sh
+*.sh.bak
 
-# Test artifacts
+# ============================================================================
+# TEST ARTIFACTS
+# ============================================================================
 test_run.zip
-SESSION_MEMORY.md  
+*.test.out
+test-results/
+junit.xml
+coverage/
+
+# ============================================================================
+# SECURE CUSTOM CONFIGURATIONS
+# ============================================================================
+
+# Custom adapter configurations (may contain secrets)
+pkg/adapters/certs/
+pkg/adapters/custom-certs/
+pkg/proxy/certs/ca/
+pkg/tls/certs/
+
+# Admin panel credentials
+pkg/admin/
+admin_config/
+
+# ============================================================================
+# EXTERNAL DATA
+# ============================================================================
+*.db
+*.sqlite
+*.sqlite3
+data/
+samples/
+
+# ============================================================================
+# CONTRACTS & LEGAL (if in repo)
+# ============================================================================
+contracts/
+*.contract
+LICENSE_COMMERCIAL*
