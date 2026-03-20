@@ -3,8 +3,8 @@ name: aegisgate
 description: AegisGate - Zero-Trust AI Security Gateway with ML Anomaly Detection
 icon: https://raw.githubusercontent.com/block/aegisgate/main/docs/logo.png
 type: application
-version: 1.0.3
-appVersion: "1.0.3"
+version: 1.0.16
+appVersion: "1.0.16"
 keywords:
   - security
   - gateway

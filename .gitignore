@@ -66,3 +66,9 @@ add_*.ps1
 # Test artifacts
 test_run.zip
 SESSION_MEMORY.md  
+  
+# Python 
+__pycache__/ 
+*.pyc 
+*.pyo 
+.pytest_cache/

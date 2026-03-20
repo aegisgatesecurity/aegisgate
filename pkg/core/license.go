@@ -61,9 +61,9 @@ type LicenseType string
 
 const (
 	LicenseTypeCommunity    LicenseType = "community"
+	LicenseTypeDeveloper    LicenseType = "developer"
 	LicenseTypeProfessional LicenseType = "professional"
 	LicenseTypeEnterprise   LicenseType = "enterprise"
-	LicenseTypeEnterpriseAI LicenseType = "enterprise-ai"
 	LicenseTypeCustom       LicenseType = "custom"
 )
 
@@ -195,13 +195,13 @@ func (lm *LicenseManager) tierAllowedByLicenseType(tier Tier) bool {
 	case LicenseTypeCommunity:
 		return tier <= TierCommunity
 
+	case LicenseTypeDeveloper:
+		return tier <= TierDeveloper
+
 	case LicenseTypeProfessional:
 		return tier <= TierProfessional
 
 	case LicenseTypeEnterprise:
-		return tier <= TierEnterprise
-
-	case LicenseTypeEnterpriseAI:
 		return tier <= TierEnterprise
 
 	case LicenseTypeCustom:

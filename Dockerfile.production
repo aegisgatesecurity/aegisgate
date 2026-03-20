@@ -1,6 +1,6 @@
 # AegisGate Production Docker Image
 # Multi-stage build: builder stage compiles, production stage uses distroless for security
-FROM golang:1.24-alpine AS builder
+FROM golang:1.25.8-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git ca-certificates

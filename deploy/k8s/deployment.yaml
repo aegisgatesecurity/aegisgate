@@ -6,7 +6,7 @@ metadata:
   labels:
     app.kubernetes.io/name: aegisgate
     app.kubernetes.io/component: gateway
-    app.kubernetes.io/version: "1.0.10"
+    app.kubernetes.io/version: "1.0.16"
 spec:
   replicas: 3
   strategy:
@@ -35,7 +35,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: aegisgate
-          image: ghcr.io/aegisgatesecurity/aegisgate:latest
+          image: ghcr.io/aegisgatesecurity/aegisgate:v1.0.16
           imagePullPolicy: Always
           ports:
             - name: wss

@@ -1,6 +1,6 @@
 module github.com/aegisgatesecurity/aegisgate
 
-go 1.23.0
+go 1.25.8
 
 require (
 	github.com/aegisgatesecurity/aegisgate/pkg/resilience v0.0.0

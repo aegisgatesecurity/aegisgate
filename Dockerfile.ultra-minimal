@@ -1,6 +1,6 @@
 # AegisGate Ultra-Minimal Production Image
 # Uses distroless/static for absolute smallest footprint (~15MB vs ~50MB alpine)
-FROM golang:1.24-alpine AS builder
+FROM golang:1.25.8-alpine AS builder
 
 RUN apk add --no-cache git ca-certificates
 WORKDIR /build

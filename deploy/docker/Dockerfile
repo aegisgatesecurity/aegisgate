@@ -1,5 +1,5 @@
 # Build Stage
-FROM golang:1.21-alpine AS builder
+FROM golang:1.25.8-alpine AS builder
 
 # Install build dependencies
 RUN apk add --no-cache git make
@@ -7,12 +7,11 @@ RUN apk add --no-cache git make
 # Set working directory
 WORKDIR /build
 
-# Copy go mod files first for better caching
-COPY go.mod go.sum ./
-RUN go mod download
-
-# Copy source code
+# Copy everything first (simple approach that works)
 COPY . .
+
+# Download dependencies
+RUN go mod download
 
 # Build the binary
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o aegisgate ./cmd/aegisgate

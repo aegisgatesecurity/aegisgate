@@ -3,7 +3,7 @@
 
 # Primary Implementation Language
 documentation: |
-  Padlock is implemented primarily in Go (version 1.23+) using only
+  Padlock is implemented primarily in Go (version 1.25+) using only
   the Go standard library - zero external dependencies.
 
   The language breakdown is:
@@ -44,7 +44,7 @@ languages:
       - "**/*.go"
     exclude:
       - "**/*_test.go"
-    documentation: "Go 1.23+ (Standard Library Only)"
+    documentation: "Go 1.25+ (Standard Library Only)"
 
   JavaScript:
     pattern:
@@ -79,7 +79,7 @@ languages:
 # Repository metadata
 repository:
   primary_language: Go
-  language_version: "1.23+"
+  language_version: "1.25+"
   description: "AI Chatbot Security Gateway - Zero dependencies, production-ready WAF"
   topics:
     - waf
