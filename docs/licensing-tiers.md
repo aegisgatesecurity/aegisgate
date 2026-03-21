@@ -6,12 +6,12 @@ AegisGate implements a comprehensive four-tier licensing model designed to scale
 
 The licensing system differentiates access based on organizational needs:
 
-| Tier | Level | Price | Target Audience |
-|------|-------|-------|-----------------|
-| Community | 0 | Free | Testing, Personal |
-| Developer | 1 | See pricing page | Individual Developers |
-| Professional | 2 | See pricing page | Teams, Businesses |
-| Enterprise | 3 | Custom | Large Organizations |
+| Tier | Level | Target Audience |
+|------|-------|-----------------|
+| Community | 0 | Testing, Personal |
+| Developer | 1 | Individual Developers |
+| Professional | 2 | Teams, Businesses |
+| Enterprise | 3 | Large Organizations |
 
 ## Tier Details
 
@@ -45,7 +45,6 @@ The Community tier is designed for testing, learning, and personal projects.
 
 The Developer tier is designed for individual developers and small projects.
 
-- **Price**: See pricing page
 - **Level Value**: `1`
 - **Max Servers**: 5
 - **Max Users**: 10
@@ -73,7 +72,6 @@ export LICENSE_KEY="AG-xxxxxxxxxxxxx"
 
 The Professional tier is designed for professional teams and businesses.
 
-- **Price**: See pricing page
 - **Level Value**: `2`
 - **Max Servers**: 25
 - **Max Users**: 50
@@ -94,7 +92,7 @@ The Professional tier is designed for professional teams and businesses.
 
 The Enterprise tier is designed for large organizations with custom needs.
 
-- **Price**: Contact sales
+- **Tier**: Enterprise
 - **Level Value**: `3`
 - **Max Servers**: Unlimited
 - **Max Users**: Unlimited

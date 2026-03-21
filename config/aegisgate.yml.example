@@ -35,7 +35,7 @@ tls:
 
 reverse_proxy:
   upstreams:
-    - "https://backend-ai-service:443"
+    - "https://backend-ai-service.example.com"
   load_balance: "round-robin"
   timeout: 30
   max_connections: 1000
