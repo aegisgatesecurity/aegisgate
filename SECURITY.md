@@ -47,24 +47,6 @@ We follow responsible disclosure practices:
 
 ---
 
-## ⚠️ Proprietary Information & Trade Secrets
-
-This software contains proprietary trade secrets and confidential technical information of AegisGate Security. The following components are designated as trade secrets:
-
-### Designated Trade Secrets
-- **License Validation Algorithm** - RSA signature verification and tier enforcement logic
-- **Threat Detection Models** - ML-based behavioral analysis and anomaly detection algorithms  
-- **Compliance Mapping Engine** - Framework-specific policy enforcement logic
-- **Feature Tier Mapping** - Detailed feature-to-license-tier associations
-
-### Protection Notice
-Unauthorized reproduction, distribution, or reverse engineering of these components is strictly prohibited. This designation applies to all source code, binaries, and documentation relating to these systems.
-
-### Reporting
-If you discover a vulnerability in our proprietary systems, please contact: **security@aegisgate.io**
-
----
-
 ## License Security
 ## License Security
 - Never commit license keys to version control
