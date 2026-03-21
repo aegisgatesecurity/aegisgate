@@ -11,22 +11,24 @@ pkg/compliance/
 │   ├── atlas/       # MITRE ATLAS
 │   ├── owasp/       # OWASP AI Top 10
 │   └── gdpr/        # GDPR compliance
-├── enterprise/      # Enterprise tier ($10-15K/mo)
+├── enterprise/      # Enterprise tier
 │   ├── nist/        # NIST AI RMF + SP 1500
 │   └── iso42001/    # ISO/IEC 42001
-└── premium/         # Premium tier ($15-25K/mo)
+└── premium/         # Premium tier
     ├── soc2/        # SOC 2 Type II
     ├── hipaa/       # HIPAA compliance
     └── pci/         # PCI DSS
 ```
 
-## Pricing
+## Framework Support
 
-| Tier      | Monthly Cost | Frameworks                          |
-|-----------|--------------|-------------------------------------|
-| Community | Free         | ATLAS, OWASP AI, GDPR               |
-| Enterprise| $10-15K      | + NIST RMF, ISO 42001               |
-| Premium   | $15-25K      | + SOC 2, HIPAA, PCI DSS             |
+| Tier      | Frameworks                           |
+|-----------|--------------------------------------|
+| Community | ATLAS, OWASP AI, GDPR                |
+| Enterprise| + NIST RMF, ISO 42001                |
+| Premium   | + SOC 2, HIPAA, PCI DSS              |
+
+*Enterprise and Premium tier frameworks require appropriate licensing.*
 
 ## Usage
 

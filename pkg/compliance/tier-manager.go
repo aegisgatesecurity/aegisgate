@@ -349,15 +349,13 @@ func (tm *TierManager) GeneratePricingReport() map[string]interface{} {
 		},
 		"enterprise": map[string]interface{}{
 			"frameworks":  tm.GetFrameworksByTier(TierEnterprise),
-			"price_range": "$10K-$15K/month",
 			"description": "For organizations needing governance frameworks",
 		},
 		"premium": map[string]interface{}{
 			"frameworks":  tm.GetFrameworksByTier(TierPremium),
-			"price_range": "$15K-$25K/month",
 			"description": "For regulated industries (healthcare, finance)",
 		},
-		"billing_note": "All prices are per-instance, unlimited users",
+		"billing_note": "Contact sales for Enterprise pricing",
 	}
 
 	return report
