@@ -4,7 +4,6 @@ package core
 import (
 	"context"
 	"testing"
-	"time"
 )
 
 // MockModule is a test module implementation.
@@ -218,38 +217,6 @@ func TestLicenseManager_ProfessionalRequiresLicense(t *testing.T) {
 	// Professional tier without license should fail
 	if lm.IsModuleLicensed("any-module", TierProfessional) {
 		t.Error("TierProfessional should not be licensed without a key")
-	}
-}
-
-func TestLicenseManager_GenerateLicense(t *testing.T) {
-	key, err := GenerateLicense(
-		LicenseTypeEnterprise,
-		"test@example.com",
-		[]string{"*"},
-		[]Tier{TierEnterprise},
-		365*24*time.Hour,
-	)
-	if err != nil {
-		t.Fatalf("GenerateLicense() error = %v", err)
-	}
-
-	if key == "" {
-		t.Error("License key should not be empty")
-	}
-
-	lm := NewLicenseManager(key)
-
-	if lm.GetStatus() != LicenseStatusValid {
-		t.Errorf("License status = %v, want %v", lm.GetStatus(), LicenseStatusValid)
-	}
-
-	license := lm.GetLicense()
-	if license == nil {
-		t.Fatal("License should not be nil")
-	}
-
-	if license.Email != "test@example.com" {
-		t.Errorf("License email = %q, want %q", license.Email, "test@example.com")
 	}
 }
 

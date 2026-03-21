@@ -343,61 +343,6 @@ func (lm *LicenseManager) verifySignature(payload []byte, signatureB64 string) e
 	return nil
 }
 
-// GenerateLicense generates a new license (for testing/admin purpose).
-// Note: This should ONLY be used for testing. Production licenses must be
-// signed with the private key corresponding to the embedded public key.
-func GenerateLicense(licenseType LicenseType, email string, modules []string, tiers []Tier, validFor time.Duration) (string, error) {
-	now := time.Now()
-	license := License{
-		ID:        generateLicenseID(),
-		Type:      licenseType,
-		Email:     email,
-		Modules:   modules,
-		Tiers:     tiers,
-		IssuedAt:  now,
-		ExpiresAt: now.Add(validFor),
-	}
-
-	data, err := json.Marshal(license)
-	if err != nil {
-		return "", err
-	}
-
-	return base64.StdEncoding.EncodeToString(data), nil
-}
-
-// GenerateSignedLicense generates a signed license (for production use).
-// Requires the private key for signing.
-func GenerateSignedLicense(licenseType LicenseType, email string, modules []string, tiers []Tier, validFor time.Duration, privateKey *rsa.PrivateKey) (string, error) {
-	now := time.Now()
-	license := License{
-		ID:        generateLicenseID(),
-		Type:      licenseType,
-		Email:     email,
-		Modules:   modules,
-		Tiers:     tiers,
-		IssuedAt:  now,
-		ExpiresAt: now.Add(validFor),
-	}
-
-	data, err := json.Marshal(license)
-	if err != nil {
-		return "", err
-	}
-
-	// Sign the payload using RSA-SHA256
-	hash := sha256.Sum256(data)
-	signature, err := rsa.SignPKCS1v15(nil, privateKey, crypto.SHA256, hash[:])
-	if err != nil {
-		return "", fmt.Errorf("failed to sign license: %w", err)
-	}
-
-	// Combine payload and signature
-	signedData := string(data) + "." + base64.StdEncoding.EncodeToString(signature)
-
-	return base64.StdEncoding.EncodeToString([]byte(signedData)), nil
-}
-
 // generateLicenseID creates a unique license ID.
 func generateLicenseID() string {
 	// Simple ID generation - use proper UUID in production
