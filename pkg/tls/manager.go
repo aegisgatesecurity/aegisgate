@@ -79,7 +79,11 @@ func (m *Manager) Initialize() error {
 	// If specific cert files provided, use them
 	if m.certFile != "" && m.keyFile != "" {
 		slog.Info("Using provided TLS certificates", "cert", m.certFile, "key", m.keyFile)
-		return m.loadExternalCertificates()
+		if err := m.loadExternalCertificates(); err != nil {
+			return err
+		}
+		// Only proceed if load succeeded
+		return nil
 	}
 
 	// If auto-generate enabled, check for or create self-signed certs
@@ -93,7 +97,11 @@ func (m *Manager) Initialize() error {
 				slog.Info("Loading existing TLS certificates", "cert", certPath, "key", keyPath)
 				m.certFile = certPath
 				m.keyFile = keyPath
-				return m.loadExternalCertificates()
+				// Try to load; if invalid, fall back to regeneration
+				if err := m.loadExternalCertificates(); err == nil {
+					return nil
+				}
+				slog.Warn("Existing certificates invalid, regenerating", "error", err)
 			}
 		}
 
