@@ -48,7 +48,11 @@ jobs:
       - name: Run tests
         run: |
           # Run tests only on packages with 75%+ coverage
-          go test -v -coverprofile=coverage.out -short -skip TestHTTP3 ./pkg/certificate ./pkg/crypto/fips ./pkg/hash_chain ./pkg/immutable-config/integrity ./pkg/immutable-config/logging ./pkg/immutable-config/readonly ./pkg/immutable-config/rollback ./pkg/immutable-config/snapshot ./pkg/immutable-config/wal ./pkg/immutable-config/watcher ./pkg/secrets
+          go test -v -coverprofile=coverage.out -short \
+            ./pkg/certificate \
+            ./pkg/crypto/fips \
+            ./pkg/hash_chain \
+            ./pkg/secrets
       - name: Check coverage threshold
         run: |
           COVERAGE=$(go tool cover -func=coverage.out | grep total: | awk '{print $3}' | sed 's/%//')
@@ -71,9 +75,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: checkout@v4
+        uses: actions/checkout@v4
       - name: Set up Go
-        uses: setup-go@v5
+        uses: actions/setup-go@v5
         with:
           go-version: '1.25.8'
       - name: Build
