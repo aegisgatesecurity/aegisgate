@@ -64,14 +64,13 @@ jobs:
             exit 1
           fi
       - name: Upload coverage
-        uses: upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: coverage
           path: coverage.out
 
   build:
     name: Build
-    needs: [version-check]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -85,7 +84,7 @@ jobs:
           go build -o aegisgate ./cmd/aegisgate
           ls -la aegisgate
       - name: Upload artifact
-        uses: upload-artifact@v4
+        uses: actions/upload-artifact@v4
         with:
           name: aegisgate-binary
           path: aegisgate
