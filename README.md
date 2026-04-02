@@ -6,7 +6,7 @@
 
 **Zero code changes. Complete AI traffic security in under 5 minutes.**
 
-[![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0_/_Proprietary-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.25.8+-00ADD8?logo=go)](https://golang.org/)
 [![Version](https://img.shields.io/badge/version-v1.0.16-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Security](https://img.shields.io/badge/Security-0_CVEs-brightgreen?logo=shield)](SECURITY.md)
@@ -543,6 +543,40 @@ graph LR
 
 ## 📦 Tiers & Licensing
 
+### License Model: Open-Core Dual Licensing
+
+**AegisGate™ uses an open-core licensing model with dual licensing:**
+
+| License | Coverage | Use Case |
+|---------|----------|----------|
+| **Apache 2.0** (Open Source) | Community tier features | Open source projects, internal use, evaluation |
+| **Proprietary** (Commercial) | Enterprise tier features | Production deployments requiring SLAs, SSO, SIEM, custom policies |
+
+> 🔐 **Patent, IP, Trademark & Copyright Protection**: All source code is protected by international patent rights, copyright law, and trademark registration. The Apache 2.0 license grants rights to use, modify, and distribute the software while protecting AegisGate Security's intellectual property and patents.
+
+#### What the Apache 2.0 License Covers (Community Tier)
+- Full access to all security scanning features
+- Prompt injection prevention (OWASP LLM Top 10)
+- Data leakage protection
+- MITRE ATLAS threat coverage
+- Self-hosted deployment (Docker, Kubernetes, binary)
+- All core proxy and compliance features
+
+#### What Requires Proprietary Licensing (Enterprise Tier)
+- SSO/SAML 2.0 integration
+- SIEM connectors (Splunk, Datadog, Elastic)
+- Custom policy engine with rule builder
+- Advanced ML threat detection with real-time updates
+- Priority support with SLA guarantees (99.99% uptime)
+- Custom compliance framework support
+- Hardware security module (HSM) integration
+- Multi-tenancy with federation
+- Custom threat detection models
+
+📧 **For commercial licensing**: sales@aegisgatesecurity.io
+
+---
+
 ### Community (Free Forever)
 
 | Feature | Included |
@@ -831,9 +865,30 @@ Interested in being listed? Contact **support@aegisgatesecurity.io**
 
 ## 📝 License
 
-**Apache License 2.0** — Copyright 2025-2026 AegisGate™ Security. All rights reserved.
+**Dual Licensing Model — Open-Core:**
 
-See [LICENSE](LICENSE) for full text.
+| Tier | License | Commercial Use |
+|------|---------|----------------|
+| **Community** | Apache 2.0 | ✅ Allowed (open source, internal use, evaluation) |
+| **Enterprise** | Proprietary | Contact sales@aegisgatesecurity.io |
+
+### Apache License 2.0 (Community Tier)
+Copyright 2025-2026 AegisGate Security. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+
+### Proprietary License (Enterprise Tier)
+Enterprise features require a commercial license. Contact **sales@aegisgatesecurity.io** for:
+- Advanced ML threat detection
+- SSO/SAML integration
+- SIEM connectors
+- Custom policies & SLA guarantees
+- Hardware security module support
+
+> ⚖️ **Legal Note**: All source code is protected by international copyright law, patent rights, and trademark registration. The Apache 2.0 license grants usage rights for community features while preserving AegisGate Security's IP protections.
+
+See [LICENSE](LICENSE) for full license text.
 
 ---
 
