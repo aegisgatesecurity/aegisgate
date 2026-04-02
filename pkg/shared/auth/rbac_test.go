@@ -3,7 +3,7 @@ package auth_test
 import (
 	"context"
 	"testing"
-	"aegisguard/pkg/shared/auth"
+	"github.com/aegisgatesecurity/aegisgate/pkg/shared/auth"
 )
 
 func TestRBACManager_CheckPermission(t *testing.T) {

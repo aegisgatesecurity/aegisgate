@@ -3,8 +3,8 @@ package bridge_test
 import (
 	"context"
 	"testing"
-	"aegisguard/pkg/bridge"
-	"aegisguard/pkg/bridge/mocks"
+	"github.com/aegisgatesecurity/aegisgate/pkg/bridge"
+	"github.com/aegisgatesecurity/aegisgate/pkg/bridge/mocks"
 )
 
 func TestGateway_ValidateRequest(t *testing.T) {

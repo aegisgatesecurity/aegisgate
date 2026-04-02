@@ -5,7 +5,8 @@ package mocks
 
 import (
 	"context"
-	"aegisguard/pkg/bridge"
+
+	"github.com/aegisgatesecurity/aegisgate/pkg/bridge"
 )
 
 // MockGateway is a mock implementation of the Gateway interface.
