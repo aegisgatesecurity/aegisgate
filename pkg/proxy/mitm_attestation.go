@@ -473,6 +473,9 @@ func (m *MITMAttestation) PreInterceptCheck(host string, timeout time.Duration) 
 
 // ValidateExistingConnection validates certificates from an existing TLS connection
 func (m *MITMAttestation) ValidateExistingConnection(conn *tls.Conn) (*MITMAttestationResult, error) {
+	if conn == nil {
+		return nil, fmt.Errorf("connection is nil")
+	}
 	connState := conn.ConnectionState()
 	return m.AttestConnection(&connState)
 }
