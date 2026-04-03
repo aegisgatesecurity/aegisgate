@@ -25,10 +25,17 @@ coverage.txt
 .DS_Store
 Thumbs.db
 
-# Environment
+# Environment & Secrets
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
+*.env
+secrets/
+secrets.yaml
+secrets.yml
+secrets.json
 
 # Logs
 *.log
@@ -40,11 +47,35 @@ Archive/
 *.key
 *.pem
 *.crt
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
 certs/
+certificates/
+ssl/
+tls/
 cmd/licensegen/
 cmd/padlock/
 cmd/debug/
 cmd/gencerts/
+
+# Credentials & Authentication
+credentials/
+credentials.yaml
+credentials.json
+api_keys/
+tokens/
+oauth/
+auth/
+
+# Database & Storage
+*.db
+*.sqlite
+*.sqlite3
+*.sql.gz
+database_backups/
 
 # Development clutter
 *.txt
@@ -58,7 +89,6 @@ gitmsg.txt
 msg*.txt
 cov*.txt
 
-
 # Temp helper scripts (local only)
 add_*.ps1
 *.ps1
@@ -68,10 +98,34 @@ worktree/
 
 # Test artifacts
 test_run.zip
-SESSION_MEMORY.md  
-  
-# Python 
-__pycache__/ 
-*.pyc 
-*.pyo 
+SESSION_MEMORY.md
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
 .pytest_cache/
+
+# Configuration with secrets
+config/secrets.*
+config/local.*
+config/production.*
+!config/*.example
+
+# API & Integration Keys
+api_key.txt
+license_key.txt
+private_key.txt
+*.secret
+*.credentials
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+
+# Package manager files (may contain tokens)
+.npmrc
+.yarnrc
+.pypirc
