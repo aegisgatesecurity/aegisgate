@@ -1,18 +1,8 @@
-# AegisGate™ - Securing the Humans
+# AegisGate™ — Transparent AI API Security Gateway
 
 [![Version](https://img.shields.io/badge/version-v1.1.0-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
-[![OpenSSF Scorecard](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/scorecard.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/scorecard.yml)
-[![OpenSSF Best Practices](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/best-practices.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/best-practices.yml)
-[![CodeQL](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/codeql.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/codeql.yml)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![SLSA](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/slsa.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/slsa.yml)
-
-### Enterprise-Grade AI API Security Platform
-
-**Zero code changes. Complete AI traffic security in under 5 minutes.**
-
 [![Go Version](https://img.shields.io/badge/Go-1.25.8+-00ADD8?logo=go)](https://golang.org/)
-[![Version](https://img.shields.io/badge/version-v1.1.0-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Security](https://img.shields.io/badge/Security-0_CVEs-brightgreen?logo=shield)](SECURITY.md)
 [![Test Coverage](https://img.shields.io/badge/Coverage-65%25-yellow?logo=codecov)](https://github.com/aegisgatesecurity/aegisgate)
 
@@ -248,6 +238,39 @@ Found a security issue? **DO NOT open a public issue.**
 - 📧 **Email:** security@aegisgatesecurity.io
 - ⏱️ **Response:** Within 48 hours
 - 🔧 **Remediation:** 90-day timeline
+
+---
+
+## 🤝 Related Projects
+
+### AegisGuard™ — AI Agent Security Platform
+
+**AegisGuard™** is the companion project for **AI agent security**. While AegisGate secures **API traffic** to LLM providers, AegisGuard secures **agent interactions** through the Model Context Protocol (MCP).
+
+| Aspect | AegisGate™ | AegisGuard™ |
+|--------|-------------|-------------|
+| **Focus** | API-side security & traffic protection | Agent-side security & compliance |
+| **Protocol** | HTTP/HTTPS, HTTP/3 (QUIC) | Model Context Protocol (MCP) |
+| **Key Features** | Signature verification, prompt injection protection | RBAC, audit logging, session isolation |
+| **Compliance** | SOC 2, HIPAA, PCI-DSS, GDPR, ISO 42001 | GDPR, HIPAA, ISO 27001, NIST AI RMF |
+
+**Together, AegisGate and AegisGuard provide end-to-end AI security — from agent to API.**
+
+👉 **[Learn more about AegisGuard](https://github.com/aegisguardsecurity/aegisguard)**
+
+---
+
+## 💼 Commercial Offerings
+
+AegisGate is available under the Apache 2.0 license with full security and compliance features. Organizations requiring additional capabilities can explore:
+
+| Offering | Highlights |
+|----------|------------|
+| **Developer** | Multiple AI providers, enhanced threat detection |
+| **Professional** | SIEM integration, advanced analytics, priority support |
+| **Enterprise** | Custom policies, 99.99% SLA, dedicated support, SSO/SAML |
+
+For details, visit **[aegisgatesecurity.io](https://aegisgatesecurity.io)** or contact sales@aegisgatesecurity.io.
 
 ---
 
