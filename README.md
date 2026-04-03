@@ -4,14 +4,13 @@
 [![OpenSSF Scorecard](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/scorecard.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/scorecard.yml)
 [![OpenSSF Best Practices](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/best-practices.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/best-practices.yml)
 [![CodeQL](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/codeql.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/codeql.yml)
-[![License](https://img.shields.io/badge/license-Proprietary-red)](https://github.com/aegisgatesecurity/aegisgate/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![SLSA](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/slsa.yml/badge.svg)](https://github.com/aegisgatesecurity/aegisgate/actions/workflows/slsa.yml)
 
 ### Enterprise-Grade AI API Security Platform
 
 **Zero code changes. Complete AI traffic security in under 5 minutes.**
 
-[![License](https://img.shields.io/badge/License-Apache_2.0_/_Proprietary-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.25.8+-00ADD8?logo=go)](https://golang.org/)
 [![Version](https://img.shields.io/badge/version-v1.1.0-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![Security](https://img.shields.io/badge/Security-0_CVEs-brightgreen?logo=shield)](SECURITY.md)
@@ -44,39 +43,27 @@
 
 ---
 
-## 📦 Licensing
+## 📦 License
 
-### License Model: Open-Core Dual Licensing
+### Apache License 2.0
 
-**AegisGate™ uses an open-core licensing model with dual licensing:**
+AegisGate™ is released under the Apache License 2.0, a permissive open-source license that allows you to:
 
-| License | Coverage | Use Case |
-|---------|----------|----------|
-| **Apache 2.0** (Open Source) | Core security features | Open source projects, internal use, evaluation |
-| **Proprietary** (Commercial) | Advanced features | Production deployments requiring SLAs, SSO, SIEM, custom policies |
+- ✅ Use the software for any purpose
+- ✅ Modify and distribute the software
+- ✅ Use in proprietary software
+- ✅ Distribute copies to others
 
-> 🔐 **Patent, IP, Trademark & Copyright Protection**: All source code is protected by international patent rights, copyright law, and trademark registration. The Apache 2.0 license grants rights to use, modify, and distribute the software while protecting AegisGate Security's intellectual property and patents.
-
-### Core Features (Apache 2.0)
-- Full access to all security scanning features
+**Full Features Included:**
+- Full security scanning features
 - Prompt injection prevention (OWASP LLM Top 10)
 - Data leakage protection
 - MITRE ATLAS threat coverage
+- All compliance frameworks
 - Self-hosted deployment (Docker, Kubernetes, binary)
 - All core proxy and compliance features
 
-### Advanced Features (Proprietary License)
-- SSO/SAML 2.0 integration
-- SIEM connectors (Splunk, Datadog, Elastic)
-- Custom policy engine with rule builder
-- Advanced ML threat detection with real-time updates
-- Priority support with SLA guarantees
-- Custom compliance framework support
-- Hardware security module (HSM) integration
-- Multi-tenancy with federation
-- Custom threat detection models
-
-📧 **For commercial licensing**: sales@aegisgatesecurity.io
+See [LICENSE](LICENSE) for full license text.
 
 ---
 
@@ -153,6 +140,19 @@ services:
       - ./config:/app/config
 ```
 
+### Kubernetes (Helm)
+
+```bash
+# Add Helm repository
+helm repo add aegisgate https://aegisgatesecurity.github.io/helm-charts
+helm repo update
+
+# Deploy
+helm install aegisgate aegisgate/aegisgate \
+  --namespace aegisgate \
+  --create-namespace
+```
+
 ### Build from Source
 
 ```bash
@@ -175,7 +175,7 @@ go build -o aegisgate ./cmd/aegisgate
 ┌─────────────────────────────────────────────────────────────────────────┐
 │                            AegisGate™                                    │
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │   Proxy     │  │  Security   │  │ Compliance  │  │   Metrics   │  │
+│  │   Proxy     │  │  Security   │  │ Compliance │  │   Metrics   │  │
 │  │   Layer     │──│   Engine    │──│   Engine    │──│   & Logs    │  │
 │  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -274,30 +274,14 @@ We welcome contributions! All contributions require signing our CLA.
 
 ## 📝 License
 
-**Dual Licensing Model — Open-Core:**
-
-| License Type | Coverage | Commercial Use |
-|--------------|----------|----------------|
-| **Apache 2.0** | Core features | ✅ Allowed (open source, internal use, evaluation) |
-| **Proprietary** | Advanced features | Contact sales@aegisgatesecurity.io |
-
-### Apache License 2.0
-Copyright 2025-2026 AegisGate Security. All rights reserved.
+**Apache License 2.0** — Copyright 2025-2026 AegisGate Security. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
 
-### Proprietary License
-Advanced features require a commercial license. Contact **sales@aegisgatesecurity.io** for:
-- Advanced ML threat detection
-- SSO/SAML integration
-- SIEM connectors
-- Custom policies & SLA guarantees
-- Hardware security module support
-
-> ⚖️ **Legal Note**: All source code is protected by international copyright law, patent rights, and trademark registration. The Apache 2.0 license grants usage rights for core features while preserving AegisGate Security's IP protections.
-
 See [LICENSE](LICENSE) for full license text.
+
+> ⚖️ **Legal Note**: All source code is protected by international copyright law, patent rights, and trademark registration.
 
 ---
 
