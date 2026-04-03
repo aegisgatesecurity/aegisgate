@@ -56,14 +56,14 @@ Let's figure out what's wrong!
 │                                                                             │
 │     docker logs aegisgate                                                  │
 │                                                                             │
-│ This shows you what's happening inside AegisGate.                        │
+│ This shows you what's happening inside AegisGate.                          │
 │                                                                             │
-│ LOOK FOR ERROR MESSAGES - they'll be in RED or say "ERROR"!               │
+│ LOOK FOR ERROR MESSAGES - they'll be in RED or say "ERROR"!                │
 │                                                                             │
 │ EXAMPLE ERROR:                                                             │
 │ ┌─────────────────────────────────────────────────────────────────────┐   │
 │ │ 2025-01-15T10:30:00Z ERROR Failed to connect to database           │   │
-│ │ 2025-01-15T10:30:00Z ERROR dial tcp: connection refused           │   │
+│ │ 2025-01-15T10:30:00Z ERROR dial tcp: connection refused            │   │
 │ └─────────────────────────────────────────────────────────────────────┘   │
 │                                                                             │
 │ The second line tells you WHAT failed: connection refused = database       │
@@ -273,7 +273,7 @@ SOLUTIONS:
       limits:
         memory: 2G
 
-✓ Enable caching (Professional tier):
+✓ Enable caching for improved performance:
   AEGISGATE_CACHE_ENABLED=true
 
 ✓ Use PostgreSQL instead of file storage:
@@ -304,34 +304,6 @@ FOR PRODUCTION:
 • Use a valid certificate from Let's Encrypt or your CA
 • Make sure cert isn't expired:
   openssl x509 -in cert.pem -dates -noout
-
-═══════════════════════════════════════════════════════════════════════════════
-
-🟡 PROBLEM: "Invalid license key"
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
-WHAT THIS LOOKS LIKE:
-┌─────────────────────────────────────────────────────────────────────────────┐
-│ ERROR: Invalid license key: dev-xxxxxxxxxxxxx                              │
-│ ERROR: Feature not available for tier: community                          │
-└─────────────────────────────────────────────────────────────────────────────┘
-
-CAUSE: License key is invalid or doesn't match your tier
-
-SOLUTION:
-1. Verify your license key format:
-   • Community: No key needed
-   • Developer: Starts with "dev-"
-   • Professional: Starts with "pro-"
-   • Enterprise: Starts with "ent-"
-
-2. Check tier in config:
-   AEGISGATE_TIER=developer
-
-3. Make sure license key is correct (no extra spaces)
-
-4. Contact support if key is valid but not working:
-   support@aegisgatesecurity.io
 
 ═══════════════════════════════════════════════════════════════════════════════
 
@@ -403,14 +375,13 @@ Quick reference for common error messages:
 │ connection timeout             │ Network slow / firewall blocking        │
 │ certificate unknown           │ Self-signed cert / SSL problem          │
 │ permission denied              │ No permission to access file/port      │
-│ file not found                 │ Config file path incorrect             │
-│ invalid configuration          │ Config file has errors                 │
-│ license invalid                │ License key wrong or expired           │
+│ file not found                 │ Config file path incorrect              │
+│ invalid configuration          │ Config file has errors                  │
 │ rate limited                   │ Too many requests, wait and retry       │
-│ unauthorized                   │ Wrong or missing API key/token         │
+│ unauthorized                   │ Wrong or missing API key/token          │
 │ not found                      │ Route/endpoint doesn't exist            │
-│ internal server error          │ Bug in AegisGate - check logs          │
-│ out of memory                  │ Systemresources exhausted               │
+│ internal server error          │ Bug in AegisGate - check logs           │
+│ out of memory                  │ System resources exhausted              │
 │ database error                 │ PostgreSQL connection issue             │
 └─────────────────────────────────────────────────────────────────────────────┘
 
@@ -420,7 +391,7 @@ SECTION 4: NETWORK ISSUES
 ─────────────────────────
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│ CAN'T REACH LOCALHOST                                                      │
+│ CAN'T REACH LOCALHOST                                                       │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ Try these URLs:                                                            │
 │   http://127.0.0.1:8080                                                    │
@@ -428,7 +399,7 @@ SECTION 4: NETWORK ISSUES
 │                                                                             │
 │ On Windows, try:                                                           │
 │   ipconfig   (find your IPv4 address)                                      │
-│   Then go to http://[YOUR_IP]:8080                                         │
+│   Then go to http://[YOUR_IP]:8080                                        │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -436,7 +407,7 @@ SECTION 4: NETWORK ISSUES
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ If running on a server and can't connect:                                  │
 │                                                                             │
-│ • Linux: sudo ufw allow 8080/tcp                                           │
+│ • Linux: sudo ufw allow 8080/tcp                                          │
 │ • AWS: Add inbound rule for port 8080                                      │
 │ • GCP: Add firewall rule                                                   │
 │ • Azure: Configure NSG                                                     │

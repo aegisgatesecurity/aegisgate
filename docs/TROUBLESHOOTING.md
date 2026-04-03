@@ -47,10 +47,9 @@ docker system df
 **Problem:** AegisGate rejects the license key.
 
 **Solutions:**
-1. Verify the license key format (should start with `dev-`, `pro-`, or `ent-`)
+1. Verify the license key format
 2. Check for extra whitespace in the key
-3. Ensure your tier supports the features you're using
-4. Contact support if the issue persists
+3. Contact support if the issue persists
 
 ### "Database connection failed"
 
@@ -93,7 +92,7 @@ docker exec -it aegisgate curl -v postgres:5432
 **Problem:** API requests are taking too long.
 
 **Solutions:**
-1. Enable caching (Professional tier):
+1. Enable caching:
    ```bash
    AEGISGATE_CACHE_ENABLED=true
    ```
@@ -134,9 +133,8 @@ docker exec -it aegisgate curl -v postgres:5432
 
 **Solutions:**
 1. Wait for the rate limit window to reset
-2. Upgrade your tier for higher limits
-3. Implement exponential backoff in your client
-4. Check if someone else is using your API keys
+2. Implement exponential backoff in your client
+3. Check if someone else is using your API keys
 
 ---
 
@@ -220,8 +218,7 @@ Expected response:
 ```json
 {
   "status": "healthy",
-  "version": "1.0.0",
-  "tier": "community"
+  "version": "1.1.0"
 }
 ```
 
@@ -244,12 +241,11 @@ curl http://localhost:9090/metrics
 
 ### Support channels
 
-| Tier | Support |
-|------|---------|
-| Community | [GitHub Issues](https://github.com/aegisgatesecurity/aegisgate/issues) |
-| Developer | Email: support@aegisgatesecurity.ioaegisgate.example.com |
-| Professional | Priority email |
-| Enterprise | 24/7 dedicated support |
+| Channel | Contact |
+|---------|---------|
+| GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
+| Email Support | support@aegisgatesecurity.io |
+| Security Issues | security@aegisgatesecurity.io |
 
 ---
 

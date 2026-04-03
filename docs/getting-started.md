@@ -45,7 +45,7 @@ cd aegisgate
 make build
 
 # 3. Run AegisGate
-./bin/aegisgate serve --config ./config/community.env
+./bin/aegisgate serve --config ./config/aegisgate.env
 ```
 
 ---
@@ -71,9 +71,6 @@ After installation, explore these guides:
 Create a `.env` file:
 
 ```bash
-# Tier: community, developer, professional, enterprise
-AEGISGATE_TIER=community
-
 # Server
 AEGISGATE_HTTP_PORT=8080
 AEGISGATE_HTTPS_PORT=8443
@@ -90,13 +87,10 @@ AEGISGATE_TLS_ENABLED=false
 
 ```bash
 # With environment file
-./bin/aegisgate serve --config ./config/community.env
-
-# With environment variables
-AEGISGATE_TIER=community ./bin/aegisgate serve
+./bin/aegisgate serve --config ./config/aegisgate.env
 
 # With Docker
-docker run -p 8080:8080 -p 8443:8443 aegisgate/aegisgate:latest
+docker run -p 8080:8080 -p 8443:8443 ghcr.io/aegisgatesecurity/aegisgate:latest
 ```
 
 ---
@@ -113,8 +107,7 @@ Expected response:
 ```json
 {
   "status": "healthy",
-  "version": "1.0.0",
-  "tier": "community"
+  "version": "1.1.0"
 }
 ```
 
@@ -135,7 +128,7 @@ curl http://localhost:8080/api/v1/status
 export OPENAI_API_KEY=sk-xxxxx
 
 # Or use configuration file
-# Edit config/community.env and add:
+# Edit config/aegisgate.env and add:
 # OPENAI_API_KEY=sk-xxxxx
 ```
 
@@ -181,7 +174,7 @@ AEGISGATE_TLS_KEY=/path/to/key.pem
 ### Set Up PostgreSQL
 
 ```bash
-# config/professional.env
+# config/aegisgate.env
 AEGISGATE_STORAGE_MODE=postgres
 DATABASE_URL=postgres://user:pass@localhost:5432/aegisgate?sslmode=require
 ```
@@ -246,9 +239,9 @@ See [Production Deployment](DEPLOYMENT.md) for details.
 
 | Channel | Link |
 |---------|------|
-| Discord | https://discord.gg/aegisgate |
-| Forum | https://community.aegisgate.example.com |
 | GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
+| Email Support | support@aegisgatesecurity.io |
+| Security Issues | security@aegisgatesecurity.io |
 
 ---
 

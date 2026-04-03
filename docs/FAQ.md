@@ -94,20 +94,18 @@ For production with PostgreSQL:
 
 ### How does licensing work?
 
-AegisGate uses license keys to activate different feature tiers:
+AegisGate uses an open-core licensing model:
 
-- **Community**: Base features, no license required
-- **Developer**: Additional features with self-hosted license
-- **Professional**: Enhanced features with self-hosted license
-- **Enterprise**: Full features with custom license and support
+- **Apache 2.0 License**: Core security features available under open source license
+- **Proprietary License**: Advanced features available under commercial license
 
 ### Can I use AegisGate commercially?
 
-Yes! The Apache 2.0 license allows commercial use for the Community edition. Paid tiers include commercial licensing with support.
+Yes! The Apache 2.0 license allows commercial use for core features. Advanced features require commercial licensing. Contact sales@aegisgatesecurity.io for details.
 
 ### What happens if my license expires?
 
-Features may revert to Community tier during any transition period.
+Licenses can be renewed at any time. Core features remain available while commercial licenses are renewed.
 
 ---
 
@@ -174,9 +172,9 @@ docker stats aegisgate
 
 ### Rate limiting triggered
 
-You're hitting your tier's rate limits. Options:
+You're hitting rate limits. Options:
 1. Wait and retry
-2. Upgrade your tier
+2. Adjust rate limit configuration
 3. Contact support for adjustments
 
 ---
@@ -185,12 +183,11 @@ You're hitting your tier's rate limits. Options:
 
 ### How do I get support?
 
-| Tier | Support Channel |
-|------|-----------------|
-| Community | [Discord](https://discord.gg/aegisgate), [Forum](https://community.aegisgate.example.com) |
-| Developer | Email support |
-| Professional | Priority email |
-| Enterprise | 24/7 dedicated support |
+| Channel | Contact |
+|---------|---------|
+| GitHub Issues | https://github.com/aegisgatesecurity/aegisgate/issues |
+| Email | support@aegisgatesecurity.io |
+| Security Issues | security@aegisgatesecurity.io |
 
 ### Where can I find documentation?
 
@@ -201,7 +198,7 @@ You're hitting your tier's rate limits. Options:
 
 ### How do I report bugs?
 
-See our [Issue Template](.github/ISSUE_TEMPLATE/ISSUE_TEMPLATE.md) or email security@aegisgatesecurity.example.com for security issues.
+Open an issue at https://github.com/aegisgatesecurity/aegisgate/issues or email security@aegisgatesecurity.io for security issues.
 
 ---
 
@@ -217,10 +214,6 @@ See our [Issue Template](.github/ISSUE_TEMPLATE/ISSUE_TEMPLATE.md) or email secu
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-### Is there a bug bounty program?
-
-Yes! See [bugbounty.aegisgate.example.com](https://bugbounty.aegisgate.example.com) for details.
-
 ---
 
-*Can't find your answer? Contact us at support@aegisgatesecurity.example.com*
+*Can't find your answer? Contact us at support@aegisgatesecurity.io*

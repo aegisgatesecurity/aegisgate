@@ -6,13 +6,6 @@ Complete configuration guide for AegisGate.
 
 ## Environment Variables
 
-### Tier Configuration
-
-| Variable | Type | Default | Description |
-|----------|------|---------|-------------|
-| `AEGISGATE_TIER` | string | `community` | Tier: community, developer, professional, enterprise |
-| `AEGISGATE_LICENSE_KEY` | string | - | License key for paid tiers |
-
 ### Server Configuration
 
 | Variable | Type | Default | Description |
@@ -79,12 +72,9 @@ Complete configuration guide for AegisGate.
 
 ## Configuration Files
 
-### Community (.env)
+### Minimal Configuration
 
 ```bash
-# Tier
-AEGISGATE_TIER=community
-
 # Server
 AEGISGATE_HTTP_PORT=8080
 AEGISGATE_HTTPS_PORT=8443
@@ -106,13 +96,9 @@ AEGISGATE_LOG_LEVEL=info
 AEGISGATE_METRICS_ENABLED=true
 ```
 
-### Developer (.env)
+### Standard Configuration
 
 ```bash
-# Tier
-AEGISGATE_TIER=developer
-AEGISGATE_LICENSE_KEY=dev-xxxxxxxxxxxxx
-
 # Server
 AEGISGATE_HTTP_PORT=8080
 AEGISGATE_HTTPS_PORT=8443
@@ -126,7 +112,6 @@ AEGISGATE_TLS_ENABLED=true
 AEGISGATE_TLS_CERT=/etc/aegisgate/certs/cert.pem
 AEGISGATE_TLS_KEY=/etc/aegisgate/certs/key.pem
 AEGISGATE_JWT_SECRET=your-secret-key
-AEGISGATE_MTLS_ENABLED=true
 
 # Rate Limiting
 AEGISGATE_RATE_LIMIT_ENABLED=true
@@ -143,19 +128,15 @@ AEGISGATE_COMPLIANCE_FRAMEWORKS=owasp,nist
 
 # Monitoring
 AEGISGATE_METRICS_ENABLED=true
-GRAFANA_ENABLED=true
 ```
 
-### Professional (.env)
+### Advanced Configuration
 
 ```bash
-# Tier
-AEGISGATE_TIER=professional
-AEGISGATE_LICENSE_KEY=pro-xxxxxxxxxxxxx
-
 # Server
 AEGISGATE_HTTP_PORT=8080
 AEGISGATE_HTTPS_PORT=8443
+AEGISGATE_HOST=0.0.0.0
 
 # Storage (PostgreSQL + Redis)
 AEGISGATE_STORAGE_MODE=postgres
@@ -167,15 +148,12 @@ AEGISGATE_TLS_ENABLED=true
 AEGISGATE_MTLS_ENABLED=true
 AEGISGATE_PKI_ATTESTATION_ENABLED=true
 
-# Multi-tenancy
-AEGISGATE_MULTI_TENANT_ENABLED=true
-
 # Compliance
 AEGISGATE_COMPLIANCE_ENABLED=true
 AEGISGATE_COMPLIANCE_FRAMEWORKS=owasp,soc2,gdpr,hipaa,pci,nist,iso27001
 AEGISGATE_COMPLIANCE_STRICT_MODE=true
 
-# SIEM
+# SIEM Integration
 SIEM_ENABLED=true
 SIEM_ENDPOINT=https://siem.company.com:443
 ```
@@ -199,7 +177,7 @@ aegisgate serve [flags]
 # Other commands
 aegisgate version     Show version
 aegisgate health      Check health
-aegisgate migrate      Run database migrations
+aegisgate migrate     Run database migrations
 ```
 
 ---
@@ -217,17 +195,10 @@ Configuration is loaded in this order (later overrides earlier):
 
 ## Examples
 
-### Minimal Configuration
-
-```bash
-AEGISGATE_TIER=community
-```
-
 ### Full Configuration
 
 ```bash
 # Server
-AEGISGATE_TIER=developer
 AEGISGATE_HTTP_PORT=8080
 AEGISGATE_HTTPS_PORT=8443
 AEGISGATE_HOST=0.0.0.0

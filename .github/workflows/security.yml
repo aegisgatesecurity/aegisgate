@@ -34,6 +34,46 @@ jobs:
           name: govulncheck-results
           path: govulncheck-results.txt
 
+  gosec:
+    name: Gosec Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Run Gosec
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          gosec ./... 2>&1 | tee gosec-results.txt
+      - name: Upload Gosec results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: gosec-results
+          path: gosec-results.txt
+
+  trivy:
+    name: Trivy Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.20.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          output: 'trivy-fs-results.txt'
+      - name: Upload Trivy filesystem results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-fs-results
+          path: trivy-fs-results.txt
+
   dependency-review:
     name: Dependency Review
     runs-on: ubuntu-latest
@@ -45,3 +85,24 @@ jobs:
           go-version: ${{ env.GO_VERSION }}
       - name: Check dependencies
         run: go list -m -json all | head -20
+
+  zap-baseline:
+    name: OWASP ZAP Baseline Scan
+    runs-on: ubuntu-latest
+    needs: [gosec, trivy]
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run OWASP ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.12.0
+        with:
+          target: 'http://staging-aegisgate.example.com'
+          cmd_options: '-a -j -t 60'
+          allow_issue_writing: false
+          fail_action: false
+      - name: Upload ZAP results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-baseline-results
+          path: zap_report.html

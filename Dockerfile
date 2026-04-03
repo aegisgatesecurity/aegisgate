@@ -10,16 +10,25 @@ WORKDIR /build
 COPY go.mod ./
 COPY go.sum ./
 
+# Verify go mod files were copied
+RUN ls -la
+
 # Copy source code
 COPY cmd/ ./cmd/
 COPY pkg/ ./pkg/
 COPY config/ ./config/
+
+# Verify source code was copied
+RUN ls -la ./cmd/aegisgate/ && ls -la ./config/
 
 # Build the application
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo \
     -ldflags="-s -w" \
     -o /build/aegisgate \
     ./cmd/aegisgate
+
+# Verify the binary was built
+RUN ls -la /build/aegisgate
 
 # Final stage - minimal runtime image
 FROM alpine:latest
@@ -34,14 +43,30 @@ WORKDIR /app
 
 # Copy binary from builder
 COPY --from=builder /build/aegisgate /app/aegisgate
-COPY config/aegisgate.yml.example /app/aegisgate.yml
+
+# Verify the binary was copied
+RUN ls -la /app/aegisgate
+
+# Copy configuration file
+COPY config/aegisgate.yml /app/aegisgate.yml
+
+# Verify the config file was copied
+RUN ls -la /app/aegisgate.yml
 
 # Use non-root user
 USER aegisgate
 
-# Expose ports
-EXPOSE 8080 8443 8444
+# Expose ports (IPv4 only)
+EXPOSE 8080/tcp
+EXPOSE 8443/tcp
+EXPOSE 8444/tcp
 
-# Set entrypoint - use command-line flags, not --config
+# Set environment variables to force IPv4 binding
+ENV AEGISGATE_BIND="0.0.0.0:8080" \
+    AEGISGATE_LOG_LEVEL="debug" \
+    AEGISGATE_COMPLIANCE_ENABLED="true" \
+    AEGISGATE_TIER="community"
+
+# Run the AegisGate binary with IPv4 binding
 ENTRYPOINT ["/app/aegisgate"]
 CMD ["-bind", "0.0.0.0:8080", "-target", "https://api.openai.com", "-tier", "community"]
