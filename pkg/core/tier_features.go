@@ -287,16 +287,18 @@ func (t Tier) GetUpgradePath() Tier {
 }
 
 // GetPriceInfo returns pricing information for a tier
+// Note: Pricing is managed externally via the admin panel
+// Contact sales@aegisgatesecurity.io for tier pricing details
 func (t Tier) GetPriceInfo() (monthly float64, annual float64, perUser bool) {
 	switch t {
 	case TierCommunity:
-		return 0, 0, false
+		return 0, 0, false // Free tier
 	case TierDeveloper:
-		return 0, 0, false
+		return -1, -1, false // Contact sales
 	case TierProfessional:
-		return 0, 0, false
+		return -1, -1, false // Contact sales
 	case TierEnterprise:
-		return 0, 0, false
+		return -1, -1, false // Contact sales
 	default:
 		return 0, 0, false
 	}

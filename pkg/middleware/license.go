@@ -46,7 +46,7 @@ func DefaultLicenseConfig() *LicenseConfig {
 		PublicKeyPEM:  getEnv("LICENSE_PUBLIC_KEY", ""),
 		CacheDuration: 5 * time.Minute,
 		RetryInterval: 30 * time.Second,
-		FailOpen:      true,
+		FailOpen:      false, // Security: Do not allow requests if license service is unavailable
 	}
 }
 
