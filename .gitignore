@@ -63,6 +63,9 @@ cov*.txt
 add_*.ps1
 *.ps1
 
+# Git worktrees
+worktree/
+
 # Test artifacts
 test_run.zip
 SESSION_MEMORY.md  

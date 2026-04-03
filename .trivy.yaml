@@ -13,6 +13,44 @@ scan:
 
 ignorefile: .trivyignore
 
+# Skip directories not part of the main codebase
+skip-dirs:
+  - worktree/
+  - aegisgate-admin/
+  - aegisgate-config/
+  - aegisgate-official/
+  - aegisgate-platform/
+  - aegisgate2/
+  - aegisgate_clean/
+  - aegisguard-clean/
+  - aegisguard-docker-build/
+  - aegisguard-temp/
+  - check_dco_1/
+  - check_dco_2/
+  - check_dco_3/
+  - container_debug/
+  - final_verify/
+  - keys/
+  - logs/
+  - platform/
+  - release_testing/
+  - temp_aegisgate/
+  - temp_bridge/
+  - troubleshooting/
+  - verify_clean/
+  - MEMORIES/
+
+# Skip large JSON files that slow down scanning
+skip-files:
+  - "AegisGate Docker build failure.json"
+  - "AegisGate testing guidance request.json"
+  - "AegisGate testing strategy guidance.json"
+  - "AegisGate v1.1.0 Release.json"
+  - "E2E Testing Documentation and Docker.json"
+  - "benchmark_logs.txt"
+  - "trivy-results.sarif"
+  - "zap_baseline_report.html"
+
 ignore:
   # CVEs to ignore (temporary)
   - CVE-2024-1234
