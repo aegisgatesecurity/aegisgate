@@ -1,16 +1,20 @@
-# AegisGate™ — Transparent AI API Security Gateway
+<div align="center">
+
+# 🛡️ AegisGate™ — Transparent AI API Security Gateway
 
 [![Version](https://img.shields.io/badge/version-v1.1.0-green?logo=semver)](https://github.com/aegisgatesecurity/aegisgate/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
 [![Go Version](https://img.shields.io/badge/Go-1.25.8+-00ADD8?logo=go)](https://golang.org/)
 [![Security](https://img.shields.io/badge/Security-0_CVEs-brightgreen?logo=shield)](SECURITY.md)
-[![Test Coverage](https://img.shields.io/badge/Coverage-65%25-yellow?logo=codecov)](https://github.com/aegisgatesecurity/aegisgate)
+[![Test Coverage](https://img.shields.io/badge/Coverage-70%25-brightgreen?logo=codecov)](https://github.com/aegisgatesecurity/aegisgate)
 
 [![Docker](https://img.shields.io/badge/Docker-27MB-2496ED?logo=docker)](https://hub.docker.com/r/aegisgatesecurity/aegisgate)
 [![Kubernetes](https://img.shields.io/badge/K8s-Ready-326CE5?logo=kubernetes)](https://kubernetes.io/)
 [![CI Status](https://img.shields.io/badge/CI-Passing-brightgreen?logo=github-actions)](https://github.com/aegisgatesecurity/aegisgate/actions)
 
-[Docs](https://aegisgatesecurity.io/docs) • [Features](#-features) • [Quick Start](#-quick-start) • [Architecture](#-architecture) • [Performance](#-performance-benchmarks) • [Security](#-security)
+[📚 Docs](https://aegisgatesecurity.io/docs) &nbsp;•&nbsp; [✨ Features](#-features) &nbsp;•&nbsp; [🚀 Quick Start](#-quick-start) &nbsp;•&nbsp; [🏗️ Architecture](#-architecture) &nbsp;•&nbsp; [⚡ Performance](#-performance-benchmarks) &nbsp;•&nbsp; [🔒 Security](#-security)
+
+</div>
 
 > **30-Second Pitch**: Your AI applications need a security guard — one that speaks HTTP, understands LLM threats, and adds less than 5ms latency. AegisGate™ is that guard. Deploy in 60 seconds. Sleep better tonight.
 
@@ -156,34 +160,49 @@ go build -o aegisgate ./cmd/aegisgate
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Your Application                               │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                            AegisGate™                                    │
-│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  │
-│  │   Proxy     │  │  Security   │  │ Compliance │  │   Metrics   │  │
-│  │   Layer     │──│   Engine    │──│   Engine    │──│   & Logs    │  │
-│  └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘  │
-└─────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          AI Provider (OpenAI, etc.)                      │
-└─────────────────────────────────────────────────────────────────────────┘
+```mermaid
+flowchart TB
+    subgraph Client["Your Application"]
+        A[AI API Request]
+    end
+
+    subgraph AegisGate["AegisGate™ Security Gateway"]
+        direction LR
+        P[Proxy Layer] --> S[Security Engine]
+        S --> C[Compliance Engine]
+        C --> M[Metrics & Logging]
+    end
+
+    subgraph Providers["AI Providers"]
+        O[OpenAI]
+        AC[Anthropic Claude]
+        AZ[Azure OpenAI]
+        AWS[AWS Bedrock]
+        G[Google Gemini]
+    end
+
+    A --> P
+    M --> O
+    M --> AC
+    M --> AZ
+    M --> AWS
+    M --> G
+
+    style AegisGate fill:#e1f5ff,stroke:#0066cc,stroke-width:3px
+    style S fill:#ffeb3b,stroke:#f57f17
+    style C fill:#c8e6c9,stroke:#2e7d32
+    style P fill:#fff3e0,stroke:#ef6c00
+    style M fill:#f3e5f5,stroke:#7b1fa2
 ```
 
 ### Key Components
 
 | Component | Function |
 |-----------|----------|
-| **Transparent Proxy** | Man-in-the-middle for traffic inspection |
-| **Security Engine** | OWASP LLM Top 10, MITRE ATLAS threat detection |
-| **Compliance Engine** | Multi-framework policy enforcement |
-| **Metrics Collector** | Prometheus, OpenTelemetry exports |
+| **Proxy Layer** | Transparent HTTP/HTTPS proxy with TLS termination |
+| **Security Engine** | OWASP LLM Top 10, MITRE ATLAS threat detection, prompt injection prevention |
+| **Compliance Engine** | Multi-framework policy enforcement (SOC2, HIPAA, GDPR, ISO) |
+| **Metrics & Logging** | Prometheus metrics, OpenTelemetry tracing, audit logs |
 
 ---
 
