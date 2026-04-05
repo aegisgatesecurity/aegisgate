@@ -95,10 +95,20 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     steps:
       - uses: actions/checkout@v4
+      - name: Start AegisGate for testing
+        run: |
+          # Start AegisGate in background for ZAP scanning
+          docker run -d --name aegisgate-test \
+            -p 8080:8080 \
+            -p 8443:8443 \
+            ghcr.io/aegisgatesecurity/aegisgate:latest
+          sleep 10
+          # Verify it's running
+          curl -f http://localhost:8080/health || exit 1
       - name: Run OWASP ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.12.0
         with:
-          target: 'http://staging-aegisgate.example.com'
+          target: 'http://localhost:8080'
           cmd_options: '-a -j -t 60'
           allow_issue_writing: false
           fail_action: false
@@ -108,3 +118,6 @@ jobs:
         with:
           name: zap-baseline-results
           path: zap_report.html
+      - name: Cleanup
+        if: always()
+        run: docker stop aegisgate-test || true
